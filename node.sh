@@ -1,8 +1,8 @@
 #!/bin/bash
 
 NODE=/opt/node/bin/node
-SERVER_JS_FILE=/opt/firepick/server.js
-OUT=/var/log/firepick.log
+SERVER_JS_FILE=/opt/firemote/firemote.js
+OUT=/var/log/firemote.log
 
 case "$1" in
 

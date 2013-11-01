@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 2.8)
+project( FireMote )
+SET(COMPILE_DEFINITIONS -Werror)
+SET(FireMote_VERSION_MAJOR 0)
+SET(FireMote_VERSION_MINOR 1)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_FILE_OFFSET_BITS=64")
+
+include (InstallRequiredSystemLibraries)
+SET(CPACK_RESOURCE_FILE_LICENSE  
+     "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+SET(CPACK_PACKAGE_VERSION_MAJOR "${FireMote_VERSION_MAJOR}")
+SET(CPACK_PACKAGE_VERSION_MINOR "${FireMote_VERSION_MINOR}")
+include (CPack)
+
+configure_file (
+	"${PROJECT_SOURCE_DIR}/version.h.in"
+	"${PROJECT_BINARY_DIR}/version.h"
+	)
+
+INSTALL(FILES firemote.js DESTINATION /opt/firemote/)
+INSTALL(FILES favicon.ico DESTINATION /opt/firemote/)

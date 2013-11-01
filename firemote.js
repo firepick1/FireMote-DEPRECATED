@@ -26,18 +26,29 @@ http.createServer(function(req,resp) {
 	var parseUrl = url.parse(req.url, true);
 
 	if (parseUrl.pathname === "/camera") {
+		console.log("CAMERA");
 		var fileName = "/dev/firefuse/cam.jpg";
 		fs.readFile(fileName, function(error, data) {
 			if (error) throw error;
 			resp.writeHead(200, {"Content-Type": "image/jpeg"});
 			resp.write(data);
+			resp.end();
+		});
+	} else if (parseUrl.pathname === "/favicon.ico") {
+		console.log("FAVICON");
+		var fileName = "/opt/firemote/favicon.ico";
+		fs.readFile(fileName, function(error, data) {
+			if (error) throw error;
+			resp.writeHead(200, {"Content-Type": "image/png"});
+			resp.write(data);
+			resp.end();
 		});
 	} else {
+		console.log(parseUrl.href);
 		resp.writeHead(200, {"Content-Type": "text/plain"});
-		resp.writeln("Path unknown");
-		resp.writeln(parseUrl.pathname);
+		resp.write("Path unknown: ");
+		resp.write(parseUrl.pathname);
+		resp.end();
 	}
-	resp.end();
-	console.log(parseUrl.href);
 
 }).listen(8080);
