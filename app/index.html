@@ -1,19 +1,9 @@
 <!doctype html>
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="FireMote">
 <head>
   <meta charset="utf-8">
-  <title>My AngularJS App</title>
+  <title>FireMote</title>
   <link rel="stylesheet" href="css/app.css"/>
-</head>
-<body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-  </ul>
-
-  <div ng-view></div>
-
-  <div>Angular seed app: v<span app-version></span></div>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
@@ -25,5 +15,54 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
+
+		
+</head>
+<body>
+	<div ng-controller="MainCtrl">
+	<style>
+input[type='range'] {
+	-webkit-appearance: none;
+	margin-top: 10px;
+	padding-left:2px; padding-right:2px;
+	-webkit-border-radius: 5px;
+	height: 10px;
+	background: #eee;
+}
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none !important;
+	-webkit-border-radius: 10px;
+	background-color: #AAA;
+	border: 1px solid #999;
+	height: 30px;
+	width: 30px;
+}
+input[type='range']:focus::-webkit-slider-thumb {
+	background-color: #FA0;
+}
+.slide-number {
+	position: relative;
+	top:0px;
+	width: 35px;
+	text-align: center;
+}
+	</style>
+
+		<img src="img/FirePick.png"/>
+		<img style="float:right" src="img/camcv0.jpg" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
+		<div>
+			<div onselectstart="return false" class="slide-number" style="padding-left:{{(headPos*headPosMax/(headPosMax+30))}}px">{{headPos}}</div>
+			<input id="slide" type="range" min="0" max="{{headPosMax}}" step="1" ng-model="headPos" style="width:625px" />
+		</div>
+
+		<div class="sidebar">
+			<div class="sidebar-button"><button ng-click="go('/view1')">view1</button></div>
+			<div class="sidebar-button"><button ng-click="go('/view2')">view2</button></div>
+		</div>
+		<div ng-view></div>
+	</div>
+
+
+
 </body>
 </html>
