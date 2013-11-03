@@ -1,9 +1,31 @@
 <!doctype html>
+
+<!--
+index.html https://github.com/firepick1/FireMote/wiki
+
+Copyright (C) 2013  Karl Lew, <karl@firepick.org>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
 <html lang="en" ng-app="FireMote">
 <head>
   <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FireMote</title>
-  <link rel="stylesheet" href="css/app.css"/>
+  <link rel="stylesheet" href="css/firemote.css"/>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
@@ -15,54 +37,29 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
-
 		
 </head>
 <body>
 	<div ng-controller="MainCtrl">
-	<style>
-input[type='range'] {
-	-webkit-appearance: none;
-	margin-top: 10px;
-	padding-left:2px; padding-right:2px;
-	-webkit-border-radius: 5px;
-	height: 10px;
-	background: #eee;
-}
-input[type='range']::-webkit-slider-thumb {
-	-webkit-appearance: none !important;
-	-webkit-border-radius: 10px;
-	background-color: #AAA;
-	border: 1px solid #999;
-	height: 30px;
-	width: 30px;
-}
-input[type='range']:focus::-webkit-slider-thumb {
-	background-color: #FA0;
-}
-.slide-number {
-	position: relative;
-	top:0px;
-	width: 35px;
-	text-align: center;
-}
-	</style>
-
-		<img src="img/FirePick.png"/>
-		<img style="float:right" src="img/camcv0.jpg" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
-		<div>
-			<div onselectstart="return false" class="slide-number" style="padding-left:{{(headPos*headPosMax/(headPosMax+30))}}px">{{headPos}}</div>
-			<input id="slide" type="range" min="0" max="{{headPosMax}}" step="1" ng-model="headPos" style="width:625px" />
+		<img class="logo" src="img/FirePick.png"/>
+		<img class="cam-image" src="img/camcv0.jpg" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
+		<div class="slider-container">
+			<div onselectstart="return false" class="slider-number" style="left:{{spindleLeft()}}px">{{headPos}}</div>
+			<input class="slider" type="range" min="0" max="{{headPosMax}}" step="1" ng-model="headPos" />
+			<div class="{{spindleClass('left')}}" style="left:{{spindleLeft()}}px">&nbsp;</div>
+			<div class="{{spindleClass('right')}}" style="left:{{spindleLeft()}}px">&nbsp;</div>
 		</div>
 
-		<div class="sidebar">
-			<div class="sidebar-button"><button ng-click="go('/view1')">view1</button></div>
-			<div class="sidebar-button"><button ng-click="go('/view2')">view2</button></div>
+		<div class="detail-controls">
+			<div class="sidebar">
+				<div class="sidebar-button"><button ng-click="viewControl('/status')" style="{{ctrlBtnStyle('/status')}}">Status</button></div>
+				<div class="sidebar-button"><button ng-click="viewControl('/head')" style="{{ctrlBtnStyle('/head')}}">Head</button></div>
+				<div class="sidebar-button"><button ng-click="viewControl('/calibrate')" style="{{ctrlBtnStyle('/calibrate')}}">Calibrate</button></div>
+				<div class="sidebar-button"><button ng-click="viewControl('/jog')" style="{{ctrlBtnStyle('/jog')}}">Jog</button></div>
+			</div>
+			<div class="partials" ng-view></div>
 		</div>
-		<div ng-view></div>
 	</div>
-
-
 
 </body>
 </html>

@@ -1,0 +1,174 @@
+/* 
+firemote.css https://github.com/firepick1/FireMote/wiki
+
+Copyright (C) 2013  Karl Lew, <karl@firepick.org>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+
+body {
+	font: 10pt Verdana; 
+}
+
+button {
+	border: 1pt solid gray;
+	-webkit-border-radius: 5px;
+	width: 100px;
+	position: relative;
+	z-index: 10;
+	margin: 4px;
+	padding: 2px;
+	font: 10pt Verdana;
+}
+button: focus {
+	background-color: #FA0;
+}
+h3 {
+	margin:0;
+	margin-bottom: 5px;
+	padding:0;
+}
+input[type='range'] {
+	-webkit-appearance: none;
+	margin-top: 10px;
+	-webkit-border-radius: 5px;
+	height: 10px;
+	background: #eee;
+}
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none !important;
+	background-color: #AAA;
+	border-left: 3px solid #FFF;
+	border-right: 3px solid #FFF;
+	height: 30px;
+	width: 36px;
+}
+input[type='range']:focus::-webkit-slider-thumb {
+	background-color: #FA0;
+}
+label {
+	text-align: right;
+	display: inline-block;
+	width: 100px;
+}
+
+.big-button {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	border: 2pt solid #444;
+	background-color: #FA0;
+	-webkit-border-radius: 15px;
+	
+	background-image: -webkit-linear-gradient(top, #AAF 0%, #008 100%);
+	color: #FFF;
+
+	width:80px;
+	height:30px;
+}
+.cam-image {
+	display: inline-block;
+	-webkit-border-radius: 5px;
+	border: 1pt solid black;
+}
+.checkbox {
+	position: relative;
+	top: 13px;
+	display: inline-block;
+	border: 3pt solid #ccc;
+	-webkit-border-radius: 13px;
+	background-color: #eee;
+	width: 20px;
+	height: 20px;
+	margin: 5px;
+}
+.checkbox-label{
+	display: inline-block;
+	height: 20px;
+	width: 100px;
+	text-align: right;
+}
+.checkbox-on {
+	background-color: #FA0;
+}
+.detail-controls {
+	margin-top: 50px;
+}
+.hide {
+	display: none;
+	border:1pt solid red;
+}
+.labeledButton {
+	display: inline-block;
+}
+.logo {
+	margin-right: 230px;
+}
+.partials {
+	float: left;
+	position: relative;
+	border-left: 3pt solid #fa0;
+	padding: 5px;
+	padding-left: 10px;
+	z-index: 0;
+	height:300px;
+}
+.sidebar {
+	float: left;
+	padding-left: 5pt;
+	padding-right: 5pt;
+}
+.slider {
+	width: 700px;
+}
+.slider-container {
+	position: relative;
+	margin-top: 5px;
+}
+.slider-number {
+	position: absolute;
+	top:30px;
+	border:0;
+	padding:0;
+	margin:0;
+	width: 36px;
+	text-align: center;
+}
+.spindle {
+	position: absolute;
+	top: -8px;
+	width: 4px;
+	border: 0;
+	height: 3px;
+	border-top: 36px solid #000;
+	margin-top: 2px;
+}
+.spindle-down {
+	margin-top: 8px;
+}
+.spindle-left {
+	margin-left: 0px;
+}
+.spindle-loaded {
+	border-bottom: 4px solid #FA0;
+}
+.spindle-on {
+	border-top: 36px solid #FA0;
+}
+.spindle-right {
+	margin-left: 36px;
+}
+

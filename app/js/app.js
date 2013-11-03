@@ -10,7 +10,9 @@ angular.module('FireMote', [
   'FireMote.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view1', {templateUrl: 'partials/calibrate.html', controller: 'CalibrateCtrl'});
-  $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.when('/status', {templateUrl: 'partials/status.html', controller: 'StatusCtrl'});
+  $routeProvider.when('/calibrate', {templateUrl: 'partials/calibrate.html', controller: 'CalibrateCtrl'});
+  $routeProvider.when('/head', {templateUrl: 'partials/head.html', controller: 'HeadCtrl'});
+  $routeProvider.when('/jog', {templateUrl: 'partials/jog.html', controller: 'JogCtrl'});
+  $routeProvider.otherwise({redirectTo: '/status'});
 }]);
