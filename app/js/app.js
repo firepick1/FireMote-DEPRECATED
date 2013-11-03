@@ -12,7 +12,8 @@ angular.module('FireMote', [
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/status', {templateUrl: 'partials/status.html', controller: 'StatusCtrl'});
   $routeProvider.when('/calibrate', {templateUrl: 'partials/calibrate.html', controller: 'CalibrateCtrl'});
-  $routeProvider.when('/head', {templateUrl: 'partials/head.html', controller: 'HeadCtrl'});
+  $routeProvider.when('/spindle', {templateUrl: 'partials/spindle.html', controller: 'SpindleCtrl'});
+  $routeProvider.when('/camera', {templateUrl: 'partials/camera.html', controller: 'CameraCtrl'});
   $routeProvider.when('/jog', {templateUrl: 'partials/jog.html', controller: 'JogCtrl'});
   $routeProvider.otherwise({redirectTo: '/status'});
 }]);

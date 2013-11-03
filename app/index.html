@@ -53,13 +53,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		<div class="detail-controls">
 			<div class="sidebar">
 				<div class="sidebar-button"><button ng-click="viewControl('/status')" style="{{ctrlBtnStyle('/status')}}">Status</button></div>
-				<div class="sidebar-button"><button ng-click="viewControl('/head')" style="{{ctrlBtnStyle('/head')}}">Head</button></div>
+				<div class="sidebar-button"><button ng-click="viewControl('/camera')" style="{{ctrlBtnStyle('/camera')}}">Camera</button></div>
+				<div class="sidebar-button"><button ng-click="viewControl('/spindle')" style="{{ctrlBtnStyle('/spindle')}}">Spindles</button></div>
 				<div class="sidebar-button"><button ng-click="viewControl('/calibrate')" style="{{ctrlBtnStyle('/calibrate')}}">Calibrate</button></div>
 				<div class="sidebar-button"><button ng-click="viewControl('/jog')" style="{{ctrlBtnStyle('/jog')}}">Jog</button></div>
 			</div>
 			<div class="partials" ng-view></div>
 		</div>
 	</div>
-
 </body>
 </html>
