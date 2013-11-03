@@ -40,24 +40,7 @@ h3 {
 	margin:0;
 	margin-bottom: 5px;
 	padding:0;
-}
-input[type='range'] {
-	-webkit-appearance: none;
-	margin-top: 10px;
-	-webkit-border-radius: 5px;
-	height: 10px;
-	background: #eee;
-}
-input[type='range']::-webkit-slider-thumb {
-	-webkit-appearance: none !important;
-	background-color: #AAA;
-	border-left: 3px solid #FFF;
-	border-right: 3px solid #FFF;
-	height: 30px;
-	width: 36px;
-}
-input[type='range']:focus::-webkit-slider-thumb {
-	background-color: #FA0;
+	text-align: center;
 }
 label {
 	text-align: right;
@@ -111,6 +94,38 @@ label {
 	display: none;
 	border:1pt solid red;
 }
+.hslider {
+	width: 700px;
+	-webkit-appearance: none;
+	margin-top: 10px;
+	-webkit-border-radius: 5px;
+	height: 10px;
+	background: #eee;
+}
+.hslider::-webkit-slider-thumb {
+	-webkit-appearance: none !important;
+	background-color: #AAA;
+	border-left: 3px solid #FFF;
+	border-right: 3px solid #FFF;
+	height: 30px;
+	width: 36px;
+}
+.hslider:focus::-webkit-slider-thumb {
+	background-color: #FA0;
+}
+.hslider-container {
+	position: relative;
+	margin-top: 5px;
+}
+.hslider-number {
+	position: absolute;
+	top:30px;
+	border:0;
+	padding:0;
+	margin:0;
+	width: 36px;
+	text-align: center;
+}
 .labeledButton {
 	display: inline-block;
 }
@@ -130,22 +145,6 @@ label {
 	float: left;
 	padding-left: 5pt;
 	padding-right: 5pt;
-}
-.slider {
-	width: 700px;
-}
-.slider-container {
-	position: relative;
-	margin-top: 5px;
-}
-.slider-number {
-	position: absolute;
-	top:30px;
-	border:0;
-	padding:0;
-	margin:0;
-	width: 36px;
-	text-align: center;
 }
 .spindle {
 	position: absolute;
@@ -171,4 +170,39 @@ label {
 .spindle-right {
 	margin-left: 36px;
 }
-
+.vslider {
+	-webkit-appearance: slider-vertical;
+	margin: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 100px;
+	width: 50px;
+	background: red;
+	display: block;
+}
+.vslider::-webkit-slider-thumb {
+	background-color: #AAA;
+	height: 50px;
+	width: 36px;
+}
+.vslider:focus::-webkit-slider-thumb {
+	background-color: #FA0;
+}
+.vslider-container {
+	position: relative;
+	float: left;
+	width: 150px;
+}
+.vslider-label {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+.vslider-label2 {
+	position: absolute;
+	top:  16px;
+	left: 75px;
+	width: 150px;
+	text-align: center;
+}

@@ -45,17 +45,14 @@ function CalibrateCtrl($scope, $location) {
 }
 
 function MainCtrl($scope, $location) {
-		var SPINDLE_ON_BIT = 1;
-		var SPINDLE_DOWN_BIT = 2;
-		var SPINDLE_LOADED_BIT = 4;
-
 		$scope.foo = "MAIN";
 		$scope.imageLarge = false;
 		$scope.headPos = 100;
 		$scope.headPosMax = 624;
+		$scope.spindleLeft = {pos:0, side:"left", on:true, part:true};
+		$scope.spindleRight = {pos:100, side:"right", on:false, part:false};
 		$scope.control = $location.path() || "/status";
 		$scope.checkboxes = [];
-		$scope.spindles = [];
 		$scope.isActive = [];
 
 
@@ -87,18 +84,28 @@ function MainCtrl($scope, $location) {
 				"background-color: #FA0; width:105%; border:none; height: 40px;" :
 				"background-color: #efefef; border:none; height: 40px;";
 		}
-		$scope.spindleClass = function(spindle) {
-			var result = "spindle spindle-" + spindle;
-			var spindleValue = $scope.spindles[spindle] || 0;
+		$scope.hsliderLeft = function() {
+			return ($scope.headPos * (700 - 36) / $scope.headPosMax); 
+		}
+		$scope.hsliderSpindleClass = function(spindle) {
+			var result = "spindle spindle-" + spindle.side;
 
-			result += (spindleValue & SPINDLE_ON_BIT) ? " spindle-on" : "";
-			result += (spindleValue & SPINDLE_DOWN_BIT) ? " spindle-down" : "";
-			result += (spindleValue & SPINDLE_LOADED_BIT) ? " spindle-loaded" : "";
+			result += spindle.on ? " spindle-on" : "";
+			result += spindle.pos == 0 ? " spindle-down" : "";
+			result += spindle.part ? " spindle-loaded" : "";
 
 			return result;
 		}
-		$scope.spindleLeft = function() {
-			return ($scope.headPos * (700 - 36) / $scope.headPosMax); 
+		$scope.vacuumClick = function(spindle) {
+			spindle.on = !spindle.on;
+			if (spindle.on) {
+				spindle.part = spindle.pos == 0;
+			} else {
+				spindle.part = false;
+			}
+		}
+		$scope.vacuumClass = function(spindle) {
+			return spindle.on ? "checkbox-on" : "";
 		}
 		$scope.viewControl = function(control) {
 			$location.path(control);

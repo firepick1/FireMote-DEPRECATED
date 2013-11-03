@@ -43,11 +43,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<div ng-controller="MainCtrl">
 		<img class="logo" src="img/FirePick.png"/>
 		<img class="cam-image" src="img/camcv0.jpg" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
-		<div class="slider-container">
-			<div onselectstart="return false" class="slider-number" style="left:{{spindleLeft()}}px">{{headPos}}</div>
-			<input class="slider" type="range" min="0" max="{{headPosMax}}" step="1" ng-model="headPos" />
-			<div class="{{spindleClass('left')}}" style="left:{{spindleLeft()}}px">&nbsp;</div>
-			<div class="{{spindleClass('right')}}" style="left:{{spindleLeft()}}px">&nbsp;</div>
+		<div class="hslider-container">
+			<div onselectstart="return false" class="hslider-number" style="left:{{hsliderLeft()}}px">{{headPos}}</div>
+			<input class="hslider" type="range" min="0" max="{{headPosMax}}" step="1" ng-model="headPos" />
+			<div class="{{hsliderSpindleClass(spindleLeft)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
+			<div class="{{hsliderSpindleClass(spindleRight)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
 		</div>
 
 		<div class="detail-controls">
