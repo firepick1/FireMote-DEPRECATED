@@ -44,14 +44,28 @@ h3 {
 }
 
 .angle-container {
-	position: absolute;
-	left: 65px;
-	bottom: 0;
+	position: relative;
+	top: 15px;
+}
+.angle-label {
+	position: relative;
+	left: 75px;
+	width: 150px;
+	text-align: center;
+}
+.angle-pointer {
+	position: relative;
+	top: -8px;	
+	left: 8px;
+	border-top: 4px solid #FA0;
+	border-bottom: 4px solid #eee;
+	width: 4px;
+	height: 28px;
 }
 .angle-slider {
-	-webkit-appearance: none;
 	position: relative;
-	background-color: red;
+	left: 50px;
+	background-color: #eee;
 	width: 200px;
 	height: 4px;
 }
@@ -257,8 +271,11 @@ h3 {
 }
 .vslider-container {
 	position: relative;
-	float: left;
+	display: inline-block;
 	width: 150px;
+}
+.vslider-containers {
+	position: relative;
 }
 .vslider-label {
 	display: block;
