@@ -1,0 +1,9 @@
+{
+"head":{"angle":0,"light":false},
+"trayFeeder":{"pos":0, "posMax":300, "calibrate":false},
+"pcbFeeder":{"pos":0, "posMax":300, "calibrate":false},
+"spindleLeft":{"pos":0, "side":"left", "on":true, "part":true},
+"spindleRight":{"pos":100, "side":"right", "on":false, "part":false},
+"gantry": {"pos":500, "posMax":500},
+"message":"FirePick Live!"
+}

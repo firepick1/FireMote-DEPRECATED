@@ -27,11 +27,23 @@ controllers.controller('JogCtrl', ['$scope','$location',function(scope, location
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
 		scope.view = "CAMERA";
+
+		scope.lightClass = function(head) {
+			return head.light ? "checkbox checkbox-on" : "checkbox";
+		}
+		scope.lightClick = function(head) {
+			head.light = !head.light;
+		}
 }]);
 
 controllers.controller('SpindleCtrl', ['$scope','$location',function(scope, location) {
 		scope.view = "SPINDLE";
 
+		scope.rotateStyle = function(head) {
+			return "-moz-transform: rotate(" + head.angle + "deg);" +
+				"-webkit-transform: rotate(" + head.angle + "deg);" +
+				"-o-transform: rotate(" + head.angle + "deg)";
+		}
 		scope.vacuumClick = function(spindle) {
 			spindle.on = !spindle.on;
 			if (spindle.on) {
@@ -49,11 +61,12 @@ controllers.controller('StatusCtrl', ['$scope','$location',function(scope, locat
 		scope.view = "STATUS";
 }]);
 
-controllers.controller('CalibrateCtrl', ['$scope','$location',function(scope, location) {
+controllers.controller('CalibrateCtrl', ['$scope','$location','Status', function(scope, location, Status) {
 		scope.view = "CALIBRATE";
 
 		scope.calibrate = function () {
 			alert("calibrating...");
+			scope.updateStatus();
 			scope.axisGantry.calibrate = false;
 			scope.axisTrayFeeder.calibrate = false;
 			scope.axisPcbFeeder.calibrate = false;
@@ -72,16 +85,15 @@ controllers.controller('CalibrateCtrl', ['$scope','$location',function(scope, lo
 		}
 }]);
 
-controllers.controller('MainCtrl', ['$scope','$location',function(scope, location) {
+controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', function(scope, location, Status, REST) {
 		scope.view = "MAIN";
 		scope.imageLarge = false;
-		scope.headPos = 100;
-		scope.headPosMax = 624;
-		scope.axisGantry = {pos:0, calibrate:false};
-		scope.axisTrayFeeder = {pos:0, calibrate:false};
-		scope.axisPcbFeeder = {pos:0, calibrate:false};
-		scope.spindleLeft = {pos:0, side:"left", on:true, part:true};
-		scope.spindleRight = {pos:100, side:"right", on:false, part:false};
+		scope.head = {angle:0, light: true}; // default
+		scope.axisGantry = {pos:0, posMax:624, calibrate:false}; // default
+		scope.axisTrayFeeder = {pos:0, posMax:300, calibrate:false}; // default
+		scope.axisPcbFeeder = {pos:0, posMax:300, calibrate:false}; // default
+		scope.spindleLeft = {pos:0, side:"left", on:true, part:true}; // default
+		scope.spindleRight = {pos:100, side:"right", on:false, part:false}; // default
 		scope.control = location.path() || "/status";
 		scope.isActive = [];
 
@@ -96,8 +108,15 @@ controllers.controller('MainCtrl', ['$scope','$location',function(scope, locatio
 				"background-color: #FA0; width:105%; border:none; height: 40px;" :
 				"background-color: #efefef; border:none; height: 40px;";
 		}
+		scope.demoClick = function() {
+			REST.setMock(!REST.getMock());
+			scope.updateStatus();
+		}
 		scope.hsliderLeft = function() {
-			return (scope.headPos * (700 - 36) / scope.headPosMax); 
+			return (scope.axisGantry.pos * (700 - 36) / scope.axisGantry.posMax); 
+		}
+		scope.hsliderNumberClass = function() {
+			return scope.head.light ? "hslider-number hslider-number-light": "hslider-number";
 		}
 		scope.hsliderSpindleClass = function(spindle) {
 			var result = "spindle spindle-" + spindle.side;
@@ -112,4 +131,17 @@ controllers.controller('MainCtrl', ['$scope','$location',function(scope, locatio
 			location.path(control);
 			scope.control = control;
 		}
+		scope.updateStatus = function() {
+			Status.get(function(data){
+				scope.status = data;
+				scope.axisGantry = data.gantry || scope.axisGantry;
+				scope.axisTrayFeeder = data.trayFeeder || scope.axisTrayFeeder;
+				scope.axisPcbFeeder = data.pcbFeeder || scope.axisPcbFeeder;
+				scope.head = data.head || scope.head;
+				scope.spindleLeft = data.spindleLeft || scope.spindleLeft;
+				scope.spindleRight = data.spindleRight || scope.spindleRight;
+			});
+		}
+
+		scope.updateStatus();
 }]);
