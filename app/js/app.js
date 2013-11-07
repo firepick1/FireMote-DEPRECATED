@@ -4,6 +4,7 @@
 // Declare app level module which depends on filters, and services
 angular.module('FireMote', [
   'ngRoute',
+  'FireMote.bootstrap',
   'FireMote.filters',
   'FireMote.services',
   'FireMote.directives',

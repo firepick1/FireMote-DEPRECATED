@@ -18,11 +18,16 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+
 'use strict';
+var bootstrap = angular.module('FireMote.bootstrap', ['ui.bootstrap']);
+
 var controllers = angular.module('FireMote.controllers', []);
+
 
 controllers.controller('JogCtrl', ['$scope','$location',function(scope, location) {
 		scope.view = "JOG";
+
 }]);
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
@@ -94,6 +99,7 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 		scope.axisPcbFeeder = {pos:0, posMax:300, calibrate:false}; // default
 		scope.spindleLeft = {pos:0, side:"left", on:true, part:true}; // default
 		scope.spindleRight = {pos:100, side:"right", on:false, part:false}; // default
+		scope.jog = {gantry: 0.5}; // default
 		scope.control = location.path() || "/status";
 		scope.isActive = [];
 
