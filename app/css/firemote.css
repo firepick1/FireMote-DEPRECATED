@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 body {
 	font: 10pt Verdana; 
+	padding-left: 5px;
 }
 
 button {
@@ -37,10 +38,10 @@ button: focus {
 	background-color: #FA0;
 }
 h3 {
-	margin:0;
-	margin-bottom: 5px;
-	padding:0;
-	text-align: center;
+	margin:0 !important;
+	margin-bottom: 5px !important;
+	padding:0 !important;
+	text-align: center !important;
 }
 
 /* BOOTSTRAP */
@@ -58,8 +59,8 @@ h3 {
 }
 .angle-pointer {
 	position: relative;
-	top: -8px;	
-	left: 8px;
+	top: -7px;	
+	left: 5px;
 	border-top: 4px solid #FA0;
 	border-bottom: 4px solid #eee;
 	width: 4px;
@@ -87,13 +88,106 @@ h3 {
 	height:30px;
 }
 
+.btn-checkbox {
+  color: #FA0;
+  background-color: #eee;
+  border-color: #ccc !important;
+	-webkit-border-radius: 13px !important;
+	width: 20px;
+	height: 20px;
+	padding:0 !important;
+	border-width: 3px !important;
+	margin: 5px !important;
+}
+.btn-checkbox:hover,
+.btn-checkbox:focus {
+  color: #ffffff;
+	box-shadow: 0px 0px 5px #00F !important;
+}
+.btn-checkbox:active,
+.btn-checkbox.active,
+.open .dropdown-toggle.btn-checkbox {
+  color: #ffffff;
+	background-color: #FA0 !important;
+}
+.btn-checkbox:active,
+.btn-checkbox.active,
+.open .dropdown-toggle.btn-checkbox {
+  background-image: none;
+}
+.btn-checkbox.disabled,
+.btn-checkbox[disabled],
+fieldset[disabled] .btn-checkbox,
+.btn-checkbox.disabled:hover,
+.btn-checkbox[disabled]:hover,
+fieldset[disabled] .btn-checkbox:hover,
+.btn-checkbox.disabled:focus,
+.btn-checkbox[disabled]:focus,
+fieldset[disabled] .btn-checkbox:focus,
+.btn-checkbox.disabled:active,
+.btn-checkbox[disabled]:active,
+fieldset[disabled] .btn-checkbox:active,
+.btn-checkbox.disabled.active,
+.btn-checkbox[disabled].active,
+fieldset[disabled] .btn-checkbox.active {
+  background-color: #0F0;
+  border-color: #0f0;
+}
+.btn-checkbox .caret {
+  border-top-color: #F00;
+}
+.dropup .btn-checkbox .caret {
+  border-bottom-color: #F00;
+}
+
+.btn-jog{
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+	width: 40px !important;
+}
+
+.btn-jog:hover,
+.btn-jog:focus,
+.btn-jog:active,
+.btn-jog.active,
+.open .dropdown-toggle.btn-jog {
+  color: #ffffff;
+  background-color: #3276b1;
+  border-color: #285e8e;
+}
+
+.btn-jog:active,
+.btn-jog.active,
+.open .dropdown-toggle.btn-jog {
+  background-image: none;
+}
+
+.btn-jog.disabled,
+.btn-jog[disabled],
+fieldset[disabled] .btn-jog,
+.btn-jog.disabled:hover,
+.btn-jog[disabled]:hover,
+fieldset[disabled] .btn-jog:hover,
+.btn-jog.disabled:focus,
+.btn-jog[disabled]:focus,
+fieldset[disabled] .btn-jog:focus,
+.btn-jog.disabled:active,
+.btn-jog[disabled]:active,
+fieldset[disabled] .btn-jog:active,
+.btn-jog.disabled.active,
+.btn-jog[disabled].active,
+fieldset[disabled] .btn-jog.active {
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+
 .btn-unit {
   color: #FA0;
   background-color: #FFF;
   border-color: #FA0 !important;
-	width: 45px;
+	width: 43px;
 }
-
 .btn-unit:hover,
 .btn-unit:focus,
 .btn-unit:active,
@@ -103,13 +197,11 @@ h3 {
   background-color: #FA0;
   border-color: #0F0;
 }
-
 .btn-unit:active,
 .btn-unit.active,
 .open .dropdown-toggle.btn-unit {
   background-image: none;
 }
-
 .btn-unit.disabled,
 .btn-unit[disabled],
 fieldset[disabled] .btn-unit,
@@ -128,11 +220,9 @@ fieldset[disabled] .btn-unit.active {
   background-color: #0F0;
   border-color: #0f0;
 }
-
 .btn-unit .caret {
   border-top-color: #F00;
 }
-
 .dropup .btn-unit .caret {
   border-bottom-color: #F00;
 }
@@ -142,25 +232,11 @@ fieldset[disabled] .btn-unit.active {
 	-webkit-border-radius: 5px;
 	border: 1pt solid black;
 }
-.checkbox {
-	position: relative;
-	top: 13px;
-	display: inline-block;
-	border: 3pt solid #ccc;
-	-webkit-border-radius: 13px;
-	background-color: #eee;
-	width: 20px;
-	height: 20px;
-	margin: 5px;
-}
 .checkbox-label{
 	display: inline-block;
 	height: 20px;
 	width: 100px;
 	text-align: right;
-}
-.checkbox-on {
-	background-color: #FA0;
 }
 .debug {
 	position: fixed; 
@@ -168,6 +244,7 @@ fieldset[disabled] .btn-unit.active {
 	left: 0;
 	width: 100%;
 	padding: 0;
+	padding-left: 5px;
 	margin: 0;
 	color: white;
 	background-color: #888;
@@ -177,6 +254,13 @@ fieldset[disabled] .btn-unit.active {
 .detail-controls {
 	margin-top: 50px;
 }
+.form-control:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 255, 0.6) !important;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(0, 0, 255, 0.6) !important;
+}
+
 .hide {
 	display: none;
 	border:1pt solid red;
@@ -242,21 +326,21 @@ fieldset[disabled] .btn-unit.active {
 	border-left: 3pt solid #fa0;
 	padding: 5px;
 	padding-left: 10px;
-	z-index: 0;
+	z-index: 1;
 	height:300px;
 }
 .sidebar {
 	position: relative;
 	float: left;
 	padding-left: 5pt;
-	padding-right: 5pt;
+	margin-right: -3px;
 }
 .spindle {
 	position: absolute;
 	top: -8px;
 	width: 4px;
 	border: 0;
-	height: 3px;
+	height: 42px !important;
 	border-top: 36px solid #000;
 	margin-top: 2px;
 }
@@ -289,6 +373,7 @@ fieldset[disabled] .btn-unit.active {
 	border-bottom: 1px solid #eee;
 	padding-right: 5px;
 }
+/*
 .status-row:nth-child(odd) {
 	background-color: #eee;
 	border-bottom: 1pt solid red;
@@ -305,6 +390,7 @@ fieldset[disabled] .btn-unit.active {
 .status-row:last-child > td {
 	border-bottom: 1px solid #000;
 }
+	*/
 .vslider {
 	-webkit-appearance: slider-vertical;
 	margin: auto;

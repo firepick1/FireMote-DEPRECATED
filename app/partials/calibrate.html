@@ -21,15 +21,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <h3>Calibration Controls</h3>
 <div>
 	<div class="checkbox-label">Gantry</div>
-	<div class="checkbox {{calibrateCheckboxClass(axisGantry)}}" ng-click="calibrateCheckboxClick(axisGantry)" ></div>
+	<button type="button" class="btn btn-checkbox" ng-model="axisGantry.calibrate" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
 </div>
 <div>
 	<div class="checkbox-label">Tray Feeder</div>
-	<div class="checkbox {{calibrateCheckboxClass(axisTrayFeeder)}}" ng-click="calibrateCheckboxClick(axisTrayFeeder)" ></div>
+	<button type="button" class="btn btn-checkbox" ng-model="axisTrayFeeder.calibrate" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
 </div>
 <div>
 	<div class="checkbox-label">PCB Feeder</div>
-	<div class="checkbox {{calibrateCheckboxClass(axisPcbFeeder)}}" ng-click="calibrateCheckboxClick(axisPcbFeeder)" ></div>
+	<button type="button" class="btn btn-checkbox" ng-model="axisPcbFeeder.calibrate" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
 </div>
 
 <button class="big-button {{calibrateClass()}}" ng-click="calibrate()">Calibrate</button>

@@ -20,11 +20,66 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 <h3>Manual Axis Control: Jog/Absolute</h3>
 
-{{jog.gantry}}<br>
-
-    <div class="btn-group">
-        <button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="0.1">0.1</button>
-        <button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="0.5">0.5</button>
-        <button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="1">1</button>
-    </div>
+<form class="form-horizontal">
+	<div class="form-group" >
+		<label for="posGantry" class="col-xs-2 control-label">Gantry</label>
+		<div class="col-xs-2">
+			<input id="posGantry" type="text" class="form-control" ng-model="axisGantry.pos"/>
+		</div>
+		<div class="col-xs-2">
+			<button type="button" class="btn btn-s btn-jog" ng-click="jogAxis(axisGantry, -jog.gantry)"><span class="h3">&#x2013;</span></button>
+			<button type="button" class="btn btn-s btn-jog" ng-click="jogAxis(axisGantry, jog.gantry)"><span class="h3">+</span></button>
+		</div>
+		<div class="col-xs-6" >
+			<div class="btn-group">
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="0.1">0.1</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="0.5">0.5</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="1">1</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="2">2</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="4">4</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.gantry" btn-radio="5">5</button>
+			</div>
+		</div>
+	</div>
+	<div class="form-group" >
+		<label for="posTray" class="col-xs-2 control-label">Tray Feeder</label>
+		<div class="col-xs-2">
+			<input id="posTray" type="text" class="form-control" ng-model="axisTrayFeeder.pos"/>
+		</div>
+		<div class="col-xs-2">
+			<button class="btn btn-s btn-jog" ng-click="jogAxis(axisTrayFeeder, -jog.trayFeeder)"><span class="h3">&#x2013;</span></button>
+			<button class="btn btn-s btn-jog" ng-click="jogAxis(axisTrayFeeder, jog.trayFeeder)"><span class="h3">+</span></button>
+		</div>
+		<div class="col-xs-6" >
+			<div class="btn-group">
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.trayFeeder" btn-radio="0.1">0.1</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.trayFeeder" btn-radio="0.5">0.5</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.trayFeeder" btn-radio="1">1</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.trayFeeder" btn-radio="2">2</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.trayFeeder" btn-radio="4">4</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.trayFeeder" btn-radio="5">5</button>
+			</div>
+		</div>
+	</div>
+	<div class="form-group" >
+		<label for="posPcb" class="col-xs-2 control-label">PCB Feeder</label>
+		<div class="col-xs-2">
+			<input type="text" class="form-control" ng-model="axisPcbFeeder.pos"/>
+		</div>
+		<div class="col-xs-2">
+			<button class="btn btn-s btn-jog" ng-click="jogAxis(axisPcbFeeder, -jog.pcbFeeder)"><span class="h3">&#x2013;</span></button>
+			<button class="btn btn-s btn-jog" ng-click="jogAxis(axisPcbFeeder, jog.pcbFeeder)"><span class="h3">+</span></button>
+		</div>
+		<div class="col-xs-6" >
+			<div class="btn-group">
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.pcbFeeder" btn-radio="0.1">0.1</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.pcbFeeder" btn-radio="0.5">0.5</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.pcbFeeder" btn-radio="1">1</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.pcbFeeder" btn-radio="2">2</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.pcbFeeder" btn-radio="4">4</button>
+					<button type="button" class="btn btn-s btn-unit" ng-model="jog.pcbFeeder" btn-radio="5">5</button>
+			</div>
+		</div>
+	</div>
+</form>
 

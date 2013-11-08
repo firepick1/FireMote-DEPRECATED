@@ -28,9 +28,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			<div class="vslider-label">{{spindleLeft.pos}}%</div>
 			<div style="position:relative">
 				<div class="vslider-label2">Vacuum</div>
-				<div class="checkbox {{vacuumClass(spindleLeft)}} vslider-label" ng-click="vacuumClick(spindleLeft)" >
+			</div>
+			<div class="vslider-label">
+				<button type="button" class="btn btn-checkbox" ng-model="spindleLeft.on" ng-click="vacuumClick(spindleLeft)" btn-checkbox >
 					<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
-				</div>
+				</button>
 			</div>
 		</div>
 
@@ -38,8 +40,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			<div class="vslider-label">Right</div>
 			<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleRight.pos" />
 			<div class="vslider-label">{{spindleRight.pos}}%</div>
-			<div class="checkbox {{vacuumClass(spindleRight)}} vslider-label" ng-click="vacuumClick(spindleRight)" >
-				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
+			<div class="vslider-label">
+				<button type="button" class="btn btn-checkbox" ng-model="spindleRight.on" ng-click="vacuumClick(spindleRight)" btn-checkbox >
+					<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
+				</button>
 			</div>
 		</div>
 	</div>

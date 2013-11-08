@@ -28,17 +28,15 @@ var controllers = angular.module('FireMote.controllers', []);
 controllers.controller('JogCtrl', ['$scope','$location',function(scope, location) {
 		scope.view = "JOG";
 
+		scope.jogAxis = function(axis, delta) {
+			axis.pos = typeof axis.pos === 'number' ? axis.pos : parseFloat(axis.pos);
+			axis.pos = axis.pos + delta;
+		}
 }]);
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
 		scope.view = "CAMERA";
 
-		scope.lightClass = function(head) {
-			return head.light ? "checkbox checkbox-on" : "checkbox";
-		}
-		scope.lightClick = function(head) {
-			head.light = !head.light;
-		}
 }]);
 
 controllers.controller('SpindleCtrl', ['$scope','$location',function(scope, location) {
@@ -50,15 +48,12 @@ controllers.controller('SpindleCtrl', ['$scope','$location',function(scope, loca
 				"-o-transform: rotate(" + head.angle + "deg)";
 		}
 		scope.vacuumClick = function(spindle) {
-			spindle.on = !spindle.on;
-			if (spindle.on) {
+			var nextStateOn = !spindle.on;
+			if (nextStateOn) { 
 				spindle.part = spindle.pos == 0;
 			} else {
 				spindle.part = false;
 			}
-		}
-		scope.vacuumClass = function(spindle) {
-			return spindle.on ? "checkbox-on" : "";
 		}
 }]);
 
@@ -75,12 +70,6 @@ controllers.controller('CalibrateCtrl', ['$scope','$location','Status', function
 			scope.axisGantry.calibrate = false;
 			scope.axisTrayFeeder.calibrate = false;
 			scope.axisPcbFeeder.calibrate = false;
-		}
-		scope.calibrateCheckboxClass = function(axis) {
-			return axis.calibrate ? "checkbox-on" : "";
-		}
-		scope.calibrateCheckboxClick = function(axis) {
-			axis.calibrate = !axis.calibrate;
 		}
 		scope.calibrateClass = function() {
 			return scope.axisGantry.calibrate 
@@ -99,7 +88,7 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 		scope.axisPcbFeeder = {pos:0, posMax:300, calibrate:false}; // default
 		scope.spindleLeft = {pos:0, side:"left", on:true, part:true}; // default
 		scope.spindleRight = {pos:100, side:"right", on:false, part:false}; // default
-		scope.jog = {gantry: 0.5}; // default
+		scope.jog = {gantry: 1, trayFeeder:1, pcbFeeder:1}; // default
 		scope.control = location.path() || "/status";
 		scope.isActive = [];
 
@@ -111,8 +100,8 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 		}
 		scope.ctrlBtnStyle = function(control) {
 			return (scope.control === control) ?
-				"background-color: #FA0; width:105%; border:none; height: 40px;" :
-				"background-color: #efefef; border:none; height: 40px;";
+				"background-color: #FA0; border:none; height: 40px; z-index:2;" :
+				"background-color: #efefef; border:none; height: 40px; z-index:0";
 		}
 		scope.demoClick = function() {
 			REST.setMock(!REST.getMock());
