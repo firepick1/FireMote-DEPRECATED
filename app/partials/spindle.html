@@ -18,38 +18,39 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 
-<h3>Spindle Controls</h3>
 
-<div>
-	<div class="vslider-containers">
-		<div class="vslider-container">
-			<div class="vslider-label">Left</div>
-			<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleLeft.pos" />
-			<div class="vslider-label">{{spindleLeft.pos}}%</div>
-			<div style="position:relative">
-				<div class="vslider-label2">Vacuum</div>
-			</div>
-			<div class="vslider-label">
-				<button type="button" class="btn btn-checkbox" ng-model="spindleLeft.on" ng-click="vacuumClick(spindleLeft)" btn-checkbox >
-					<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
-				</button>
-			</div>
-		</div>
+<div class="panel-header h3 text-centered">Adjust Pick and Place Spindles</div>
 
-		<div class="vslider-container">
-			<div class="vslider-label">Right</div>
-			<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleRight.pos" />
-			<div class="vslider-label">{{spindleRight.pos}}%</div>
-			<div class="vslider-label">
-				<button type="button" class="btn btn-checkbox" ng-model="spindleRight.on" ng-click="vacuumClick(spindleRight)" btn-checkbox >
-					<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
-				</button>
-			</div>
-		</div>
+<div class="row">
+	<div class="col-xs-4 ">
+		<div><input type='text' class="form-control text-centered" ng-model="spindleLeft.name"/></div>
+		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleLeft.pos" />
+		<div class="col-xs-1 col-xs-offset-2">{{spindleLeft.pos}}%</div>
 	</div>
-
-	<div class="angle-container">
+	<div class="col-xs-4 col-xs-offset-1">
+		<div><input type='text' class="form-control text-centered" ng-model="spindleRight.name"/></div>
+		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleRight.pos" />
+		<div class="col-xs-1 col-xs-offset-2">{{spindleRight.pos}}%</div>
+	</div>
+</div>
+<div class="row ">
+		<div class="col-xs-2 col-xs-offset-1">
+			<button type="button" class="btn btn-checkbox center-block " ng-model="spindleLeft.on" ng-click="vacuumClick(spindleLeft)" btn-checkbox >
+				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
+			</button>
+		</div>
+		<div class="col-xs-2 ">Vacuum</div>
+		<div class="col-xs-2 col-xs-offset-1">
+			<button type="button" class="btn btn-checkbox" ng-model="spindleRight.on" ng-click="vacuumClick(spindleRight)" btn-checkbox >
+				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
+			</button>
+		</div>
+</div>
+<div class="row">
+	<div class="col-xs-8 col-xs-offset-1">
 		<input class="angle-slider" type="range" min="0" max="360" step="1" ng-model="head.angle" />
-		<div class="angle-label">{{head.angle}} Degrees</div>
 	</div>
+</div>
+<div class="row">
+	<div class="col-xs-3 col-xs-offset-3">{{head.angle}} Degrees</div>
 </div>

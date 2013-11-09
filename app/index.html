@@ -48,7 +48,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		<img class="cam-image" src="img/camcv0.jpg" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
 		<div class="hslider-container">
 			<div onselectstart="return false" class="{{hsliderNumberClass()}}" style="left:{{hsliderLeft()}}px">{{axisGantry.pos}}</div>
-			<input class="hslider" type="range" min="0" max="{{axisGantry.posMax}}" step="1" ng-model="axisGantry.pos" />
+			<input class="hslider" type="range" min="0" max="{{axisGantry.posMax}}" step="1" ng-model="axisGantry.pos" ng-change="hsliderChange()" />
 			<div class="{{hsliderSpindleClass(spindleLeft)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
 			<div class="{{hsliderSpindleClass(spindleRight)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
 		</div>
@@ -60,7 +60,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<div class="sidebar-button"><button ng-click="viewControl('/camera')" style="{{ctrlBtnStyle('/camera')}}">Camera</button></div>
 				<div class="sidebar-button"><button ng-click="viewControl('/spindle')" style="{{ctrlBtnStyle('/spindle')}}">Spindles</button></div>
 				<div class="sidebar-button"><button ng-click="viewControl('/calibrate')" style="{{ctrlBtnStyle('/calibrate')}}">Calibrate</button></div>
-				<div class="sidebar-button"><button ng-click="viewControl('/jog')" style="{{ctrlBtnStyle('/jog')}}">Jog</button></div>
+				<div class="sidebar-button"><button ng-click="viewControl('/move')" style="{{ctrlBtnStyle('/move')}}">Move</button></div>
 			</div>
 			<div class="partials" ng-view></div>
 		</div>

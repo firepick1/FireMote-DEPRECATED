@@ -25,12 +25,17 @@ var bootstrap = angular.module('FireMote.bootstrap', ['ui.bootstrap']);
 var controllers = angular.module('FireMote.controllers', []);
 
 
-controllers.controller('JogCtrl', ['$scope','$location',function(scope, location) {
-		scope.view = "JOG";
+controllers.controller('MoveCtrl', ['$scope','$location',function(scope, location) {
+		scope.view = "MOVE";
+
+		for (var i = 0; i < scope.axes.length; i++) {
+			scope.axes[i].posNew = scope.axes[i].pos;
+		}
 
 		scope.jogAxis = function(axis, delta) {
-			axis.pos = typeof axis.pos === 'number' ? axis.pos : parseFloat(axis.pos);
-			axis.pos = axis.pos + delta;
+			axis.posNew = typeof axis.posNew === 'number' ? axis.posNew : parseFloat(axis.posNew);
+			delta = typeof delta === 'number' ? delta : parseFloat(delta);
+			axis.posNew = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.posNew + delta))/10.0));
 		}
 }]);
 
@@ -83,13 +88,13 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 		scope.view = "MAIN";
 		scope.imageLarge = false;
 		scope.head = {angle:0, light: true}; // default
-		scope.axisGantry = {pos:0, posMax:624, calibrate:false}; // default
-		scope.axisTrayFeeder = {pos:0, posMax:300, calibrate:false}; // default
-		scope.axisPcbFeeder = {pos:0, posMax:300, calibrate:false}; // default
-		scope.spindleLeft = {pos:0, side:"left", on:true, part:true}; // default
-		scope.spindleRight = {pos:100, side:"right", on:false, part:false}; // default
-		scope.jog = {gantry: 1, trayFeeder:1, pcbFeeder:1}; // default
+		scope.axisGantry = {name:"Gantry", pos:0, posMax:624, calibrate:false, jog:1}; // default
+		scope.axisTrayFeeder = {name:"Tray Feeder", pos:0, posMax:300, calibrate:false, jog:1}; // default
+		scope.axisPcbFeeder = {name:"PCB Feeder", pos:0, posMax:300, calibrate:false, jog:1}; // default
+		scope.spindleLeft = {pos:0, name:"Left", side:"left", on:true, part:true}; // default
+		scope.spindleRight = {pos:100, name:"Right", side:"right", on:false, part:false}; // default
 		scope.control = location.path() || "/status";
+		scope.axes = [scope.axisGantry, scope.axisTrayFeeder, scope.axisPcbFeeder] 
 		scope.isActive = [];
 
 		scope.camImageClick = function() {
@@ -109,6 +114,12 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 		}
 		scope.hsliderLeft = function() {
 			return (scope.axisGantry.pos * (700 - 36) / scope.axisGantry.posMax); 
+		}
+		scope.hsliderChange = function() {
+			console.log("hsliderChanged");
+				for (var i = 0; i < scope.axes.length; i++) {
+					scope.axes[i].posNew = scope.axes[i].pos;
+				}
 		}
 		scope.hsliderNumberClass = function() {
 			return scope.head.light ? "hslider-number hslider-number-light": "hslider-number";
@@ -132,6 +143,7 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 				scope.axisGantry = data.gantry || scope.axisGantry;
 				scope.axisTrayFeeder = data.trayFeeder || scope.axisTrayFeeder;
 				scope.axisPcbFeeder = data.pcbFeeder || scope.axisPcbFeeder;
+				scope.axes = [scope.axisGantry, scope.axisTrayFeeder, scope.axisPcbFeeder] 
 				scope.head = data.head || scope.head;
 				scope.spindleLeft = data.spindleLeft || scope.spindleLeft;
 				scope.spindleRight = data.spindleRight || scope.spindleRight;

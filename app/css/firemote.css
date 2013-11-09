@@ -37,12 +37,6 @@ button {
 button: focus {
 	background-color: #FA0;
 }
-h3 {
-	margin:0 !important;
-	margin-bottom: 5px !important;
-	padding:0 !important;
-	text-align: center !important;
-}
 
 /* BOOTSTRAP */
 .nav, .pagination, .carousel a { cursor: pointer; }
@@ -68,7 +62,6 @@ h3 {
 }
 .angle-slider {
 	position: relative;
-	left: 50px;
 	background-color: #eee;
 	width: 200px;
 	height: 4px;
@@ -142,25 +135,26 @@ fieldset[disabled] .btn-checkbox.active {
 
 .btn-jog{
   color: #ffffff;
-  background-color: #428bca;
-  border-color: #357ebd;
-	width: 40px !important;
+	-webkit-border-radius: 10px !important;
+  background-color: #ccc; /*#428bca; */
+  border-color: #ccc !important;
+	width: 35px !important;
+	outline: none !important;
 }
 
 .btn-jog:hover,
-.btn-jog:focus,
-.btn-jog:active,
-.btn-jog.active,
-.open .dropdown-toggle.btn-jog {
-  color: #ffffff;
+.btn-jog:focus {
+  color: #FFF !important;
   background-color: #3276b1;
-  border-color: #285e8e;
+	box-shadow: 0px 0px 5px #00F !important;
+  border-color: #FFF !important;
 }
 
 .btn-jog:active,
 .btn-jog.active,
 .open .dropdown-toggle.btn-jog {
   background-image: none;
+  border-color: #00F !important;
 }
 
 .btn-jog.disabled,
@@ -320,6 +314,21 @@ fieldset[disabled] .btn-unit.active {
 .logo {
 	margin-right: 230px;
 }
+.outline-blue {
+	outline-color: #00F !important;
+	outline-width: 1px !important;
+	outline-style: solid !important;
+}
+.outline-green {
+	outline-color: #0F0 !important;
+	outline-width: 1px !important;
+	outline-style: solid !important;
+}
+.outline-red {
+	outline-color: #F00 !important;
+	outline-width: 1px !important;
+	outline-style: solid !important;
+}
 .partials {
 	float: left;
 	position: relative;
@@ -373,24 +382,6 @@ fieldset[disabled] .btn-unit.active {
 	border-bottom: 1px solid #eee;
 	padding-right: 5px;
 }
-/*
-.status-row:nth-child(odd) {
-	background-color: #eee;
-	border-bottom: 1pt solid red;
-}
-.status-row:first-child > th {
-	border-top: 1px solid #000;
-}
-.status-row:first-child > td {
-	border-top: 1px solid #000;
-}
-.status-row:last-child > th {
-	border-bottom: 1px solid #000;
-}
-.status-row:last-child > td {
-	border-bottom: 1px solid #000;
-}
-	*/
 .vslider {
 	-webkit-appearance: slider-vertical;
 	margin: auto;
@@ -417,6 +408,7 @@ fieldset[disabled] .btn-unit.active {
 .vslider-containers {
 	position: relative;
 }
+/*
 .vslider-label {
 	display: block;
 	margin-left: auto;
@@ -430,3 +422,4 @@ fieldset[disabled] .btn-unit.active {
 	width: 150px;
 	text-align: center;
 }
+	*/
