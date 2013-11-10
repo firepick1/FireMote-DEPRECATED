@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleLeft.pos" />
 		<div class="col-xs-1 col-xs-offset-2">{{spindleLeft.pos}}%</div>
 	</div>
-	<div class="col-xs-4 col-xs-offset-1">
+	<div class="col-xs-4 col-xs-offset-3">
 		<div><input type='text' class="form-control text-centered" ng-model="spindleRight.name"/></div>
 		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleRight.pos" />
 		<div class="col-xs-1 col-xs-offset-2">{{spindleRight.pos}}%</div>
@@ -39,18 +39,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
 			</button>
 		</div>
-		<div class="col-xs-2 ">Vacuum</div>
-		<div class="col-xs-2 col-xs-offset-1">
+		<div class="col-xs-5 ">
+			<input class="form-control " type="range" min="0" max="360" step="1" ng-model="head.angle" />
+		</div>
+		<div class="col-xs-2 ">
 			<button type="button" class="btn btn-checkbox" ng-model="spindleRight.on" ng-click="vacuumClick(spindleRight)" btn-checkbox >
 				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
 			</button>
 		</div>
 </div>
 <div class="row">
-	<div class="col-xs-8 col-xs-offset-1">
-		<input class="angle-slider" type="range" min="0" max="360" step="1" ng-model="head.angle" />
-	</div>
 </div>
 <div class="row">
-	<div class="col-xs-3 col-xs-offset-3">{{head.angle}} Degrees</div>
+		<div class="col-xs-3 col-xs-offset-1">Vacuum</div>
+		<div class="col-xs-4 ">{{head.angle}} Degrees</div>
+		<div class="col-xs-3 ">Vacuum</div>
 </div>

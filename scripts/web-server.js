@@ -11,7 +11,7 @@ var DEFAULT_PORT = 8000;
 function main(argv) {
   new HttpServer({
     'GET': createServlet(StaticServlet),
-    'HEAD': createServlet(StaticServlet)
+    'HEAD': createServlet(StaticServlet),
   }).start(Number(argv[2]) || DEFAULT_PORT);
 }
 
@@ -41,7 +41,7 @@ function HttpServer(handlers) {
 HttpServer.prototype.start = function(port) {
   this.port = port;
   this.server.listen(port);
-  util.puts('Http Server running at http://localhost:' + port + '/');
+  util.puts('FireMote demo Http Server running at http://localhost:' + port + '/');
 };
 
 HttpServer.prototype.parseUrl_ = function(urlString) {
@@ -90,6 +90,10 @@ StaticServlet.prototype.handleRequest = function(req, res) {
   var path = ('./' + req.url.pathname).replace('//','/').replace(/%(..)/g, function(match, hex){
     return String.fromCharCode(parseInt(hex, 16));
   });
+	if (path.indexOf("FireMote") === 2) {
+		util.puts("FireMote[" + path.substring(10) + "]");
+		return self.sendFireMote_(req, res, path.substring(10));
+	}
   var parts = path.split('/');
   if (parts[parts.length-1].charAt(0) === '.')
     return self.sendForbidden_(req, res, path);
@@ -162,6 +166,22 @@ StaticServlet.prototype.sendRedirect_ = function(req, res, redirectUrl) {
   );
   res.end();
   util.puts('301 Moved Permanently: ' + redirectUrl);
+};
+
+StaticServlet.prototype.sendFireMote_ = function(req, res, path) {
+  var self = this;
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  if (req.method === 'HEAD') {
+    res.end();
+  } else if (req.method === 'GET') {
+		util.puts("sending FireMote GET response");
+		res.write("{'response':'GET hello'}");
+		res.end();
+	} else {
+		util.puts("sending FireMote POST response");
+		res.write("{'response':'POST greetings'}");
+		res.end();
+  }
 };
 
 StaticServlet.prototype.sendFile_ = function(req, res, path) {

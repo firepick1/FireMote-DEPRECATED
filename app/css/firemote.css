@@ -134,10 +134,10 @@ fieldset[disabled] .btn-checkbox.active {
 }
 
 .btn-jog{
-  color: #ffffff;
-	-webkit-border-radius: 10px !important;
-  background-color: #ccc; /*#428bca; */
-  border-color: #ccc !important;
+	border: 2pt solid #444 !important;
+	-webkit-border-radius: 15px !important;
+	background-image: -webkit-linear-gradient(top, #AAF 0%, #008 100%) !important;
+	color: #FFF;
 	width: 35px !important;
 	outline: none !important;
 }

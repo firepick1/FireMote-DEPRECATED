@@ -32,10 +32,19 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 			scope.axes[i].posNew = scope.axes[i].pos;
 		}
 
+		scope.moveClick = function() {
+			scope.spindleLeft.pos = 100;	
+			scope.spindleRight.pos = 100;
+			scope.postState();
+		}
+
 		scope.jogAxis = function(axis, delta) {
+			scope.spindleLeft.pos = 100;	
+			scope.spindleRight.pos = 100;
 			axis.posNew = typeof axis.posNew === 'number' ? axis.posNew : parseFloat(axis.posNew);
 			delta = typeof delta === 'number' ? delta : parseFloat(delta);
 			axis.posNew = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.posNew + delta))/10.0));
+			scope.postState();
 		}
 }]);
 
@@ -66,7 +75,7 @@ controllers.controller('StatusCtrl', ['$scope','$location',function(scope, locat
 		scope.view = "STATUS";
 }]);
 
-controllers.controller('CalibrateCtrl', ['$scope','$location','Status', function(scope, location, Status) {
+controllers.controller('CalibrateCtrl', ['$scope','$location','Status', 'State', function(scope, location, Status, State) {
 		scope.view = "CALIBRATE";
 
 		scope.calibrate = function () {
@@ -84,7 +93,7 @@ controllers.controller('CalibrateCtrl', ['$scope','$location','Status', function
 		}
 }]);
 
-controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', function(scope, location, Status, REST) {
+controllers.controller('MainCtrl', ['$scope','$location','FireMote', 'REST', function(scope, location, FireMote, REST) {
 		scope.view = "MAIN";
 		scope.imageLarge = false;
 		scope.head = {angle:0, light: true}; // default
@@ -116,10 +125,9 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 			return (scope.axisGantry.pos * (700 - 36) / scope.axisGantry.posMax); 
 		}
 		scope.hsliderChange = function() {
-			console.log("hsliderChanged");
-				for (var i = 0; i < scope.axes.length; i++) {
-					scope.axes[i].posNew = scope.axes[i].pos;
-				}
+			for (var i = 0; i < scope.axes.length; i++) {
+				scope.axes[i].posNew = scope.axes[i].pos;
+			}
 		}
 		scope.hsliderNumberClass = function() {
 			return scope.head.light ? "hslider-number hslider-number-light": "hslider-number";
@@ -137,18 +145,34 @@ controllers.controller('MainCtrl', ['$scope','$location','Status', 'REST', funct
 			location.path(control);
 			scope.control = control;
 		}
+		scope.onStateReceived = function(state) {
+			scope.status = state;
+			scope.axisGantry = state.gantry || scope.axisGantry;
+			scope.axisTrayFeeder = state.trayFeeder || scope.axisTrayFeeder;
+			scope.axisPcbFeeder = state.pcbFeeder || scope.axisPcbFeeder;
+			scope.head = state.head || scope.head;
+			scope.spindleLeft = state.spindleLeft || scope.spindleLeft;
+			scope.spindleRight = state.spindleRight || scope.spindleRight;
+
+			scope.axes = [scope.axisGantry, scope.axisTrayFeeder, scope.axisPcbFeeder] 
+		};
+		scope.postState = function() {
+			var state = {
+				gantry:scope.axisGantry,
+			  trayFeeder:scope.axisTrayFeeder,
+			  pcbFeeder:scope.axisPcbFeeder,
+				head:scope.head,
+				spindleLeft:scope.spindleLeft,
+				spindleRight:scope.spindleRight
+			};
+			state.trayFeeder.pos = state.trayFeeder.posNew;
+			state.pcbFeeder.pos = state.pcbFeeder.posNew;
+			state.gantry.pos = state.gantry.posNew;
+			FireMote.post(state, scope.onStateReceived);
+		};
 		scope.updateStatus = function() {
-			Status.get(function(data){
-				scope.status = data;
-				scope.axisGantry = data.gantry || scope.axisGantry;
-				scope.axisTrayFeeder = data.trayFeeder || scope.axisTrayFeeder;
-				scope.axisPcbFeeder = data.pcbFeeder || scope.axisPcbFeeder;
-				scope.axes = [scope.axisGantry, scope.axisTrayFeeder, scope.axisPcbFeeder] 
-				scope.head = data.head || scope.head;
-				scope.spindleLeft = data.spindleLeft || scope.spindleLeft;
-				scope.spindleRight = data.spindleRight || scope.spindleRight;
-			});
-		}
+			FireMote.get(scope.onStateReceived);
+		};
 
 		scope.updateStatus();
 }]);

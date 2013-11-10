@@ -1,0 +1,46 @@
+<!--
+jog.html https://github.com/firepick1/FireMote/wiki
+
+Copyright (C) 2013  Karl Lew, <karl@firepick.org>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+
+<div class="panel-heading h3 text-center">Move Linear Axis</div>
+<div class="form-horizontal">
+	<div class="form-group" ng-repeat="axis in axes">
+		<label for="posGantry" class="col-xs-3 control-label">{{axis.name}}</label>
+		<div class="col-xs-2">
+			<input id="posGantry" type="text" class="form-control" ng-model="axis.posNew"/>
+		</div>
+		<div class="col-xs-3">
+			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, -axis.jog)"><span class="h3">&#x2013;</span></button>
+			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, axis.jog)"><span class="h3">+</span></button>
+		</div>
+		<div class="col-xs-3">
+			<select class="form-control" ng-model="axis.jog">
+				<option value="0.1">&#xb1;0.1mm</option>
+				<option value="0.5">&#xb1;0.5mm</option>
+				<option value="1">&#xb1;1mm</option>
+				<option value="2">&#xb1;2mm</option>
+				<option value="3">&#xb1;3mm</option>
+				<option value="4">&#xb1;4mm</option>
+				<option value="5">&#xb1;5mm</option>
+			</select>
+		</div>
+	</div>
+	<button class="big-button " ng-click="moveClick()">Move</button>
+</div>

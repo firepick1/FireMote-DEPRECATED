@@ -27,8 +27,11 @@ services.value('version', '0.1');
 services.factory('REST', [function() {
 		var isMock = false;
 		return {
-			getStatusUrl: function() {
-					return isMock ? "data/status.json" : "data/statusLive.json";
+			getStatePOSTUrl: function() {
+					return isMock ? "firemote/echo" : "firemote/state";
+			},
+			getStateGETUrl: function() {
+					return isMock ? "firemote/state" : "firemote/state";
 			},
 			getMock: function(value) {
 				return isMock;
@@ -39,10 +42,20 @@ services.factory('REST', [function() {
 		};
 }]);
 
-services.factory('Status', ['$http', 'REST', function($http, rest){
+services.factory('FireMote', ['$http', 'REST', function($http, rest){
 	return{
 		get: function(callback){
-			$http.get(rest.getStatusUrl())
+			$http.get("firemote/state")
+				.success(function(data) {
+					callback(data);
+				})
+				.error(function(data, status, headers, config) {
+					alert("Could not get status");
+				});
+		},
+		post: function(postData, callback) {
+			var json = JSON.stringify(postData);
+			$http.post(rest.getStatePOSTUrl(), json)
 				.success(function(data) {
 					callback(data);
 				})
