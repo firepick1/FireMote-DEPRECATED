@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 
-var __appdir = "app";
+var __appdir = "client";
 
 var stateId = 1;
 

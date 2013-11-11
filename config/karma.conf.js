@@ -3,12 +3,16 @@ module.exports = function(config){
     basePath : '../',
 
     files : [
-      'app/lib/angular/angular.js',
-      'app/lib/angular/angular-*.js',
+      'client/lib/angular/angular.js',
+      'client/lib/angular/angular-*.js',
       'test/lib/angular/angular-mocks.js',
-      'app/js/**/*.js',
-      'test/unit/**/*.js'
+      'client/js/**/*.js',
+      //'test/unit/**/*.js',
+      'common/js/**/*.js',
+      'test/unit/**/common.js'
     ],
+
+		exclude: ['client/lib/angular/angular-loader*.js'],
 
     autoWatch : true,
 
