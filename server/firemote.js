@@ -1,12 +1,23 @@
 var express = require('express');
+var fs = require('fs');
 var app = express();
 
-var __appdir = "client";
+var __appdir = "www";
 
 var stateId = 1;
 
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
+
+app.get('/firemote/headcam.jpg', function(req, res){
+  res.setHeader('Content-Type', 'image/jpeg');
+  var jpgname = '/dev/firefuse/cam.jpg';
+  if (fs.existsSync(jpgname)) {
+    res.sendfile(jpgname);
+  } else {
+    res.sendfile(__appdir + '/img/camcv0.jpg');
+  }
+});
 
 app.get('/firemote/state', function(req, res){
 	var obj = {
