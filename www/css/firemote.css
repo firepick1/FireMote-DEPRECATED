@@ -299,6 +299,14 @@ fieldset[disabled] .btn-unit.active {
 .labeledButton {
 	display: inline-block;
 }
+.log {
+	margin-top: 3px;
+	border: none;
+	border-top: 2pt solid #EEE;
+	border-bottom: 2pt solid #EEE;
+	width:800px;
+	height:500px;
+}
 .logo {
 	position: relative;
 	top: -4px;
