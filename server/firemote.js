@@ -5,15 +5,25 @@ var app = express();
 var __appdir = "www";
 
 var stateId = 1;
+var logLevel = "INFO";
 
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
 
 app.get('/firemote/log', function(req, res){
-  res.setHeader('Content-Type', 'image/jpeg');
-  var jpgname = '/var/log/firefuse.log';
-  if (fs.existsSync(jpgname)) {
-    res.sendfile(jpgname);
+  res.setHeader('Content-Type', 'text/plain');
+  var filename = '/var/log/firefuse.log';
+  if (fs.existsSync(filename)) {
+    var err = undefined;
+    if (logLevel !== req.query.level) {
+      logLevel = req.query.level;
+      err = fs.writeFileSync('/dev/firefuse/firelog', logLevel);
+    }
+    if (err) {
+      res.write("Error: " + err);
+    } else {
+      res.sendfile(filename);
+    }
   } else {
     res.sendfile(__appdir + '/data/firefuse.log');
   }
