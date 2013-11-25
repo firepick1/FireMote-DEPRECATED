@@ -42,8 +42,13 @@ services.factory('REST', [function() {
 		};
 }]);
 
-services.factory('FireMote', ['$http', 'REST', function($http, rest){
-	return{
+services.factory('FireMote', ['$http', '$interval', 'REST', function($http, $interval, rest){
+	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
+	//var animation = ['\u2665', '\u2764'];
+	//var animation = ['\u2190', '\u2196', '\u2191', '\u2197', '\u2192', '\u2198', '\u2193', '\u2199'];
+  var firemote = {
+		onFireStep: function(firestep) {},
+		firestep: {"firestep":"...", "seconds":null},
 		get: function(callback){
 			$http.get("firemote/state")
 				.success(function(data) {
@@ -64,5 +69,21 @@ services.factory('FireMote', ['$http', 'REST', function($http, rest){
 				});
 		}
 	};
+
+	$interval(function(seconds) {
+		$http.get("firemote/firestep")
+			.success(function(data) {
+				firemote.firestep = data;
+				firemote.firestep.t = animation[seconds % animation.length];
+				firemote.onFireStep(firemote.firestep);
+			})
+			.error(function(data, status, headers, config) {
+				firemote.firestep = {error:"could not get firemote/state",data:data,status:status};
+				firemote.firestep.t = animation[seconds % animation.length];
+			})
+
+		}, 1000);
+
+	return firemote;
 }]);
 

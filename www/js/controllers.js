@@ -183,6 +183,10 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', 'REST', fun
     scope.updateStatus = function() {
       FireMote.get(scope.onStateReceived);
     };
+		scope.firemote = FireMote;
+		scope.firemote.onFireStep = function(firestep) {
+			scope.axisGantry.pos = firestep.mpoy || scope.axisGantry.pos;
+		}
 
     scope.updateStatus();
 }]);

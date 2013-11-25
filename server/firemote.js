@@ -6,9 +6,25 @@ var __appdir = "www";
 
 var stateId = 1;
 var logLevel = "INFO";
+var fireStepCount = 0;
 
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
+
+app.get('/firemote/firestep', function(req, res){
+  res.setHeader('Content-Type', 'application/json');
+  var filename = '/dev/firefuse/firestep';
+	fireStepCount++;
+  if (fs.existsSync(filename)) {
+		res.sendfile(filename);
+  } else {
+	  var mpoy = fireStepCount % 300;
+    res.send({
+			firestep:"demo response",
+			mpoy:mpoy
+		});
+  }
+});
 
 app.get('/firemote/log', function(req, res){
   res.setHeader('Content-Type', 'text/plain');
@@ -20,7 +36,7 @@ app.get('/firemote/log', function(req, res){
       err = fs.writeFileSync('/dev/firefuse/firelog', logLevel);
     }
     if (err) {
-      res.write("Error: " + err);
+      res.send("Error: " + err);
     } else {
       res.sendfile(filename);
     }
