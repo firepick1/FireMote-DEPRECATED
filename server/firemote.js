@@ -9,6 +9,16 @@ var stateId = 1;
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
 
+app.get('/firemote/log', function(req, res){
+  res.setHeader('Content-Type', 'image/jpeg');
+  var jpgname = '/var/log/firefuse.log';
+  if (fs.existsSync(jpgname)) {
+    res.sendfile(jpgname);
+  } else {
+    res.sendfile(__appdir + '/data/firefuse.log');
+  }
+});
+
 app.get('/firemote/headcam.jpg', function(req, res){
   res.setHeader('Content-Type', 'image/jpeg');
   var jpgname = '/dev/firefuse/cam.jpg';
