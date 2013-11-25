@@ -49,6 +49,7 @@ services.factory('FireMote', ['$http', '$interval', 'REST', function($http, $int
   var firemote = {
 		onFireStep: function(firestep) {},
 		firestep: {"firestep":"...", "seconds":null},
+		t:0,
 		get: function(callback){
 			$http.get("firemote/state")
 				.success(function(data) {
@@ -76,6 +77,7 @@ services.factory('FireMote', ['$http', '$interval', 'REST', function($http, $int
 				firemote.firestep = data;
 				firemote.firestep.t = animation[seconds % animation.length];
 				firemote.onFireStep(firemote.firestep);
+				firemote.t++;
 			})
 			.error(function(data, status, headers, config) {
 				firemote.firestep = {error:"could not get firemote/state",data:data,status:status};

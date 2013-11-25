@@ -185,7 +185,7 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', 'REST', fun
     };
 		scope.firemote = FireMote;
 		scope.firemote.onFireStep = function(firestep) {
-			scope.axisGantry.pos = firestep.mpoy || scope.axisGantry.pos;
+			scope.axisGantry.pos = firestep.mpoy;
 		}
 
     scope.updateStatus();
