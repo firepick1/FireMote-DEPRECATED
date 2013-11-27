@@ -102,7 +102,7 @@ controllers.controller('CalibrateCtrl', ['$scope','$location','Status', 'State',
     }
 }]);
 
-controllers.controller('MainCtrl', ['$scope','$location','FireMote', 'REST', function(scope, location, FireMote, REST) {
+controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(scope, location, FireMote) {
     scope.view = "MAIN";
     scope.log = {level:"INFO"};
     scope.imageLarge = false;
@@ -128,8 +128,7 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', 'REST', fun
         "background-color: #efefef; border:none; height: 40px; z-index:0";
     }
     scope.demoClick = function() {
-      REST.setMock(!REST.getMock());
-      scope.updateStatus();
+			alert("not implemented");
     }
     scope.hsliderLeft = function() {
       return (scope.axisGantry.pos * (700 - 36) / scope.axisGantry.posMax); 
@@ -185,7 +184,14 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', 'REST', fun
     };
 		scope.firemote = FireMote;
 		scope.firemote.onFireStep = function(firestep) {
-			scope.axisGantry.pos = firestep.mpoy || scope.axisGantry.pos;
+			if (!(typeof firestep.mpoy === 'undefined')) {
+				if (scope.axisGantry.pos === scope.axisGantry.posNew) {
+					scope.state.gantry.pos = firestep.mpoy;
+					scope.state.gantry.posNew = firestep.mpoyNew;
+					scope.axisGantry.pos = firestep.mpoy;
+					scope.axisGantry.posNew = firestep.mpoy;
+				} 
+		  }
 		}
 
     scope.updateStatus();

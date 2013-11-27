@@ -24,25 +24,7 @@ var services = angular.module('FireMote.services', []);
 
 services.value('version', '0.1');
 
-services.factory('REST', [function() {
-		var isMock = false;
-		return {
-			getStatePOSTUrl: function() {
-					return isMock ? "firemote/echo" : "firemote/state";
-			},
-			getStateGETUrl: function() {
-					return isMock ? "firemote/state" : "firemote/state";
-			},
-			getMock: function(value) {
-				return isMock;
-			},
-			setMock: function(value) {
-				isMock = value;
-			}
-		};
-}]);
-
-services.factory('FireMote', ['$http', '$interval', 'REST', function($http, $interval, rest){
+services.factory('FireMote', ['$http', '$interval', function($http, $interval){
 	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
 	//var animation = ['\u2665', '\u2764'];
 	//var animation = ['\u2190', '\u2196', '\u2191', '\u2197', '\u2192', '\u2198', '\u2193', '\u2199'];
@@ -60,7 +42,7 @@ services.factory('FireMote', ['$http', '$interval', 'REST', function($http, $int
 		},
 		post: function(postData, callback) {
 			var json = JSON.stringify(postData);
-			$http.post(rest.getStatePOSTUrl(), json)
+			$http.post("firemote/state", json)
 				.success(function(data) {
 					callback(data);
 				})
