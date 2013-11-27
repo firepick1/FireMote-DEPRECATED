@@ -2,22 +2,40 @@ module org.firepick.firemote {
 	export class MachineState {
 		message: string = "FirePick machine state";
 		stateId: number = 1;
-		head: Head = new Head("Left", "Right");
-		gantries: Axis[] = [new Axis("Gantry")];
-		trayFeeders: Axis[] = [new Axis("Tray Feeder")];
-		pcbFeeders: Axis[] = [new Axis("PCB Feeder")];
+		gantries: Gantry[] = [];
+		trayFeeders: TrayFeeder[] = [];
+		pcbFeeders: PcbFeeder[] = [];
 
-		constructor() {}
+		constructor(obj = undefined) {
+			if (typeof obj === 'string') {
+			  obj = JSON.parse(obj);
+			}
+			if (typeof obj !== 'undefined') {
+			  obj.message && (this.message = obj.message);
+			  obj.stateId && (this.stateId = obj.stateId);
+				if (obj.gantries && obj.gantries.length > 0) {
+				  for (var i = 0; i < obj.gantries.length; i++) {
+					  this.gantries.push(new Gantry(obj.gantries[i]));
+					}
+				}
+				if (obj.trayFeeders && obj.trayFeeders.length > 0) {
+				  for (var i = 0; i < obj.trayFeeders.length; i++) {
+					  this.trayFeeders.push(new TrayFeeder(obj.trayFeeders[i]));
+					}
+				}
+				if (obj.pcbFeeders && obj.pcbFeeders.length > 0) {
+				  for (var i = 0; i < obj.pcbFeeders.length; i++) {
+					  this.pcbFeeders.push(new PcbFeeder(obj.pcbFeeders[i]));
+					}
+				}
+			}
+			this.gantries.length > 0 || this.gantries.push(new Gantry());
+			this.trayFeeders.length > 0 || this.trayFeeders.push(new TrayFeeder());
+			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder());
+		}
 
 		clone(): MachineState {
-			var result: MachineState = new MachineState();
-			result.stateId = this.stateId;
-			result.message = this.message;
-			result.head = this.head.clone();
-			result.gantries = Axis.cloneArray(this.gantries);
-			result.trayFeeders = Axis.cloneArray(this.trayFeeders);
-			result.pcbFeeders = Axis.cloneArray(this.pcbFeeders);
-			return result;
+			return new MachineState(this);
 		}
   }
 }

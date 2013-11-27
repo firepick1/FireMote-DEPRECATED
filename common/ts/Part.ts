@@ -1,16 +1,22 @@
 module org.firepick.firemote {
 	export class Part {
-			pcbId: string;
 			name: string;
+			pcbId: string;
 
-			constructor(name_: string = "0 ohm resistor", pcbId_: string = "R0") {
-				this.pcbId = pcbId_;
-				this.name = name_;
+			constructor(obj) {
+				this.name = "0 ohm resistor";
+				this.pcbId = "R0";
+				if (typeof obj === 'string') {
+				  obj = JSON.parse(obj);
+				}
+				if (typeof obj !== 'undefined') {
+					this.name = obj.name || this.name;
+					this.pcbId = obj.pcbId || this.pcbId;
+				}
 			}
 
 			clone(): Part {
-				var result = new Part(this.name, this.pcbId);
-				return result;
+			  return new Part(this);
 			}
 	}
 }

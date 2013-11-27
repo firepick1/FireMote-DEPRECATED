@@ -1,31 +1,26 @@
 module org.firepick.firemote {
 	export class Axis {
-			name: string;
+			name: string = "Unknown axis";
 			pos: number = 0;
-			posMax: number;
+			posMax: number = 100;
 			jog: number = 1;
 			calibrate: Boolean = false;
 
-			constructor(public name_:string = "Unknown Axis", public posMax_: number = 100) {
-				this.name = name_;
-				this.posMax = posMax_;
+			constructor(obj = undefined) {
+				if (typeof obj === 'string') {
+				  obj = JSON.parse(obj);
+				}
+				if (typeof obj !== 'undefined') {
+				  obj.name && (this.name = obj.name);
+					obj.pos && (this.pos = obj.pos);
+					obj.posMax && (this.posMax = obj.posMax);
+					obj.jog && (this.jog = obj.jog);
+					obj.calibrate && (this.calibrate = obj.calibrate);
+				}
 			}
 
 			clone(): Axis {
-				var result = new Axis(this.name, this.posMax);
-				result.pos = this.pos;
-				result.jog = this.jog;
-				result.calibrate = this.calibrate;
-				return result;
-			}
-
-			static cloneArray(value: Axis[]): Axis[] {
-				var result: Axis[] = [];
-				for (var i = 0; i < value.length; i++) {
-					var axis:Axis = value[i];
-					result.push(axis.clone());
-				}
-				return result;
+				return new Axis(this);
 			}
 	}
 }

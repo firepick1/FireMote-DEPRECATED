@@ -6,21 +6,23 @@ module org.firepick.firemote {
 			spindles: Spindle[] = [];
 			angle: number = 0;
 
-			constructor(s0: string = "Spindle", s1: string = undefined, s2: string = undefined, s3: string = undefined) {
-				s0 && this.spindles.push(new Spindle(s0));
-				s1 && this.spindles.push(new Spindle(s1));
-				s2 && this.spindles.push(new Spindle(s2));
-				s3 && this.spindles.push(new Spindle(s3));
+			constructor(obj = undefined) {
+			  if (typeof obj === 'string') {
+				  obj = JSON.parse(obj);
+				}
+				if (typeof obj !== 'undefined') {
+				  obj.angle && (this.angle = obj.angle);
+					if (obj.spindles && obj.spindles.length > 0) {
+					  for (var i = 0; i < obj.spindles.length; i++) {
+						  this.spindles.push(new Spindle(obj.spindles[i]));
+						}
+					}
+				}
+				this.spindles.length > 0 || this.spindles.push(new Spindle({name:"Left"}));
 			}
 
 			clone(): Head {
-				var result = new Head();
-				result.spindles = [];
-				for (var i = 0; i < this.spindles.length; i++) {
-					result.spindles.push(this.spindles[i].clone());
-				}
-				result.angle = this.angle;
-				return result;
+				return new Head(this);
 			}
 	}
 }

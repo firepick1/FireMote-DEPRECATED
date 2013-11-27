@@ -1,1 +1,1 @@
-tsc -w -outDir js `find ts -type f` --module "commonjs" &
+tsc -w -outDir ../www/js `find ts -type f` --module "commonjs" &
