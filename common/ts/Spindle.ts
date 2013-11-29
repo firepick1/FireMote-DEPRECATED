@@ -1,6 +1,5 @@
-import Part = org.firepick.firemote.Part;
-
-module org.firepick.firemote {
+///<reference path='../../include.d.ts'/>
+module firemote {
 	export class Spindle {
 			name: string = "Spindle";
 			on: Boolean = false;
@@ -12,10 +11,10 @@ module org.firepick.firemote {
 				  obj = JSON.parse(obj);
 				}
 				if (typeof obj !== 'undefined') {
-				  obj.name && (this.name = obj.name);
-					obj.on && (this.on = obj.on);
-					obj.pos && (this.pos = obj.pos);
-					obj.part && (this.part = obj.part.clone());
+				  if (obj.hasOwnProperty("name")) this.name = obj.name;
+					if (obj.hasOwnProperty("on")) this.on = obj.on;
+					if (obj.hasOwnProperty("pos")) this.pos = obj.pos;
+					if (obj.hasOwnProperty("part")) this.part = obj.part.clone();
 				}
 			}
 
@@ -24,3 +23,5 @@ module org.firepick.firemote {
 			}
 	}
 }
+
+exports.firemote = firemote;

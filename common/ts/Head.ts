@@ -1,7 +1,5 @@
-import Axis = org.firepick.firemote.Axis;
-import Spindle = org.firepick.firemote.Spindle;
-
-module org.firepick.firemote {
+///<reference path='../../include.d.ts'/>
+module firemote {
 	export class Head {
 			spindles: Spindle[] = [];
 			angle: number = 0;
@@ -11,7 +9,7 @@ module org.firepick.firemote {
 				  obj = JSON.parse(obj);
 				}
 				if (typeof obj !== 'undefined') {
-				  obj.angle && (this.angle = obj.angle);
+				  if (obj.hasOwnProperty("angle")) this.angle = obj.angle;
 					if (obj.spindles && obj.spindles.length > 0) {
 					  for (var i = 0; i < obj.spindles.length; i++) {
 						  this.spindles.push(new Spindle(obj.spindles[i]));
@@ -27,3 +25,4 @@ module org.firepick.firemote {
 	}
 }
 
+exports.firemote = firemote;

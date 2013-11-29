@@ -1,7 +1,10 @@
-module org.firepick.firemote {
+///<reference path='../../include.d.ts'/>
+module firemote {
 	export class MachineState {
 		message: string = "FirePick machine state";
 		stateId: number = 1;
+		logLevel: string = "INFO";
+		firefuse: Boolean = true;
 		gantries: Gantry[] = [];
 		trayFeeders: TrayFeeder[] = [];
 		pcbFeeders: PcbFeeder[] = [];
@@ -11,8 +14,10 @@ module org.firepick.firemote {
 			  obj = JSON.parse(obj);
 			}
 			if (typeof obj !== 'undefined') {
-			  obj.message && (this.message = obj.message);
-			  obj.stateId && (this.stateId = obj.stateId);
+			  if (obj.hasOwnProperty("message")) this.message = obj.message;
+			  if (obj.hasOwnProperty("stateId")) this.stateId = obj.stateId;
+			  if (obj.hasOwnProperty("logLevel")) this.logLevel = obj.logLevel;
+			  if (obj.hasOwnProperty("firefuse")) this.firefuse = obj.firefuse;
 				if (obj.gantries && obj.gantries.length > 0) {
 				  for (var i = 0; i < obj.gantries.length; i++) {
 					  this.gantries.push(new Gantry(obj.gantries[i]));
@@ -39,3 +44,5 @@ module org.firepick.firemote {
 		}
   }
 }
+
+exports.firemote = firemote;

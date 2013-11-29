@@ -1,8 +1,7 @@
-var Part = org.firepick.firemote.Part;
-
 var org;
 (function (org) {
     (function (firepick) {
+        ///<reference path='../../include.d.ts'/>
         (function (firemote) {
             var Spindle = (function () {
                 function Spindle(obj) {
@@ -14,10 +13,14 @@ var org;
                         obj = JSON.parse(obj);
                     }
                     if (typeof obj !== 'undefined') {
-                        obj.name && (this.name = obj.name);
-                        obj.on && (this.on = obj.on);
-                        obj.pos && (this.pos = obj.pos);
-                        obj.part && (this.part = obj.part.clone());
+                        if (obj.hasOwnProperty("name"))
+                            this.name = obj.name;
+                        if (obj.hasOwnProperty("on"))
+                            this.on = obj.on;
+                        if (obj.hasOwnProperty("pos"))
+                            this.pos = obj.pos;
+                        if (obj.hasOwnProperty("part"))
+                            this.part = obj.part.clone();
                     }
                 }
                 Spindle.prototype.clone = function () {
@@ -31,3 +34,5 @@ var org;
     })(org.firepick || (org.firepick = {}));
     var firepick = org.firepick;
 })(org || (org = {}));
+
+exports.Spindle = org.firepick.firemote.Spindle;

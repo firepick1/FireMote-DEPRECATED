@@ -1,9 +1,7 @@
-var Axis = org.firepick.firemote.Axis;
-var Spindle = org.firepick.firemote.Spindle;
-
 var org;
 (function (org) {
     (function (firepick) {
+        ///<reference path='../../include.d.ts'/>
         (function (firemote) {
             var Head = (function () {
                 function Head(obj) {
@@ -14,7 +12,8 @@ var org;
                         obj = JSON.parse(obj);
                     }
                     if (typeof obj !== 'undefined') {
-                        obj.angle && (this.angle = obj.angle);
+                        if (obj.hasOwnProperty("angle"))
+                            this.angle = obj.angle;
                         if (obj.spindles && obj.spindles.length > 0) {
                             for (var i = 0; i < obj.spindles.length; i++) {
                                 this.spindles.push(new firemote.Spindle(obj.spindles[i]));
@@ -34,3 +33,5 @@ var org;
     })(org.firepick || (org.firepick = {}));
     var firepick = org.firepick;
 })(org || (org = {}));
+
+exports.Head = org.firepick.firemote.Head;

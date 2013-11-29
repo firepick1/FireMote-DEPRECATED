@@ -140,11 +140,15 @@ describe('common-js-tests', function(){
 		expect(state.gantries[0].name).toBe("Gantry");
 		expect(state.trayFeeders[0].name).toBe("Tray Feeder");
 		expect(state.pcbFeeders[0].name).toBe("PCB Feeder");
+		expect(state.logLevel).toBe("INFO");
+		expect(state.firefuse).toBe(true);
 		expect(state.stateId).toBe(1);
 		expect(state.message).toBe("FirePick machine state");
     var json = JSON.stringify({
 			message:"M",
 			stateId:123,
+			logLevel:"TRACE",
+			firefuse:false,
 			gantries:[
 				{ head:{
 						spindles:[
@@ -165,6 +169,10 @@ describe('common-js-tests', function(){
 			]}); 
 
 		var state2 = new org.firepick.firemote.MachineState(json);
+		expect(state2.stateId).toBe(123);
+		expect(state2.message).toBe("M");
+		expect(state2.firefuse).toBe(false);
+		expect(state2.logLevel).toBe("TRACE");
 		expect(state2.gantries[0].head.spindles[0].name).toBe("L");
 		expect(state2.gantries[0].head.spindles[1].name).toBe("R");
 		expect(state2.gantries[0].axis.posMax).toBe(200);
@@ -179,8 +187,6 @@ describe('common-js-tests', function(){
 		expect(state2.pcbFeeders[0].axis.posMax).toBe(400);
 		expect(state2.pcbFeeders[0].axis.pos).toBe(40);
 		expect(state2.pcbFeeders[0].axis.jog).toBe(4);
-		expect(state2.stateId).toBe(123);
-		expect(state2.message).toBe("M");
 	}));
 
 });

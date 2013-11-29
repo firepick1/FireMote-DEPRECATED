@@ -1,6 +1,7 @@
 var org;
 (function (org) {
     (function (firepick) {
+        ///<reference path='../../include.d.ts'/>
         (function (firemote) {
             var PcbFeeder = (function () {
                 function PcbFeeder(obj) {
@@ -10,8 +11,10 @@ var org;
                         obj = JSON.parse(obj);
                     }
                     if (typeof obj !== 'undefined') {
-                        obj.name && (this.name = obj.name);
-                        obj.axis && (this.axis = new firemote.Axis(obj.axis));
+                        if (obj.hasOwnProperty("name"))
+                            this.name = obj.name;
+                        if (obj.hasOwnProperty("axis"))
+                            this.axis = new firemote.Axis(obj.axis);
                     }
                     this.axis = this.axis || new firemote.Axis({ name: this.name });
                 }
@@ -26,3 +29,5 @@ var org;
     })(org.firepick || (org.firepick = {}));
     var firepick = org.firepick;
 })(org || (org = {}));
+
+exports.PcbFeeder = org.firepick.firemote.PcbFeeder;

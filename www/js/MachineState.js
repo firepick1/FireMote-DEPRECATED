@@ -1,12 +1,15 @@
 var org;
 (function (org) {
     (function (firepick) {
+        ///<reference path='../../include.d.ts'/>
         (function (firemote) {
             var MachineState = (function () {
                 function MachineState(obj) {
                     if (typeof obj === "undefined") { obj = undefined; }
                     this.message = "FirePick machine state";
                     this.stateId = 1;
+                    this.logLevel = "INFO";
+                    this.firefuse = true;
                     this.gantries = [];
                     this.trayFeeders = [];
                     this.pcbFeeders = [];
@@ -14,8 +17,14 @@ var org;
                         obj = JSON.parse(obj);
                     }
                     if (typeof obj !== 'undefined') {
-                        obj.message && (this.message = obj.message);
-                        obj.stateId && (this.stateId = obj.stateId);
+                        if (obj.hasOwnProperty("message"))
+                            this.message = obj.message;
+                        if (obj.hasOwnProperty("stateId"))
+                            this.stateId = obj.stateId;
+                        if (obj.hasOwnProperty("logLevel"))
+                            this.logLevel = obj.logLevel;
+                        if (obj.hasOwnProperty("firefuse"))
+                            this.firefuse = obj.firefuse;
                         if (obj.gantries && obj.gantries.length > 0) {
                             for (var i = 0; i < obj.gantries.length; i++) {
                                 this.gantries.push(new firemote.Gantry(obj.gantries[i]));
@@ -47,3 +56,5 @@ var org;
     })(org.firepick || (org.firepick = {}));
     var firepick = org.firepick;
 })(org || (org = {}));
+
+exports.MachineState = org.firepick.firemote.MachineState;

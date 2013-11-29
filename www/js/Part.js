@@ -1,6 +1,7 @@
 var org;
 (function (org) {
     (function (firepick) {
+        ///<reference path='../../include.d.ts'/>
         (function (firemote) {
             var Part = (function () {
                 function Part(obj) {
@@ -25,3 +26,5 @@ var org;
     })(org.firepick || (org.firepick = {}));
     var firepick = org.firepick;
 })(org || (org = {}));
+
+exports.Part = org.firepick.firemote.Part;

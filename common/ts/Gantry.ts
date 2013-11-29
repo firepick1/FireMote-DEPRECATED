@@ -1,4 +1,5 @@
-module org.firepick.firemote {
+///<reference path='../../include.d.ts'/>
+module firemote {
 	export class Gantry {
 	  name: string;
 		head: Head;
@@ -9,9 +10,9 @@ module org.firepick.firemote {
 			  obj = JSON.parse(obj);
 			}
 			if (typeof obj !== 'undefined') {
-			  obj.name && (this.name = obj.name);
-				obj.head && (this.head = new Head(obj.head));
-				obj.axis && (this.axis = new Axis(obj.axis));
+			  if (obj.hasOwnProperty("name")) this.name = obj.name;
+				if (obj.hasOwnProperty("head")) this.head = new Head(obj.head);
+				if (obj.hasOwnProperty("axis")) this.axis = new Axis(obj.axis);
 			}
 			this.name = this.name || "Gantry";
 			this.axis = this.axis || new Axis({name:this.name});
@@ -23,3 +24,5 @@ module org.firepick.firemote {
 		}
   }
 }
+
+exports.firemote = firemote;

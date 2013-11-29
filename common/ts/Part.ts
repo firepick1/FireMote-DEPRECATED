@@ -1,4 +1,5 @@
-module org.firepick.firemote {
+///<reference path='../../include.d.ts'/>
+module firemote {
 	export class Part {
 			name: string;
 			pcbId: string;
@@ -20,3 +21,5 @@ module org.firepick.firemote {
 			}
 	}
 }
+
+exports.firemote = firemote;

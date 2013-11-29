@@ -1,4 +1,5 @@
-module org.firepick.firemote {
+///<reference path='../../include.d.ts'/>
+module firemote {
 	export class PcbFeeder {
 	  name: string = "PCB Feeder";
 		axis: Axis;
@@ -8,8 +9,8 @@ module org.firepick.firemote {
 			  obj = JSON.parse(obj);
 			}
 			if (typeof obj !== 'undefined') {
-			  obj.name && (this.name = obj.name);
-				obj.axis && (this.axis = new Axis(obj.axis));
+			  if (obj.hasOwnProperty("name")) this.name = obj.name;
+				if (obj.hasOwnProperty("axis")) this.axis = new Axis(obj.axis);
 			}
 			this.axis = this.axis || new Axis({name:this.name});
 		}
@@ -19,3 +20,5 @@ module org.firepick.firemote {
 		}
   }
 }
+
+exports.firemote = firemote;

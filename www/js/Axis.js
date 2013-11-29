@@ -1,6 +1,7 @@
 var org;
 (function (org) {
     (function (firepick) {
+        ///<reference path='../../include.d.ts'/>
         (function (firemote) {
             var Axis = (function () {
                 function Axis(obj) {
@@ -14,11 +15,16 @@ var org;
                         obj = JSON.parse(obj);
                     }
                     if (typeof obj !== 'undefined') {
-                        obj.name && (this.name = obj.name);
-                        obj.pos && (this.pos = obj.pos);
-                        obj.posMax && (this.posMax = obj.posMax);
-                        obj.jog && (this.jog = obj.jog);
-                        obj.calibrate && (this.calibrate = obj.calibrate);
+                        if (obj.hasOwnProperty("name"))
+                            this.name = obj.name;
+                        if (obj.hasOwnProperty("pos"))
+                            this.pos = obj.pos;
+                        if (obj.hasOwnProperty("posMax"))
+                            this.posMax = obj.posMax;
+                        if (obj.hasOwnProperty("jog"))
+                            this.jog = obj.jog;
+                        if (obj.hasOwnProperty("calibrate"))
+                            this.calibrate = obj.calibrate;
                     }
                 }
                 Axis.prototype.clone = function () {
@@ -32,3 +38,5 @@ var org;
     })(org.firepick || (org.firepick = {}));
     var firepick = org.firepick;
 })(org || (org = {}));
+
+exports.Axis = org.firepick.firemote.Axis;
