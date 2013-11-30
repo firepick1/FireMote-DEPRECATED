@@ -8,6 +8,7 @@ module firemote {
 		gantries: Gantry[] = [];
 		trayFeeders: TrayFeeder[] = [];
 		pcbFeeders: PcbFeeder[] = [];
+		firestep: FireStep = new FireStep();
 
 		constructor(obj = undefined) {
 			if (typeof obj === 'string') {
@@ -18,6 +19,7 @@ module firemote {
 			  if (obj.hasOwnProperty("stateId")) this.stateId = obj.stateId;
 			  if (obj.hasOwnProperty("logLevel")) this.logLevel = obj.logLevel;
 			  if (obj.hasOwnProperty("firefuse")) this.firefuse = obj.firefuse;
+			  if (obj.hasOwnProperty("firestep")) this.firestep = obj.firestep;
 				if (obj.gantries && obj.gantries.length > 0) {
 				  for (var i = 0; i < obj.gantries.length; i++) {
 					  this.gantries.push(new Gantry(obj.gantries[i]));

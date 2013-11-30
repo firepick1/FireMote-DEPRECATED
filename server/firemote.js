@@ -18,14 +18,19 @@ var dummy = {
 		}
 };
 
-var machine = dummy;
+//var machine = dummy;
 var __appdir = "www";
 var tsr = require('typescript-require');
 var firemote = require('../www/js/firemote.js');
+var machine = new firemote.MachineState();
+
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
 
 firemote_respondJSON = function(res, obj) {
+	if (typeof obj === 'undefined') {
+		obj = "undefined";
+	}
 	var json = JSON.stringify(obj);
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Content-Length', json.length);
@@ -34,9 +39,9 @@ firemote_respondJSON = function(res, obj) {
 
 firestep_load = function() {
 	if (machine.demo) {
-		machine.firestep.mpox = machine.state.trayFeeder.pos;
-		machine.firestep.mpoy = machine.state.gantry.pos;
-		machine.firestep.mpoz = machine.state.pcbFeeder.pos;
+		machine.firestep.mpox = machine.trayFeeders[0].axis.pos;
+		machine.firestep.mpoy = machine.gantries[0].axis.pos;
+		machine.firestep.mpoz = machine.pcbFeeders[0].axis.pos;
 	} else {
 		var filename = '/dev/firefuse/firestep';
 		fs.readFile(filename, function (err, data) {
@@ -109,16 +114,7 @@ app.post('/firemote/state', function(req, res){
 app.listen(8000);
 console.log('FireMote listening on port 8000');
 
-var foo = {afield:"FIELD", afun:function(arg){return arg;}};
-console.log("EXPORTS");
-for (var k in exports) {
-	 console.log(k);
-}
 console.log("FIREMOTE");
 for (var k in firemote) {
 	 console.log(k);
 }
-
-new firemote.Axis();
-new firemote.Spindle();
-new firemote.Gantry();

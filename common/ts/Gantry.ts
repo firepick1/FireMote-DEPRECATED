@@ -1,7 +1,6 @@
 ///<reference path='../../include.d.ts'/>
 module firemote {
 	export class Gantry {
-	  name: string;
 		head: Head;
 		axis: Axis;
 
@@ -10,13 +9,11 @@ module firemote {
 			  obj = JSON.parse(obj);
 			}
 			if (typeof obj !== 'undefined') {
-			  if (obj.hasOwnProperty("name")) this.name = obj.name;
 				if (obj.hasOwnProperty("head")) this.head = new Head(obj.head);
 				if (obj.hasOwnProperty("axis")) this.axis = new Axis(obj.axis);
 			}
-			this.name = this.name || "Gantry";
-			this.axis = this.axis || new Axis({name:this.name});
-			this.head = this.head || new Head({name:this.name});
+			this.axis = this.axis || new Axis({name:"Gantry"});
+			this.head = this.head || new Head();
 		}
 
 		clone(): Gantry {

@@ -5,5 +5,6 @@
 ///<reference path='common/ts/PcbFeeder.ts'/>
 ///<reference path='common/ts/Gantry.ts'/>
 ///<reference path='common/ts/Head.ts'/>
+///<reference path='common/ts/FireStep.ts'/>
 ///<reference path='common/ts/MachineState.ts'/>
 ///<reference path='node.d.ts'/>

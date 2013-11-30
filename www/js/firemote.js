@@ -60,17 +60,14 @@ var firemote;
     var TrayFeeder = (function () {
         function TrayFeeder(obj) {
             if (typeof obj === "undefined") { obj = undefined; }
-            this.name = "Tray Feeder";
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
             if (typeof obj !== 'undefined') {
-                if (obj.hasOwnProperty("name"))
-                    this.name = obj.name;
                 if (obj.hasOwnProperty("axis"))
                     this.axis = new firemote.Axis(obj.axis);
             }
-            this.axis = this.axis || new firemote.Axis({ name: this.name });
+            this.axis = this.axis || new firemote.Axis({ name: "Tray Feeder" });
         }
         TrayFeeder.prototype.clone = function () {
             return new TrayFeeder(this);
@@ -87,17 +84,14 @@ var firemote;
     var PcbFeeder = (function () {
         function PcbFeeder(obj) {
             if (typeof obj === "undefined") { obj = undefined; }
-            this.name = "PCB Feeder";
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
             if (typeof obj !== 'undefined') {
-                if (obj.hasOwnProperty("name"))
-                    this.name = obj.name;
                 if (obj.hasOwnProperty("axis"))
                     this.axis = new firemote.Axis(obj.axis);
             }
-            this.axis = this.axis || new firemote.Axis({ name: this.name });
+            this.axis = this.axis || new firemote.Axis({ name: "PCB Feeder" });
         }
         PcbFeeder.prototype.clone = function () {
             return new PcbFeeder(this);
@@ -118,16 +112,13 @@ var firemote;
                 obj = JSON.parse(obj);
             }
             if (typeof obj !== 'undefined') {
-                if (obj.hasOwnProperty("name"))
-                    this.name = obj.name;
                 if (obj.hasOwnProperty("head"))
                     this.head = new firemote.Head(obj.head);
                 if (obj.hasOwnProperty("axis"))
                     this.axis = new firemote.Axis(obj.axis);
             }
-            this.name = this.name || "Gantry";
-            this.axis = this.axis || new firemote.Axis({ name: this.name });
-            this.head = this.head || new firemote.Head({ name: this.name });
+            this.axis = this.axis || new firemote.Axis({ name: "Gantry" });
+            this.head = this.head || new firemote.Head();
         }
         Gantry.prototype.clone = function () {
             return new Gantry(this);
@@ -172,6 +163,74 @@ exports.Head = firemote.Head;
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
+    var FireStep = (function () {
+        //mpob: number = 0; // [mpob] b machine position
+        //mpoc: number = 0; // [mpoc] c machine position
+        //ofsx: number = 0; // [ofsx] x machine offset   - X machine offset to work position in absolute coordinates in mm units ONLY
+        //ofsy: number = 0; // [ofsy] y machine offset       Reports offsets in mm and absolute machine coordinates
+        //ofsz: number = 0; // [ofsz] z machine offset
+        //ofsa: number = 0; // [ofsa] a machine offset
+        //ofsb: number = 0; // [ofsb] b machine offset
+        //ofsc: number = 0; // [ofsc] c machine offset
+        //g54x: number = 0; // [g54x] g54x               - G54 coordinate system offset for X axis
+        //g54y: number = 0; // [g54y] g54y                   Coordinate system offsets may be reported
+        //g54z: number = 0; // [g54z] g54z
+        //...
+        //g59a: number = 0; // [g59a] g59a
+        //g59b: number = 0; // [g59b] g59b
+        //g59c: number = 0; // [g59c] g59c
+        //g92x: number = 0; // [g92x] g92x               - G92 origin offset for X axis
+        //g92y: number = 0; // [g92y] g92y                   The number returned can be a bit brain bending as you have to back out
+        //g92z: number = 0; // [g92z] g92z                   the position from which the G92 was set, but this is the actual offset
+        //g29a: number = 0; // [g29a] g92a                   value; and may be different from the value entered in the G92 command.
+        //g92b: number = 0; // [g92b] g92b
+        //g92c: number = 0; // [g92c] g92c
+        function FireStep(obj) {
+            if (typeof obj === "undefined") { obj = undefined; }
+            this.vel = 0;
+            this.feed = 0;
+            this.stat = 0;
+            //unit: number = 0; // [unit] units_mode         - 0=inch, 1=mm
+            this.coor = 0;
+            this.momo = 0;
+            //plan: number = 0; // [plan] plane_select       - 0=XY plane, 1=XZ plane, 2=YZ plane
+            this.path = 0;
+            this.dist = 0;
+            //frmo: number = 0; // [frmo] feed_rate_mode     - 0=units-per-minute-mode, 1=inverse-time-mode
+            this.hold = 0;
+            this.posx = 0;
+            this.posy = 0;
+            this.posz = 0;
+            this.posa = 0;
+            //posb: number = 0; // [posb] b work position
+            //posc: number = 0; // [posc] c work position
+            this.mpox = 0;
+            this.mpoy = 0;
+            this.mpoz = 0;
+            this.mpoa = 0;
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            }
+            if (typeof obj !== 'undefined') {
+                for (var k in this) {
+                    if (typeof this[k] === 'number') {
+                        this[k] = obj[k];
+                    }
+                }
+            }
+        }
+        FireStep.prototype.clone = function () {
+            return new FireStep(this);
+        };
+        return FireStep;
+    })();
+    firemote.FireStep = FireStep;
+})(firemote || (firemote = {}));
+
+exports.FireStep = firemote.FireStep;
+///<reference path='../../include.d.ts'/>
+var firemote;
+(function (firemote) {
     var MachineState = (function () {
         function MachineState(obj) {
             if (typeof obj === "undefined") { obj = undefined; }
@@ -182,6 +241,7 @@ var firemote;
             this.gantries = [];
             this.trayFeeders = [];
             this.pcbFeeders = [];
+            this.firestep = new firemote.FireStep();
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
@@ -194,6 +254,8 @@ var firemote;
                     this.logLevel = obj.logLevel;
                 if (obj.hasOwnProperty("firefuse"))
                     this.firefuse = obj.firefuse;
+                if (obj.hasOwnProperty("firestep"))
+                    this.firestep = obj.firestep;
                 if (obj.gantries && obj.gantries.length > 0) {
                     for (var i = 0; i < obj.gantries.length; i++) {
                         this.gantries.push(new firemote.Gantry(obj.gantries[i]));
