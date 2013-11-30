@@ -45,4 +45,4 @@ module firemote {
   }
 }
 
-exports.firemote = firemote;
+exports.MachineState = firemote.MachineState;

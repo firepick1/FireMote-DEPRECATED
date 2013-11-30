@@ -26,4 +26,4 @@ module firemote {
 	}
 }
 
-exports.firemote = firemote;
+exports.Axis = firemote.Axis;

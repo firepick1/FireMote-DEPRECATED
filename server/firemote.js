@@ -21,26 +21,7 @@ var dummy = {
 var machine = dummy;
 var __appdir = "www";
 var tsr = require('typescript-require');
-function requireAll() {
-	  var cns = { };
-		for (var i = 0; i < arguments.length; i++) {
-			 var ns = require(arguments[i]);
-			 for (var o in ns) {
-				  cns[o] = ns[o];
-			 }
-		}
-		return cns;
-}
-var nsfiremote = requireAll(
-	'../www/js/MachineState.js',
-	'../www/js/Axis.js',
-	'../www/js/Part.js',
-	'../www/js/Spindle.js',
-	'../www/js/TrayFeeder.js',
-	'../www/js/PcbFeeder.js',
-	'../www/js/Gantry.js',
-	'../www/js/Head.js',
-	'../www/js/MachineState.js');
+var firemote = require('../www/js/firemote.js');
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
 
@@ -133,11 +114,11 @@ console.log("EXPORTS");
 for (var k in exports) {
 	 console.log(k);
 }
-console.log("DEBUG");
-for (var k in nsfiremote) {
+console.log("FIREMOTE");
+for (var k in firemote) {
 	 console.log(k);
 }
 
-new nsfiremote.Axis();
-new nsfiremote.Spindle();
-new nsfiremote.Gantry();
+new firemote.Axis();
+new firemote.Spindle();
+new firemote.Gantry();

@@ -104,7 +104,7 @@ controllers.controller('CalibrateCtrl', ['$scope','$location','Status', 'State',
 
 controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(scope, location, FireMote) {
     scope.view = "MAIN";
-		scope.machine = new org.firepick.firemote.MachineState();
+		scope.machine = new firemote.MachineState();
     scope.log = {level:"INFO"};
     scope.imageLarge = false;
     scope.head = {angle:0, light: true}; // default

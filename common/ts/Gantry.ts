@@ -25,4 +25,4 @@ module firemote {
   }
 }
 
-exports.firemote = firemote;
+exports.Gantry = firemote.Gantry;

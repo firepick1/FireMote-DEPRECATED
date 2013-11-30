@@ -1,0 +1,9 @@
+///<reference path='common/ts/Axis.ts'/>
+///<reference path='common/ts/Part.ts'/>
+///<reference path='common/ts/Spindle.ts'/>
+///<reference path='common/ts/TrayFeeder.ts'/>
+///<reference path='common/ts/PcbFeeder.ts'/>
+///<reference path='common/ts/Gantry.ts'/>
+///<reference path='common/ts/Head.ts'/>
+///<reference path='common/ts/MachineState.ts'/>
+///<reference path='node.d.ts'/>

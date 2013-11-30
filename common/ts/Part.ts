@@ -22,4 +22,4 @@ module firemote {
 	}
 }
 
-exports.firemote = firemote;
+exports.Part = firemote.Part;

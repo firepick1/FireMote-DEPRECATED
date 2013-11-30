@@ -21,4 +21,4 @@ module firemote {
   }
 }
 
-exports.firemote = firemote;
+exports.PcbFeeder = firemote.PcbFeeder;

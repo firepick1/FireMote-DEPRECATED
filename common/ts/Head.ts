@@ -25,4 +25,4 @@ module firemote {
 	}
 }
 
-exports.firemote = firemote;
+exports.Head = firemote.Head;

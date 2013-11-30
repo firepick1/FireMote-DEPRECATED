@@ -24,4 +24,4 @@ module firemote {
 	}
 }
 
-exports.firemote = firemote;
+exports.Spindle = firemote.Spindle;
