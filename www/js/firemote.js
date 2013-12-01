@@ -8,6 +8,10 @@ var firemote;
             return new DeltaFactory(this);
         };
 
+        DeltaFactory.prototype.equals = function (obj1, obj2) {
+            return this.diff(obj1, obj2) ? false : true;
+        };
+
         DeltaFactory.prototype.diff = function (obj1, obj2) {
             var result = {};
             var changes = 0;
@@ -23,7 +27,9 @@ var firemote;
             for (var k in obj1) {
                 var val1 = obj1[k];
                 var val2 = obj2[k];
-                if (typeof val1 !== typeof val2) {
+                if (typeof val1 === 'function' || typeof val2 === 'function') {
+                    // ignore functions
+                } else if (typeof val1 !== typeof val2) {
                     result[k] = val2;
                     changes++;
                 } else if (val1 instanceof Array) {
@@ -371,6 +377,22 @@ var firemote;
             this.trayFeeders.length > 0 || this.trayFeeders.push(new firemote.TrayFeeder());
             this.pcbFeeders.length > 0 || this.pcbFeeders.push(new firemote.PcbFeeder());
         }
+        MachineState.prototype.axes = function () {
+            var result = [];
+
+            for (var i = 0; i < this.gantries.length; i++) {
+                result.push(this.gantries[i].axis);
+            }
+            for (var i = 0; i < this.pcbFeeders.length; i++) {
+                result.push(this.pcbFeeders[i].axis);
+            }
+            for (var i = 0; i < this.trayFeeders.length; i++) {
+                result.push(this.trayFeeders[i].axis);
+            }
+
+            return result;
+        };
+
         MachineState.prototype.clone = function () {
             return new MachineState(this);
         };

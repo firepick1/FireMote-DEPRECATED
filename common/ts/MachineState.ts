@@ -41,6 +41,22 @@ module firemote {
 			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder());
 		}
 
+		axes(): Axis[] {
+		  var result:Axis[] = [];
+
+			for (var i = 0; i < this.gantries.length; i++) {
+			  result.push(this.gantries[i].axis);
+			}
+			for (var i = 0; i < this.pcbFeeders.length; i++) {
+			  result.push(this.pcbFeeders[i].axis);
+			}
+			for (var i = 0; i < this.trayFeeders.length; i++) {
+			  result.push(this.trayFeeders[i].axis);
+			}
+
+			return result;
+		}
+
 		clone(): MachineState {
 			return new MachineState(this);
 		}

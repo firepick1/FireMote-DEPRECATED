@@ -8,6 +8,10 @@ module firemote {
 			return new DeltaFactory(this);
 		}
 
+		equals(obj1, obj2): Boolean {
+		  return this.diff(obj1, obj2) ? false : true;
+		}
+
 		diff(obj1, obj2) {
 			var result = {};
 			var changes: number = 0;
@@ -20,7 +24,9 @@ module firemote {
 			for (var k in obj1) {
 				var val1 = obj1[k];
 				var val2 = obj2[k];
-				if (typeof val1 !== typeof val2) {
+				if (typeof val1 === 'function' || typeof val2 === 'function') {
+					// ignore functions
+				} else if (typeof val1 !== typeof val2) {
 						result[k] = val2;
 						changes++;
 				} else if (val1 instanceof Array) {
@@ -31,7 +37,7 @@ module firemote {
 					}
 				} else {
 					if (val1 !== val2) {
-					  if (typeof val1 === 'number' || typeof val1 === 'string') {
+						if (typeof val1 === 'number' || typeof val1 === 'string') {
 							result[k] = val2;
 							changes++;
 						} else {

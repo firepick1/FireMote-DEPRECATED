@@ -109,5 +109,7 @@ for (var k in firemote) {
 }
 
 var foo= [1,'a'];
+var fun = function(){return 1;}
 console.log("Array typeof is " + (typeof foo));
 console.log("instanceof Array " + (foo instanceof Array));
+console.log("typeof function " + (typeof fun));
