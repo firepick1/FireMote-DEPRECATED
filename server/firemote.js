@@ -1,31 +1,13 @@
 var express = require('express');
 var fs = require('fs');
 var app = express();
-
-var dummy = {
-	firestep:{mpox:411, mpoy:411, mpoz:411, vel:411, state:411},
-	logLevel: "INFO",
-	demo:false,
-	state:{
-		stateId:0,
-		head:{"angle":0,"light":true},
-		trayFeeder:{"name":"Tray Feeder", "pos":0, "posMax":300, "calibrate":false, "jog":1},
-		pcbFeeder:{"name":"PCB Feeder", "pos":0, "posMax":300, "calibrate":false, "jog":1},
-		gantry: {"name":"Gantry", "pos":0, "posMax":500, "jog":1},
-		spindleLeft:{"pos":0, "name":"Left", "side":"left", "on":true, "part":true},
-		spindleRight:{"pos":100, "name":"Right", "side":"right", "on":false, "part":false},
-		message:"FireMote is in demo mode"
-		}
-};
-
-//var machine = dummy;
 var __appdir = "www";
+app.use(express.static(__appdir));
+app.use(express.bodyParser());
+
 var tsr = require('typescript-require');
 var firemote = require('../www/js/firemote.js');
 var machine = new firemote.MachineState();
-
-app.use(express.static(__appdir));
-app.use(express.bodyParser());
 
 firemote_respondJSON = function(res, obj) {
 	if (typeof obj === 'undefined') {
@@ -38,20 +20,20 @@ firemote_respondJSON = function(res, obj) {
 };
 
 firestep_load = function() {
-	if (machine.demo) {
-		machine.firestep.mpox = machine.trayFeeders[0].axis.pos;
-		machine.firestep.mpoy = machine.gantries[0].axis.pos;
-		machine.firestep.mpoz = machine.pcbFeeders[0].axis.pos;
-	} else {
+	if (machine.firefuse) {
 		var filename = '/dev/firefuse/firestep';
 		fs.readFile(filename, function (err, data) {
 			if (err)  {
-				machine.demo = true;
+				machine.firefuse = false;
 				console.log("FireFuse is unavailable. machine is now in demo mode.");
 			} else {
 				machine.firestep = data;
 			}
 		});
+	} else {
+		machine.firestep.mpox = machine.trayFeeders[0].axis.pos;
+		machine.firestep.mpoy = machine.gantries[0].axis.pos;
+		machine.firestep.mpoz = machine.pcbFeeders[0].axis.pos;
 	}
 }
 firestep_load();
@@ -74,9 +56,7 @@ app.get('/firemote/firestep', function(req, res){
 app.get('/firemote/log', function(req, res){
   res.setHeader('Content-Type', 'text/plain');
   var filename = '/var/log/firefuse.log';
-  if (machine.demo) {
-    res.sendfile(__appdir + '/data/firefuse.log');
-	} else {
+  if (machine.firefuse) {
     var err = undefined;
     if (machine.logLevel !== req.query.level) {
       machine.logLevel = req.query.level;
@@ -87,28 +67,37 @@ app.get('/firemote/log', function(req, res){
     } else {
       res.sendfile(filename);
     }
+	} else {
+    res.sendfile(__appdir + '/data/firefuse.log');
   }
 });
 
 app.get('/firemote/headcam.jpg', function(req, res){
   res.setHeader('Content-Type', 'image/jpeg');
-	if (machine.demo) {
-    res.sendfile(__appdir + '/img/camcv0.jpg');
-	} else {
+	if (machine.firefuse) {
     res.sendfile('/dev/firefuse/cam.jpg');
+	} else {
+    res.sendfile(__appdir + '/img/camcv0.jpg');
   }
 });
 
 app.get('/firemote/state', function(req, res){
-	firemote_respondJSON(res, machine.state);
+	machine.stateId++;
+	firemote_respondJSON(res, machine);
 });
 
 app.post('/firemote/state', function(req, res){
-	machine.state = req.body;
-	machine.state.stateId = machine.stateId++;
-	machine.state.message = "FireMote POST state response";
-	console.log("POST(/firemote/state) -> " + JSON.stringify(machine.state));
-	firemote_respondJSON(res, machine.state);
+	var newMachine = new firemote.MachineState(req.body);
+  if (machine.stateId === newMachine.stateId) {
+	  machine = newMachine;
+		machine.message = "FireMote POST state response";
+		console.log("POST(/firemote/state) -> " + JSON.stringify(machine));
+	} else {
+		machine.message = "Invalid stateId" + newMachine.stateId;
+	  console.log("POST(/firemote/state) -REJECTED->" + JSON.stringify(newMachine));
+	}
+	machine.stateId++;
+	firemote_respondJSON(res, machine);
 });
 
 app.listen(8000);
@@ -118,3 +107,7 @@ console.log("FIREMOTE");
 for (var k in firemote) {
 	 console.log(k);
 }
+
+var foo= [1,'a'];
+console.log("Array typeof is " + (typeof foo));
+console.log("instanceof Array " + (foo instanceof Array));

@@ -1,3 +1,4 @@
+///<reference path='common/ts/DeltaFactory.ts'/>
 ///<reference path='common/ts/Axis.ts'/>
 ///<reference path='common/ts/Part.ts'/>
 ///<reference path='common/ts/Spindle.ts'/>

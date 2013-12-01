@@ -156,6 +156,7 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(sc
       scope.control = control;
     }
     scope.onStateReceived = function(state) {
+			scope.machine = new firemote.MachineState(state);
       scope.status = state;
       scope.axisGantry = state.gantry || scope.axisGantry;
       scope.axisTrayFeeder = state.trayFeeder || scope.axisTrayFeeder;
