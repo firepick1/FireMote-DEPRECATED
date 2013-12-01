@@ -12,6 +12,35 @@ var firemote;
             return this.diff(obj1, obj2) ? false : true;
         };
 
+        DeltaFactory.prototype.applyDiff = function (diff, obj) {
+            if (diff instanceof Array) {
+                this.applyArrayDiff(diff, obj);
+            } else if (diff) {
+                for (var k in diff) {
+                    var val = diff[k];
+                    if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                        obj[k] = val;
+                    } else if (typeof obj[k] === 'undefined') {
+                        obj[k] = val;
+                    } else {
+                        this.applyDiff(val, obj[k]);
+                    }
+                }
+            }
+            return obj;
+        };
+
+        DeltaFactory.prototype.applyArrayDiff = function (diff, arr) {
+            for (var i = 0; i < arr.length; i++) {
+                var val = diff[i];
+                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                    arr[i] = val;
+                } else {
+                    this.applyDiff(val, arr[i]);
+                }
+            }
+        };
+
         DeltaFactory.prototype.diff = function (obj1, obj2) {
             var result = {};
             var changes = 0;
@@ -40,7 +69,7 @@ var firemote;
                     }
                 } else {
                     if (val1 !== val2) {
-                        if (typeof val1 === 'number' || typeof val1 === 'string') {
+                        if (typeof val1 === 'number' || typeof val1 === 'string' || typeof val1 === 'boolean') {
                             result[k] = val2;
                             changes++;
                         } else {

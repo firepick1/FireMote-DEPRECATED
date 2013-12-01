@@ -113,3 +113,4 @@ var fun = function(){return 1;}
 console.log("Array typeof is " + (typeof foo));
 console.log("instanceof Array " + (foo instanceof Array));
 console.log("typeof function " + (typeof fun));
+console.log("typeof true " + (typeof true));

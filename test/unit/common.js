@@ -1,6 +1,52 @@
 'use strict';
 
 describe('common-js-tests', function(){
+
+  it('7. should create a DeltaFactory', inject(function() {
+			var factory = new firemote.DeltaFactory();
+			expect(factory.diff({a:1,b:true,c:'red'}, {a:1,b:true,c:'red'})).toBe(false);
+			expect(factory.diff({a:1,b:true,c:'red'}, {a:2,b:true,c:'red'})).toEqual({a:2});
+			expect(factory.diff({a:1,b:true,c:'red'}, {a:1,b:false,c:'red'})).toEqual({b:false});
+			expect(factory.diff({a:1,b:true,c:'red'}, {a:1,b:true,c:'blue'})).toEqual({c:'blue'});
+			expect(factory.diff({a:1,b:2}, {a:1,b:2,c:3})).toEqual({c:3});
+			expect(factory.diff({a:1,b:2}, {a:1})).toEqual({b:undefined});
+			expect(factory.diff({a:1,b:2}, {a:3,b:2})).toEqual({a:3});
+			expect(factory.diff({a:1,b:2}, {a:3,b:'hello'})).toEqual({a:3,b:'hello'});
+			expect(factory.diff({a:1,b:{c:2},d:3}, {a:1,b:'hello'})).toEqual({b:'hello',d:undefined});
+			expect(factory.diff({a:1,b:{c:2},d:3}, {a:1,b:{c:3}})).toEqual({b:{c:3},d:undefined});
+			expect(factory.diff({a:1,b:{c:2,d:3,e:4},f:5}, {a:1,b:{c:2,d:-3,e:4},f:5})).toEqual({b:{d:-3}});
+			expect(factory.diff({a:1,b:{c:2,d:3,e:4},f:5}, {a:1,b:{c:3,d:3},f:6})).toEqual({b:{c:3,e:undefined},f:6});
+
+			expect(factory.diff([1,2,3],[1,2,3])).toEqual(false);
+			expect(factory.diff([1,2,3],[1,-2,3])).toEqual([undefined,-2,undefined]);
+			expect(factory.diff([{a:1},{b:{c:2,d:3}},{e:4}],[{a:1},{b:{c:2,d:-3}},{e:4}])).toEqual([undefined,{b:{d:-3}},undefined]);
+			expect(factory.diff([{a:1},{b:{c:2,d:3}},{e:4}],[{a:-1},{b:{c:2,d:3}},{e:-4}])).toEqual([{a:-1},undefined, {e:-4}]);
+
+			var axis1 = new firemote.Axis({pos:101,posMax:501});
+			var axis2 = new firemote.Axis({pos:102,posMax:502});
+			expect(factory.diff(axis1, axis1.clone())).toEqual(false);
+			expect(factory.diff(axis1, axis2)).toEqual({pos:102, posMax:502});
+
+			var pcbFeeder1 = new firemote.PcbFeeder();
+			var trayFeeder1 = new firemote.TrayFeeder();
+			expect(factory.diff(pcbFeeder1, trayFeeder1)).toEqual({axis: {name:'Tray Feeder'}});
+
+			var gantry1 = new firemote.Gantry();
+			var gantry2 = new firemote.Gantry();
+			gantry2.head.spindles[0].name = "L";
+			expect(factory.diff(gantry1, gantry2)).toEqual({head:{spindles:[{name:"L"}]}});
+
+			expect(factory.applyDiff({a:2},{a:1,b:true,c:'red'})).toEqual({a:2,b:true,c:'red'});
+			expect(factory.applyDiff({b:false},{a:1,b:true,c:'red'})).toEqual({a:1,b:false,c:'red'});
+			expect(factory.applyDiff({c:'blue'},{a:1,b:true,c:'red'})).toEqual({a:1,b:true,c:'blue'});
+			expect(factory.applyDiff({a:-1,b:{d:-3},f:'blue'},{a:1,b:{c:2,d:3,e:4},f:'red'})).toEqual({a:-1,b:{c:2,d:-3,e:4},f:'blue'});
+			expect(factory.applyDiff([undefined, undefined, undefined, undefined],[1,true,'red',{a:1,b:{c:2}}])).toEqual([1,true,'red',{a:1,b:{c:2}}]);
+			expect(factory.applyDiff([2, undefined, undefined, undefined],[1,true,'red',{a:1,b:{c:2}}])).toEqual([2,true,'red',{a:1,b:{c:2}}]);
+			expect(factory.applyDiff([undefined, false, 'blue', undefined],[1,true,'red',{a:1,b:{c:2}}])).toEqual([1,false,'blue',{a:1,b:{c:2}}]);
+			expect(factory.applyDiff([undefined, false, 'blue', {b:{c:-2}}],[1,true,'red',{a:1,b:{c:2}}])).toEqual([1,false,'blue',{a:1,b:{c:-2}}]);
+			expect(factory.applyDiff([undefined, {b:{c:[undefined,-2,-3]}}],[1,{a:1,b:{c:[1,2,3]}}])).toEqual([1,{a:1,b:{c:[1,-2,-3]}}]);
+  }));
+
   it('1. should create a Part', inject(function() {
 			var part = new firemote.Part();
 			expect(part.name).toBe("0 ohm resistor");
@@ -193,37 +239,4 @@ describe('common-js-tests', function(){
 		])).toEqual(true);
 
 	}));
-
-  it('7. should create a DeltaFactory', inject(function() {
-			var factory = new firemote.DeltaFactory();
-			expect(factory.diff({a:1,b:2}, {a:1,b:2})).toBe(false);
-			expect(factory.diff({a:1,b:2}, {a:1,b:2,c:3})).toEqual({c:3});
-			expect(factory.diff({a:1,b:2}, {a:1})).toEqual({b:undefined});
-			expect(factory.diff({a:1,b:2}, {a:3,b:2})).toEqual({a:3});
-			expect(factory.diff({a:1,b:2}, {a:3,b:'hello'})).toEqual({a:3,b:'hello'});
-			expect(factory.diff({a:1,b:{c:2},d:3}, {a:1,b:'hello'})).toEqual({b:'hello',d:undefined});
-			expect(factory.diff({a:1,b:{c:2},d:3}, {a:1,b:{c:3}})).toEqual({b:{c:3},d:undefined});
-			expect(factory.diff({a:1,b:{c:2,d:3,e:4},f:5}, {a:1,b:{c:2,d:-3,e:4},f:5})).toEqual({b:{d:-3}});
-			expect(factory.diff({a:1,b:{c:2,d:3,e:4},f:5}, {a:1,b:{c:3,d:3},f:6})).toEqual({b:{c:3,e:undefined},f:6});
-
-			expect(factory.diff([1,2,3],[1,2,3])).toEqual(false);
-			expect(factory.diff([1,2,3],[1,-2,3])).toEqual([undefined,-2,undefined]);
-			expect(factory.diff([{a:1},{b:{c:2,d:3}},{e:4}],[{a:1},{b:{c:2,d:-3}},{e:4}])).toEqual([undefined,{b:{d:-3}},undefined]);
-			expect(factory.diff([{a:1},{b:{c:2,d:3}},{e:4}],[{a:-1},{b:{c:2,d:3}},{e:-4}])).toEqual([{a:-1},undefined, {e:-4}]);
-
-			var axis1 = new firemote.Axis({pos:101,posMax:501});
-			var axis2 = new firemote.Axis({pos:102,posMax:502});
-			expect(factory.diff(axis1, axis1.clone())).toEqual(false);
-			expect(factory.diff(axis1, axis2)).toEqual({pos:102, posMax:502});
-
-			var pcbFeeder1 = new firemote.PcbFeeder();
-			var trayFeeder1 = new firemote.TrayFeeder();
-			expect(factory.diff(pcbFeeder1, trayFeeder1)).toEqual({axis: {name:'Tray Feeder'}});
-
-			var gantry1 = new firemote.Gantry();
-			var gantry2 = new firemote.Gantry();
-			gantry2.head.spindles[0].name = "L";
-			expect(factory.diff(gantry1, gantry2)).toEqual({head:{spindles:[{name:"L"}]}});
-  }));
-
 });
