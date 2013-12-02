@@ -29,31 +29,38 @@ controllers.controller('LogCtrl', ['$scope','$location',function(scope, location
     scope.view = "LOG";
 
     scope.logUrl = function() {
-    	return "/firemote/log?level=" + scope.log.level;
+    	return "/firemote/log?level=" + scope.machine.logLevel;
     }
 
 }]);
 
 controllers.controller('MoveCtrl', ['$scope','$location',function(scope, location) {
     scope.view = "MOVE";
+		
+		var spindles = scope.machine.gantries[0].head.spindles;
 
     for (var i = 0; i < scope.axes.length; i++) {
       scope.axes[i].posNew = scope.axes[i].pos;
     }
 
-    scope.moveClick = function() {
-      scope.spindleLeft.pos = 100;  
-      scope.spindleRight.pos = 100;
-      scope.postState();
+		scope.posEdited = function(axis) {
+			axis.posNew = typeof axis.posNew === 'number' ? axis.posNew : parseFloat(axis.posNew);
+			axis.posNew = isNaN(axis.posNew) ? axis.pos : axis.posNew;
+      axis.posNew = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.posNew))/10.0));
+			axis.pos = axis.posNew;
+		}
+
+		scope.moveClick = function() {
+		  scope.machine.clearForLinearMotion();
+      scope.postMachineState();
     }
 
     scope.jogAxis = function(axis, delta) {
-      scope.spindleLeft.pos = 100;  
-      scope.spindleRight.pos = 100;
-      axis.posNew = typeof axis.posNew === 'number' ? axis.posNew : parseFloat(axis.posNew);
+		  scope.machine.clearForLinearMotion();
       delta = typeof delta === 'number' ? delta : parseFloat(delta);
-      axis.posNew = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.posNew + delta))/10.0));
-      scope.postState();
+      axis.pos = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.pos + delta))/10.0));
+			axis.posNew = axis.pos;
+      scope.postMachineState();
     }
 }]);
 
@@ -80,8 +87,13 @@ controllers.controller('SpindleCtrl', ['$scope','$location',function(scope, loca
     }
 }]);
 
-controllers.controller('StatusCtrl', ['$scope','$location',function(scope, location) {
+controllers.controller('StatusCtrl', ['$scope','$location', 'machineLocal', 'machineRemote', 
+	function(scope, location, machineLocal, machineRemote) {
     scope.view = "STATUS";
+		var df = new firemote.DeltaFactory();
+		var diff = df.diff(machineRemote, machineLocal);
+		scope.diffLocal = diff;
+		
 }]);
 
 controllers.controller('CalibrateCtrl', ['$scope','$location','Status', 'State', function(scope, location, Status, State) {
@@ -90,31 +102,26 @@ controllers.controller('CalibrateCtrl', ['$scope','$location','Status', 'State',
     scope.calibrate = function () {
       alert("calibrating...");
       scope.updateStatus();
-      scope.axisGantry.calibrate = false;
-      scope.axisTrayFeeder.calibrate = false;
-      scope.axisPcbFeeder.calibrate = false;
+      scope.machine.gantries[0].axis.calibrate = false;
+      scope.machine.trayFeeders[0].axis.calibrate = false;
+      scope.machine.pcbFeeders[0].axis.calibrate = false;
     }
     scope.calibrateClass = function() {
-      return scope.axisGantry.calibrate 
-        || scope.axisTrayFeeder.calibrate 
-        || scope.axisPcbFeeder.calibrate
+      return scope.machine.gantries[0].axis.calibrate 
+        || scope.machine.trayFeeders[0].axis.calibrate 
+        || scope.machine.pcbFeeders[0].axis.calibrate
         ? "" : "hide";
     }
 }]);
 
-controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(scope, location, FireMote) {
+controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'machineLocal', 'machineRemote', 
+  function(scope, location, BackgroundThread, machineLocal, machineRemote) {
     scope.view = "MAIN";
-		scope.machine = new firemote.MachineState();
-    scope.log = {level:"INFO"};
+		scope.machine = machineLocal;
+		scope.machineRemote = machineRemote;
     scope.imageLarge = false;
-    scope.head = {angle:0, light: true}; // default
-    scope.axisGantry = {name:"Gantry", pos:0, posMax:624, calibrate:false, jog:1}; // default
-    scope.axisTrayFeeder = {name:"Tray Feeder", pos:0, posMax:300, calibrate:false, jog:1}; // default
-    scope.axisPcbFeeder = {name:"PCB Feeder", pos:0, posMax:300, calibrate:false, jog:1}; // default
-    scope.spindleLeft = {pos:0, name:"Left", side:"left", on:true, part:true}; // default
-    scope.spindleRight = {pos:100, name:"Right", side:"right", on:false, part:false}; // default
     scope.control = location.path() || "/status";
-    scope.axes = [scope.axisGantry, scope.axisTrayFeeder, scope.axisPcbFeeder] 
+    scope.axes = scope.machine.axes();
     scope.isActive = [];
 
     scope.camImageClick = function() {
@@ -132,7 +139,7 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(sc
 			alert("not implemented");
     }
     scope.hsliderLeft = function() {
-      return (scope.axisGantry.pos * (700 - 36) / scope.axisGantry.posMax); 
+      return (scope.machine.gantries[0].axis.pos * (700 - 36) / scope.machine.gantries[0].axis.posMax); 
     }
     scope.hsliderChange = function() {
       for (var i = 0; i < scope.axes.length; i++) {
@@ -140,7 +147,7 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(sc
       }
     }
     scope.hsliderNumberClass = function() {
-      return scope.head.light ? "hslider-number hslider-number-light": "hslider-number";
+      return scope.machine.gantries[0].head.light ? "hslider-number hslider-number-light": "hslider-number";
     }
     scope.hsliderSpindleClass = function(spindle) {
       var result = "spindle spindle-" + spindle.side;
@@ -155,43 +162,38 @@ controllers.controller('MainCtrl', ['$scope','$location','FireMote', function(sc
       location.path(control);
       scope.control = control;
     }
-    scope.onStateReceived = function(state) {
-			scope.machine = new firemote.MachineState(state);
-      scope.status = state;
-      scope.axisGantry = state.gantry || scope.axisGantry;
-      scope.axisTrayFeeder = state.trayFeeder || scope.axisTrayFeeder;
-      scope.axisPcbFeeder = state.pcbFeeder || scope.axisPcbFeeder;
-      scope.head = state.head || scope.head;
-      scope.spindleLeft = state.spindleLeft || scope.spindleLeft;
-      scope.spindleRight = state.spindleRight || scope.spindleRight;
-
-      scope.axes = [scope.axisGantry, scope.axisTrayFeeder, scope.axisPcbFeeder] 
+    scope.onMachineStateReceived = function(remoteMachineState) {
+			try {
+				var newMachineRemote = new firemote.MachineState(remoteMachineState);
+				var df = new firemote.DeltaFactory();
+				scope.diffRemote = df.diff(scope.machineRemote, newMachineRemote);
+				scope.diffLocal = df.diff(scope.machineRemote, scope.machine);
+				scope.updated = new Date().toLocaleTimeString();
+				df.applyDiff(scope.diffRemote, scope.machineRemote);
+				df.applyDiff(scope.diffRemote, scope.machine);
+				df.applyDiff(scope.diffLocal, scope.machine);
+			} catch (e) {
+				alert("onMachineStateReceived()\n" + e);
+			}
     };
-    scope.postState = function() {
-      var state = {
-        gantry:scope.axisGantry,
-        trayFeeder:scope.axisTrayFeeder,
-        pcbFeeder:scope.axisPcbFeeder,
-        head:scope.head,
-        spindleLeft:scope.spindleLeft,
-        spindleRight:scope.spindleRight
-      };
-      state.trayFeeder.pos = state.trayFeeder.posNew;
-      state.pcbFeeder.pos = state.pcbFeeder.posNew;
-      state.gantry.pos = state.gantry.posNew;
-      FireMote.post(state, scope.onStateReceived);
+    scope.postMachineState = function() {
+			scope.machine.stateId = scope.machineRemote.stateId + 1;
+			var diff = new firemote.DeltaFactory().diff(scope.machineRemote, scope.machine);
+			if (diff) {
+				BackgroundThread.postMachineStateDiff(diff, scope.onMachineStateReceived);
+			}
     };
     scope.updateStatus = function() {
-      FireMote.get(scope.onStateReceived);
+      BackgroundThread.get(scope.onMachineStateReceived);
     };
-		scope.firemote = FireMote;
-		scope.firemote.onFireStep = function(firestep) {
+		scope.backgroundThread = BackgroundThread;
+		scope.backgroundThread.onFireStep = function(firestep) {
 			if (!(typeof firestep.mpoy === 'undefined')) {
-				if (scope.axisGantry.pos === scope.axisGantry.posNew) {
+				if (scope.machine.gantries[0].axis.pos === scope.machine.gantries[0].axis.posNew) {
 					scope.state.gantry.pos = firestep.mpoy;
 					scope.state.gantry.posNew = firestep.mpoyNew;
-					scope.axisGantry.pos = firestep.mpoy;
-					scope.axisGantry.posNew = firestep.mpoy;
+					scope.machine.gantries[0].axis.pos = firestep.mpoy;
+					scope.machine.gantries[0].axis.posNew = firestep.mpoy;
 				} 
 		  }
 		}

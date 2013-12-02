@@ -27,5 +27,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<tr class="status-row" ng-repeat="gantry in machine.gantries"><th>Gantry:</th><td>{{gantry}}</td></tr>
 	<tr class="status-row" ng-repeat="trayFeeder in machine.trayFeeders"><th>Tray Feeder:</th><td>{{trayFeeder}}</td></tr>
 	<tr class="status-row" ng-repeat="pcbFeeder in machine.pcbFeeders"><th>PCB Feeder:</th><td>{{pcbFeeder}}</td></tr>
-	<tr class="status-row"><th>FireStep:</th><td>{{firemote.firestep}}</td></tr>
+	<tr class="status-row"><th>FireStep:</th><td>{{machine.firestep}}</td></tr>
+	<tr class="status-row"><th>diffLocal:</th><td>{{diffLocal}}</td></tr>
+	<tr class="status-row"><th>diffRemote:</th><td>{{diffRemote}}</td></tr>
+	<tr class="status-row"><th>updated:</th><td>{{updated}}</td></tr>
 </table>

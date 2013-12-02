@@ -23,12 +23,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 var services = angular.module('FireMote.services', []);
 
 services.value('version', '0.1');
+services.value('machineLocal', new firemote.MachineState());
+services.value('machineRemote', new firemote.MachineState());
 
-services.factory('FireMote', ['$http', '$interval', function($http, $interval){
+services.factory('BackgroundThread', ['$http', '$interval', function($http, $interval){
 	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
-	//var animation = ['\u2665', '\u2764'];
-	//var animation = ['\u2190', '\u2196', '\u2191', '\u2197', '\u2192', '\u2198', '\u2193', '\u2199'];
-  var firemote = {
+  var backgroundThread = {
 		onFireStep: function(firestep) {},
 		firestep: {"firestep":"...", "seconds":null},
 		t:0,
@@ -41,8 +41,8 @@ services.factory('FireMote', ['$http', '$interval', function($http, $interval){
 					alert("Could not get status");
 				});
 		},
-		post: function(postData, callback) {
-			var json = JSON.stringify(postData);
+		postMachineStateDiff: function(diff, callback) {
+			var json = JSON.stringify(diff);
 			$http.post("firemote/state", json)
 				.success(function(data) {
 					callback(data);
@@ -56,18 +56,18 @@ services.factory('FireMote', ['$http', '$interval', function($http, $interval){
 	$interval(function(seconds) {
 		$http.get("firemote/firestep")
 			.success(function(data) {
-				firemote.firestep = data;
-				firemote.firestep.t = animation[seconds % animation.length];
-				firemote.onFireStep(firemote.firestep);
-				firemote.t++;
+				backgroundThread.firestep = data;
+				backgroundThread.firestep.t = animation[seconds % animation.length];
+				backgroundThread.onFireStep(backgroundThread.firestep);
+				backgroundThread.t++;
 			})
 			.error(function(data, status, headers, config) {
-				firemote.firestep = {error:"could not get firemote/state",data:data,status:status};
-				firemote.firestep.t = animation[seconds % animation.length];
+				backgroundThread.firestep = {error:"could not get firemote/state",data:data,status:status};
+				backgroundThread.firestep.t = animation[seconds % animation.length];
 			})
 
-		}, 1000);
+		}, 10000);
 
-	return firemote;
+	return backgroundThread;
 }]);
 

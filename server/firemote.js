@@ -8,6 +8,7 @@ app.use(express.bodyParser());
 var tsr = require('typescript-require');
 var firemote = require('../www/js/firemote.js');
 var machine = new firemote.MachineState();
+var deltaFactory = new firemote.DeltaFactory();
 
 firemote_respondJSON = function(res, obj) {
 	if (typeof obj === 'undefined') {
@@ -82,21 +83,20 @@ app.get('/firemote/headcam.jpg', function(req, res){
 });
 
 app.get('/firemote/state', function(req, res){
-	machine.stateId++;
 	firemote_respondJSON(res, machine);
 });
 
 app.post('/firemote/state', function(req, res){
-	var newMachine = new firemote.MachineState(req.body);
-  if (machine.stateId === newMachine.stateId) {
-	  machine = newMachine;
+	var diff = req.body;
+	if (diff.stateId === machine.stateId + 1) {
+	  deltaFactory.applyDiff(diff, machine);
 		machine.message = "FireMote POST state response";
-		console.log("POST(/firemote/state) -> " + JSON.stringify(machine));
+		console.log("POST(/firemote/state) -> " + JSON.stringify(diff));
 	} else {
-		machine.message = "Invalid stateId" + newMachine.stateId;
-	  console.log("POST(/firemote/state) -REJECTED->" + JSON.stringify(newMachine));
+		machine.message = "Invalid stateId actual:" + diff.stateId + " expected:" + (machine.stateId+1);
+		console.log(machine.message);
+	  console.log("POST(/firemote/state) -REJECTED->" + JSON.stringify(diff));
 	}
-	machine.stateId++;
 	firemote_respondJSON(res, machine);
 });
 

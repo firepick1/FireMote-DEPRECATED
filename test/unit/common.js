@@ -4,7 +4,7 @@ describe('common-js-tests', function(){
 
   it('7. should create a DeltaFactory', inject(function() {
 			var factory = new firemote.DeltaFactory();
-			expect(factory.diff({a:1,b:true,c:'red'}, {a:1,b:true,c:'red'})).toBe(false);
+			expect(factory.diff({a:1,b:true,c:'red','$$hashKey':'009'}, {a:1,b:true,c:'red'})).toBe(false);
 			expect(factory.diff({a:1,b:true,c:'red'}, {a:2,b:true,c:'red'})).toEqual({a:2});
 			expect(factory.diff({a:1,b:true,c:'red'}, {a:1,b:false,c:'red'})).toEqual({b:false});
 			expect(factory.diff({a:1,b:true,c:'red'}, {a:1,b:true,c:'blue'})).toEqual({c:'blue'});

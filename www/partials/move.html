@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 	<div class="form-group" ng-repeat="axis in axes">
 		<label for="posGantry" class="col-xs-3 control-label">{{axis.name}}</label>
 		<div class="col-xs-2">
-			<input id="posGantry" type="text" class="form-control" ng-model="axis.posNew"/>
+			<input id="posGantry" type="text" class="form-control" ng-model="axis.posNew" ng-change="posEdited(axis)"/>
 		</div>
 		<div class="col-xs-3">
 			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, -axis.jog)"><span class="h3">&#x2013;</span></button>

@@ -3,6 +3,7 @@ module firemote {
 	export class Head {
 			spindles: Spindle[] = [];
 			angle: number = 0;
+			light: boolean = true;
 
 			constructor(obj = undefined) {
 			  if (typeof obj === 'string') {
@@ -10,6 +11,7 @@ module firemote {
 				}
 				if (typeof obj !== 'undefined') {
 				  if (obj.hasOwnProperty("angle")) this.angle = obj.angle;
+				  if (obj.hasOwnProperty("light")) this.light = obj.light;
 					if (obj.spindles && obj.spindles.length > 0) {
 					  for (var i = 0; i < obj.spindles.length; i++) {
 						  this.spindles.push(new Spindle(obj.spindles[i]));

@@ -51,6 +51,8 @@ module firemote {
 			  return this.diffArray(obj1, obj2);
 			}
 			for (var k in obj1) {
+				if (k === '$$hashKey') continue; // ignore angularjs injection
+
 				var val1 = obj1[k];
 				var val2 = obj2[k];
 				if (typeof val1 === 'function' || typeof val2 === 'function') {
@@ -80,6 +82,7 @@ module firemote {
 				}
 			}
 			for (var k in obj2) {
+				if (k === '$$hashKey') continue; // ignore angularjs injection
 				var val1 = obj1[k];
 				var val2 = obj2[k];
 				if (typeof val1 === 'undefined') {

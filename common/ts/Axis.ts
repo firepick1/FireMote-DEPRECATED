@@ -5,7 +5,7 @@ module firemote {
 			pos: number = 0;
 			posMax: number = 100;
 			jog: number = 1;
-			calibrate: Boolean = false;
+			calibrate: boolean = false;
 
 			constructor(obj = undefined) {
 				if (typeof obj === 'string') {

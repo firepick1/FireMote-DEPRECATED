@@ -22,36 +22,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <div class="panel-header h3 text-centered">Adjust Pick and Place Spindles</div>
 
 <div class="row">
-	<div class="col-xs-4 ">
-		<div><input type='text' class="form-control text-centered" ng-model="spindleLeft.name"/></div>
-		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleLeft.pos" />
-		<div class="col-xs-1 col-xs-offset-2">{{spindleLeft.pos}}%</div>
-	</div>
-	<div class="col-xs-4 col-xs-offset-3">
-		<div><input type='text' class="form-control text-centered" ng-model="spindleRight.name"/></div>
-		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindleRight.pos" />
-		<div class="col-xs-1 col-xs-offset-2">{{spindleRight.pos}}%</div>
+	<div class="col-xs-3">&nbsp;</div>
+	<div class="col-xs-4 " ng-repeat="spindle in machine.gantries[0].head.spindles">
+		<div><input type='text' class="form-control text-centered" ng-model="spindle.name"/></div>
+		<input class="vslider" type="range" min="0" max="100" step="100" ng-model="spindle.pos" />
+		<div class="col-xs-1 col-xs-offset-2">{{spindle.pos}}%</div>
 	</div>
 </div>
 <div class="row ">
-		<div class="col-xs-2 col-xs-offset-1">
-			<button type="button" class="btn btn-checkbox center-block " ng-model="spindleLeft.on" ng-click="vacuumClick(spindleLeft)" btn-checkbox >
-				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
-			</button>
-		</div>
-		<div class="col-xs-5 ">
-			<input class="form-control " type="range" min="0" max="360" step="1" ng-model="head.angle" />
-		</div>
-		<div class="col-xs-2 ">
-			<button type="button" class="btn btn-checkbox" ng-model="spindleRight.on" ng-click="vacuumClick(spindleRight)" btn-checkbox >
-				<div class="angle-pointer" style="{{rotateStyle(head)}}">&nbsp;</div>
+		<label class="col-xs-4 ">Vacuum</label>
+		<div class="col-xs-4 " ng-repeat="spindle in machine.gantries[0].head.spindles">
+			<button type="button" class="btn btn-checkbox center-block " ng-model="spindle.on" ng-click="vacuumClick(spindles)" btn-checkbox >
+				<div class="angle-pointer" style="{{rotateStyle(machine.gantries[0].head)}}">&nbsp;</div>
 			</button>
 		</div>
 </div>
-<div class="row">
+<div class="row ">
+	&nbsp;
 </div>
 <div class="row">
-		<div class="col-xs-3 col-xs-offset-1">Vacuum</div>
-		<div class="col-xs-4 ">{{head.angle}} Degrees</div>
-		<div class="col-xs-3 ">Vacuum</div>
+	<label class="col-xs-4">{{machine.gantries[0].head.angle}} Degrees</label>
+	<div class="col-xs-8 ">
+		<input class="form-control " type="range" min="0" max="360" step="1" ng-model="machine.gantries[0].head.angle" />
+	</div>
 </div>

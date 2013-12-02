@@ -41,6 +41,15 @@ module firemote {
 			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder());
 		}
 
+		clearForLinearMotion() {
+		  for (var i = 0; i < this.gantries.length; i++) {
+			  var spindles = this.gantries[i].head.spindles;
+			  for (var j = 0; j < spindles.length; j++) {
+					spindles[j].pos = 100; // raise all spindles
+				}
+			}
+		}
+
 		axes(): Axis[] {
 		  var result:Axis[] = [];
 

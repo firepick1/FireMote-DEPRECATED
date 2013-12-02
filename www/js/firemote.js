@@ -54,6 +54,9 @@ var firemote;
                 return this.diffArray(obj1, obj2);
             }
             for (var k in obj1) {
+                if (k === '$$hashKey')
+                    continue;
+
                 var val1 = obj1[k];
                 var val2 = obj2[k];
                 if (typeof val1 === 'function' || typeof val2 === 'function') {
@@ -83,6 +86,8 @@ var firemote;
                 }
             }
             for (var k in obj2) {
+                if (k === '$$hashKey')
+                    continue;
                 var val1 = obj1[k];
                 var val2 = obj2[k];
                 if (typeof val1 === 'undefined') {
@@ -267,12 +272,15 @@ var firemote;
             if (typeof obj === "undefined") { obj = undefined; }
             this.spindles = [];
             this.angle = 0;
+            this.light = true;
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
             if (typeof obj !== 'undefined') {
                 if (obj.hasOwnProperty("angle"))
                     this.angle = obj.angle;
+                if (obj.hasOwnProperty("light"))
+                    this.light = obj.light;
                 if (obj.spindles && obj.spindles.length > 0) {
                     for (var i = 0; i < obj.spindles.length; i++) {
                         this.spindles.push(new firemote.Spindle(obj.spindles[i]));
@@ -406,6 +414,15 @@ var firemote;
             this.trayFeeders.length > 0 || this.trayFeeders.push(new firemote.TrayFeeder());
             this.pcbFeeders.length > 0 || this.pcbFeeders.push(new firemote.PcbFeeder());
         }
+        MachineState.prototype.clearForLinearMotion = function () {
+            for (var i = 0; i < this.gantries.length; i++) {
+                var spindles = this.gantries[i].head.spindles;
+                for (var j = 0; j < spindles.length; j++) {
+                    spindles[j].pos = 100;
+                }
+            }
+        };
+
         MachineState.prototype.axes = function () {
             var result = [];
 

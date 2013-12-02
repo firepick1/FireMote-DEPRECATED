@@ -47,12 +47,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <body>
   <div ng-controller="MainCtrl">
     <a href="http://github.com/firepick1/FireMote/wiki"><img class="logo" src="img/FireMote.png"/></a>
-    <img class="cam-image" ng-src="firemote/headcam.jpg?t={{firemote.t}}" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
+    <img class="cam-image" ng-src="firemote/headcam.jpg?t={{backgroundThread.t}}" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
     <div class="hslider-container">
-      <div onselectstart="return false" class="{{hsliderNumberClass()}}" style="left:{{hsliderLeft()}}px">{{axisGantry.pos}}</div>
-      <input class="hslider" type="range" min="0" max="{{axisGantry.posMax}}" step="1" ng-model="axisGantry.pos" ng-change="hsliderChange()" />
-      <div class="{{hsliderSpindleClass(spindleLeft)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
-      <div class="{{hsliderSpindleClass(spindleRight)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
+      <div onselectstart="return false" class="{{hsliderNumberClass()}}" style="left:{{hsliderLeft()}}px">{{machine.gantries[0].axis.pos}}</div>
+      <input class="hslider" type="range" min="0" max="{{machine.gantries[0].axis.posMax}}" step="1" ng-model="machine.gantries[0].axis.pos" ng-change="hsliderChange()" />
+      <div ng-repeat="spindle in machine.gantries[0].head.spindles" class="{{hsliderSpindleClass(spindle)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
     </div>
 
     <div class="detail-controls">
