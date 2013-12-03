@@ -145,6 +145,7 @@ controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'ma
       for (var i = 0; i < scope.axes.length; i++) {
         scope.axes[i].posNew = scope.axes[i].pos;
       }
+			scope.postMachineState();
     }
     scope.hsliderNumberClass = function() {
       return scope.machine.gantries[0].head.light ? "hslider-number hslider-number-light": "hslider-number";
