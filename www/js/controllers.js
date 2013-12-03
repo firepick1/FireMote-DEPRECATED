@@ -96,7 +96,7 @@ controllers.controller('StatusCtrl', ['$scope','$location', 'machineLocal', 'mac
 		
 }]);
 
-controllers.controller('CalibrateCtrl', ['$scope','$location','Status', 'State', function(scope, location, Status, State) {
+controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, location) {
     scope.view = "CALIBRATE";
 
     scope.calibrate = function () {
@@ -186,17 +186,7 @@ controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'ma
     scope.updateStatus = function() {
       BackgroundThread.get(scope.onMachineStateReceived);
     };
-		scope.backgroundThread = BackgroundThread;
-		scope.backgroundThread.onFireStep = function(firestep) {
-			if (!(typeof firestep.mpoy === 'undefined')) {
-				if (scope.machine.gantries[0].axis.pos === scope.machine.gantries[0].axis.posNew) {
-					scope.state.gantry.pos = firestep.mpoy;
-					scope.state.gantry.posNew = firestep.mpoyNew;
-					scope.machine.gantries[0].axis.pos = firestep.mpoy;
-					scope.machine.gantries[0].axis.posNew = firestep.mpoy;
-				} 
-		  }
-		}
-
+		BackgroundThread.onMachineStateReceived = scope.onMachineStateReceived;
     scope.updateStatus();
+
 }]);

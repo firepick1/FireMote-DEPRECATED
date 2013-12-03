@@ -246,6 +246,7 @@ fieldset[disabled] .btn-unit.active {
 	font: 8pt Verdana;
 }
 .detail-controls {
+	position: relative;
 	margin-top: 50px;
 }
 .form-control:focus {
@@ -338,18 +339,21 @@ fieldset[disabled] .btn-unit.active {
 	outline-style: solid !important;
 }
 .partials {
-	float: left;
-	position: relative;
+	position: absolute;
+	left:104px;
+	top:0px;
 	border-left: 3pt solid #fa0;
 	padding: 5px;
 	padding-left: 10px;
 	z-index: 1;
-	height:300px;
+	min-height:300px;
 }
 .sidebar {
-	position: relative;
-	float: left;
+	position: absolute;
+	left:0px;
+	top:0px;
 	padding-left: 5pt;
+	padding-top: 10px;
 	margin-right: -3px;
 }
 .spindle {

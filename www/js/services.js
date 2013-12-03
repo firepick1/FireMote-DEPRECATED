@@ -26,12 +26,11 @@ services.value('version', '0.1');
 services.value('machineLocal', new firemote.MachineState());
 services.value('machineRemote', new firemote.MachineState());
 
-services.factory('BackgroundThread', ['$http', '$interval', function($http, $interval){
+services.factory('BackgroundThread', ['$http', '$interval', 'machineRemote', 
+		function($http, $interval, machineRemote, machineLocal){
 	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
   var backgroundThread = {
-		onFireStep: function(firestep) {},
-		firestep: {"firestep":"...", "seconds":null},
-		t:0,
+		onMachineStateReceived: function(state){},
 		get: function(callback){
 			$http.get("firemote/state")
 				.success(function(data) {
@@ -54,19 +53,17 @@ services.factory('BackgroundThread', ['$http', '$interval', function($http, $int
 	};
 
 	$interval(function(seconds) {
-		$http.get("firemote/firestep")
+		var df = new firemote.DeltaFactory();
+
+		$http.get("firemote/state")
 			.success(function(data) {
-				backgroundThread.firestep = data;
-				backgroundThread.firestep.t = animation[seconds % animation.length];
-				backgroundThread.onFireStep(backgroundThread.firestep);
-				backgroundThread.t++;
+				backgroundThread.onMachineStateReceived(data);
 			})
 			.error(function(data, status, headers, config) {
-				backgroundThread.firestep = {error:"could not get firemote/state",data:data,status:status};
-				backgroundThread.firestep.t = animation[seconds % animation.length];
+				alert({error:"could not get firemote/state",data:data,status:status});
 			})
 
-		}, 10000);
+		}, 1000);
 
 	return backgroundThread;
 }]);
