@@ -466,11 +466,11 @@ var firemote;
                 if (obj.hasOwnProperty("name"))
                     this.name = obj.name;
                 if (obj.hasOwnProperty("pos"))
-                    this.pos = obj.pos;
+                    this.pos = obj.pos * 1;
                 if (obj.hasOwnProperty("posMax"))
-                    this.posMax = obj.posMax;
+                    this.posMax = obj.posMax * 1;
                 if (obj.hasOwnProperty("jog"))
-                    this.jog = obj.jog;
+                    this.jog = obj.jog * 1;
                 if (obj.hasOwnProperty("calibrate"))
                     this.calibrate = obj.calibrate;
             }

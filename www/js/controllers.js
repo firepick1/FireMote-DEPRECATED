@@ -39,28 +39,13 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 		
 		var spindles = scope.machine.gantries[0].head.spindles;
 
-    for (var i = 0; i < scope.axes.length; i++) {
-      scope.axes[i].posNew = scope.axes[i].pos;
-    }
-
-		scope.posEdited = function(axis) {
-			axis.posNew = typeof axis.posNew === 'number' ? axis.posNew : parseFloat(axis.posNew);
-			axis.posNew = isNaN(axis.posNew) ? axis.pos : axis.posNew;
-      axis.posNew = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.posNew))/10.0));
-			axis.pos = axis.posNew;
-		}
-
-		scope.moveClick = function() {
-		  scope.machine.clearForLinearMotion();
-      scope.postMachineState();
-    }
-
     scope.jogAxis = function(axis, delta) {
 		  scope.machine.clearForLinearMotion();
-      delta = typeof delta === 'number' ? delta : parseFloat(delta);
-      axis.pos = Math.min(axis.posMax,Math.max(0, Math.round(10.0*(axis.pos + delta))/10.0));
-			axis.posNew = axis.pos;
-      scope.postMachineState();
+			var newPos = axis.pos*1 + delta*1;
+			if (0 <= newPos && newPos <= axis.posMax) {
+			  axis.pos = newPos;
+				scope.postMachineState();
+			}
     }
 }]);
 
@@ -122,6 +107,7 @@ controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'ma
     scope.imageLarge = false;
     scope.control = location.path() || "/status";
     scope.axes = scope.machine.axes();
+    scope.remoteAxes = scope.machineRemote.axes();
     scope.isActive = [];
 
     scope.camImageClick = function() {
@@ -141,12 +127,6 @@ controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'ma
     scope.hsliderLeft = function() {
       return (scope.machine.gantries[0].axis.pos * (700 - 36) / scope.machine.gantries[0].axis.posMax); 
     }
-    scope.hsliderChange = function() {
-      for (var i = 0; i < scope.axes.length; i++) {
-        scope.axes[i].posNew = scope.axes[i].pos;
-      }
-			scope.postMachineState();
-    }
     scope.hsliderNumberClass = function() {
       return scope.machine.gantries[0].head.light ? "hslider-number hslider-number-light": "hslider-number";
     }
@@ -159,6 +139,9 @@ controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'ma
 
       return result;
     }
+		scope.hsliderChange() {
+			scope.postMachineState();
+		}
     scope.viewControl = function(control) {
       location.path(control);
       scope.control = control;

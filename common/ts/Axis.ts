@@ -13,9 +13,9 @@ module firemote {
 				}
 				if (typeof obj !== 'undefined') {
 				  if (obj.hasOwnProperty("name")) this.name = obj.name;
-					if (obj.hasOwnProperty("pos")) this.pos = obj.pos;
-					if (obj.hasOwnProperty("posMax")) this.posMax = obj.posMax;
-					if (obj.hasOwnProperty("jog")) this.jog = obj.jog;
+					if (obj.hasOwnProperty("pos")) this.pos = obj.pos*1;
+					if (obj.hasOwnProperty("posMax")) this.posMax = obj.posMax*1;
+					if (obj.hasOwnProperty("jog")) this.jog = obj.jog*1;
 					if (obj.hasOwnProperty("calibrate")) this.calibrate = obj.calibrate;
 				}
 			}

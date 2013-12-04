@@ -23,15 +23,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <div class="form-horizontal">
 	<div class="form-group" ng-repeat="axis in axes">
 		<label for="posGantry" class="col-xs-3 control-label">{{axis.name}}</label>
-		<div class="col-xs-2">
-			<input id="posGantry" type="text" class="form-control" ng-model="axis.posNew" ng-change="posEdited(axis)"/>
+		<div class="col-xs-3">
+			<input id="posGantry" type="number" min="0" max="axis.posMax" step="{{axis.jog}}" class="form-control" ng-model="axis.pos" ng-blur="postMachineState()"/>
 		</div>
 		<div class="col-xs-3">
 			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, -axis.jog)"><span class="h3">&#x2013;</span></button>
 			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, axis.jog)"><span class="h3">+</span></button>
 		</div>
 		<div class="col-xs-3">
-			<select class="form-control" ng-model="axis.jog">
+			<select class="form-control" ng-change="axis.jog=axis.jog*1" ng-model="axis.jog">
 				<option value="0.1">&#xb1;0.1mm</option>
 				<option value="0.5">&#xb1;0.5mm</option>
 				<option value="1">&#xb1;1mm</option>
@@ -42,5 +42,4 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 			</select>
 		</div>
 	</div>
-	<button class="big-button " ng-click="moveClick()">Move</button>
 </div>
