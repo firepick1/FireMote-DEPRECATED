@@ -51,7 +51,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
     <div class="hslider-container" ng-repeat="gantry in machine.gantries">
       <div onselectstart="return false" class="{{hsliderNumberClass()}}" style="left:{{hsliderLeft()}}px">{{machine.gantries[0].axis.pos}}</div>
 			<input class="hslider" type="range" min="0" max="{{gantry.axis.posMax}}" step="1" 
-				ng-model="gantry.axis.pos" ng-change="gantry.axis.pos=gantry.axis.pos*1" ng-blur="postMachineState()" ng-Dblclick="postMachineState()"/>
+				ng-model="gantry.axis.pos" ng-change="hsliderChange(gantry.axis)" />
       <div ng-repeat="spindle in gantry.head.spindles" class="{{hsliderSpindleClass(spindle)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
     </div>
 

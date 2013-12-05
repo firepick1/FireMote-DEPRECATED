@@ -99,8 +99,8 @@ controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, l
     }
 }]);
 
-controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'machineLocal', 'machineRemote', 
-  function(scope, location, BackgroundThread, machineLocal, machineRemote) {
+controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundThread', 'machineLocal', 'machineRemote', 
+  function(scope, location, $timeout, BackgroundThread, machineLocal, machineRemote) {
     scope.view = "MAIN";
 		scope.machine = machineLocal;
 		scope.machineRemote = machineRemote;
@@ -139,13 +139,20 @@ controllers.controller('MainCtrl', ['$scope','$location','BackgroundThread', 'ma
 
       return result;
     }
-		scope.hsliderChange() {
-			scope.postMachineState();
-		}
+		scope.hsliderChange = function(axis) {
+			axis.pos = axis.pos*1; // convert slider string to number
+			if (scope.hsliderPromise) {
+				$timeout.cancel(scope.hsliderPromise);
+			}
+			scope.hsliderPromise = $timeout(function() {
+				scope.hsliderPromise = false;
+				scope.postMachineState();
+			}, 1000);
+		};
     scope.viewControl = function(control) {
       location.path(control);
       scope.control = control;
-    }
+    };
     scope.onMachineStateReceived = function(remoteMachineState) {
 			try {
 				var newMachineRemote = new firemote.MachineState(remoteMachineState);
