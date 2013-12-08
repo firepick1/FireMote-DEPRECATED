@@ -1,0 +1,41 @@
+<!--
+configure.html https://github.com/firepick1/FireMote/wiki
+
+Copyright (C) 2013  Karl Lew, <karl@firepick.org>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+
+<div class="panel-heading h3 text-center">Configure</div>
+<div class="form-horizontal">
+	<div class="form-group" >
+		<div class="col-xs-3 col-xs-offset-3"><label>Maximum Position</label></div>
+			<div class="col-xs-4 "><label>GCode Axis</label></div>
+	</div>
+	<div class="form-group" ng-repeat="axis in axes">
+		<label for="pos{{axis.name}}" class="col-xs-3 control-label">{{axis.name}}</label>
+		<div class="col-xs-3">
+			<input id="pos{{axis.name}}" type="number" min="0" class="form-control" ng-model="axis.posMax" ng-blur="postMachineState()"/>
+		</div>
+		<div class="col-xs-4">
+			<select class="form-control" ng-change="postMachineState()" ng-model="axis.gcAxis">
+				<option value="x">X axis</option>
+				<option value="y">Y axis</option>
+				<option value="z">Z axis</option>
+			</select>
+		</div>
+	</div>
+</div>
