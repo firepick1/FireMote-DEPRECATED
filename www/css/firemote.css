@@ -245,6 +245,14 @@ fieldset[disabled] .btn-unit.active {
 	z-index: 100;
 	font: 8pt Verdana;
 }
+.demo {
+	position: absolute;
+	top:15px;
+	left:200px;
+	color: #eee;
+	font: 30px Verdana;
+	font-style:italic;
+}
 .detail-controls {
 	position: relative;
 	margin-top: 50px;
@@ -261,9 +269,10 @@ fieldset[disabled] .btn-unit.active {
 	border:1pt solid red;
 }
 .hslider {
+	display: block;
 	width: 700px;
 	-webkit-appearance: none;
-	margin-top: 10px;
+	margin-top: 20px;
 	-webkit-border-radius: 5px;
 	height: 10px;
 	background: #eee;
@@ -285,7 +294,7 @@ fieldset[disabled] .btn-unit.active {
 }
 .hslider-number {
 	position: absolute;
-	top:30px;
+	top:20px;
 	border:0;
 	padding:0;
 	margin:0;
@@ -299,6 +308,10 @@ fieldset[disabled] .btn-unit.active {
 }
 .labeledButton {
 	display: inline-block;
+}
+.loading {
+	font: 20px Verdana;
+	color: #eee;
 }
 .log {
 	margin-top: 3px;
@@ -358,7 +371,7 @@ fieldset[disabled] .btn-unit.active {
 }
 .spindle {
 	position: absolute;
-	top: -8px;
+	top: -18px;
 	width: 4px;
 	border: 0;
 	height: 42px !important;

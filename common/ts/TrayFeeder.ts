@@ -13,6 +13,11 @@ module firemote {
 			this.axis = this.axis || new Axis({name:"Tray Feeder"});
 		}
 
+		validate(): TrayFeeder {
+		  this.axis.validate();
+		  return this;
+		}
+
 		clone(): TrayFeeder {
 			return new TrayFeeder(this);
 		}

@@ -229,14 +229,16 @@ describe('common-js-tests', function(){
 		expect(state2.pcbFeeders[0].axis.posMax).toBe(400);
 		expect(state2.pcbFeeders[0].axis.pos).toBe(40);
 		expect(state2.pcbFeeders[0].axis.jog).toBe(4);
+		expect(state2.gantries[0].axis.pos = 2000).toBe(2000);
+		expect(state2.validate().gantries[0].axis.pos).toBe(200);
 
 		var axes = state.axes();
 		var df = new firemote.DeltaFactory();
-		expect(df.equals(axes,[
-				{ name : 'Gantry', pos : 0, posMax : 100, jog : 1, calibrate : false }, 
-				{ name : 'PCB Feeder', pos : 0, posMax: 100, jog : 1, calibrate : false }, 
-				{ name : 'Tray Feeder', pos : 0, posMax : 100, jog : 1, calibrate : false } 
-		])).toEqual(true);
+		expect(df.diff(axes,[
+				{ name : 'Gantry', gcAxis:"y", pos : 0, posMax : 100, jog : 1, calibrate : false }, 
+				{ name : 'PCB Feeder', gcAxis:"x", pos : 0, posMax: 100, jog : 1, calibrate : false }, 
+				{ name : 'Tray Feeder', gcAxis:"z", pos : 0, posMax : 100, jog : 1, calibrate : false } 
+		])).toEqual(false);
 
 	}));
 });

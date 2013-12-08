@@ -16,6 +16,11 @@ module firemote {
 			this.head = this.head || new Head();
 		}
 
+		validate(): Gantry {
+		  this.axis.validate();
+		  return this;
+		}
+
 		clone(): Gantry {
 			return new Gantry(this);
 		}

@@ -40,7 +40,6 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 		var spindles = scope.machine.gantries[0].head.spindles;
 
     scope.jogAxis = function(axis, delta) {
-		  scope.machine.clearForLinearMotion();
 			var newPos = axis.pos*1 + delta*1;
 			if (0 <= newPos && newPos <= axis.posMax) {
 			  axis.pos = newPos;
@@ -51,6 +50,11 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
     scope.view = "CAMERA";
+
+}]);
+
+controllers.controller('ConfigureCtrl', ['$scope','$location',function(scope, location) {
+    scope.view = "CONFIGURE";
 
 }]);
 
@@ -72,11 +76,10 @@ controllers.controller('SpindleCtrl', ['$scope','$location',function(scope, loca
     }
 }]);
 
-controllers.controller('StatusCtrl', ['$scope','$location', 'machineLocal', 'machineRemote', 
-	function(scope, location, machineLocal, machineRemote) {
+controllers.controller('StatusCtrl', ['$scope','$location', function(scope, location ) {
     scope.view = "STATUS";
 		var df = new firemote.DeltaFactory();
-		var diff = df.diff(machineRemote, machineLocal);
+		var diff = df.diff(scope.machineRemote, scope.machine);
 		scope.diffLocal = diff;
 		
 }]);
@@ -86,7 +89,7 @@ controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, l
 
     scope.calibrate = function () {
       alert("calibrating...");
-      scope.updateStatus();
+      scope.postMachineState();
       scope.machine.gantries[0].axis.calibrate = false;
       scope.machine.trayFeeders[0].axis.calibrate = false;
       scope.machine.pcbFeeders[0].axis.calibrate = false;
@@ -99,15 +102,11 @@ controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, l
     }
 }]);
 
-controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundThread', 'machineLocal', 'machineRemote', 
-  function(scope, location, $timeout, BackgroundThread, machineLocal, machineRemote) {
+controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundThread', 
+  function(scope, location, $timeout, BackgroundThread) {
     scope.view = "MAIN";
-		scope.machine = machineLocal;
-		scope.machineRemote = machineRemote;
     scope.imageLarge = false;
     scope.control = location.path() || "/status";
-    scope.axes = scope.machine.axes();
-    scope.remoteAxes = scope.machineRemote.axes();
     scope.isActive = [];
 
     scope.camImageClick = function() {
@@ -155,20 +154,38 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
     };
     scope.onMachineStateReceived = function(remoteMachineState) {
 			try {
-				var newMachineRemote = new firemote.MachineState(remoteMachineState);
-				var df = new firemote.DeltaFactory();
-				scope.diffRemote = df.diff(scope.machineRemote, newMachineRemote);
-				scope.diffLocal = df.diff(scope.machineRemote, scope.machine);
-				scope.updated = new Date().toLocaleTimeString();
-				df.applyDiff(scope.diffRemote, scope.machineRemote);
-				df.applyDiff(scope.diffRemote, scope.machine);
-				df.applyDiff(scope.diffLocal, scope.machine);
+				if (scope.hasOwnProperty("machine")) {
+					var newMachineRemote = new firemote.MachineState(remoteMachineState);
+					var df = new firemote.DeltaFactory();
+					scope.diffRemote = df.diff(scope.machineRemote, newMachineRemote);
+					scope.diffLocal = df.diff(scope.machineRemote, scope.machine);
+					scope.updated = new Date().toLocaleTimeString();
+					df.applyDiff(scope.diffRemote, scope.machineRemote);
+					df.applyDiff(scope.diffRemote, scope.machine);
+					df.applyDiff(scope.diffLocal, scope.machine);
+				} else {
+					scope.machineRemote = new firemote.MachineState(remoteMachineState);
+					scope.remoteAxes = scope.machineRemote.axes();
+					var UGLY_SLIDER_FIX = true;
+					if (UGLY_SLIDER_FIX) {
+						for (var i = 0; i < scope.remoteAxes.length; i++) {
+							scope.remoteAxes[i].pos = 0;  
+							console.log(JSON.stringify(scope.remoteAxes[i]));
+						}
+					}
+					scope.machine = new firemote.MachineState(scope.machineRemote);
+					scope.axes = scope.machine.axes();
+					console.log("Initialized from remote machine state:\n" + JSON.stringify(remoteMachineState));
+				}
 			} catch (e) {
 				alert("onMachineStateReceived()\n" + e);
+				return false;
 			}
+			return true;
     };
     scope.postMachineState = function() {
 			scope.machine.stateId = scope.machineRemote.stateId + 1;
+			scope.machine.validate();
 			var diff = new firemote.DeltaFactory().diff(scope.machineRemote, scope.machine);
 			if (diff) {
 				BackgroundThread.postMachineStateDiff(diff, scope.onMachineStateReceived);

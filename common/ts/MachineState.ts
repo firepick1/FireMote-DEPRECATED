@@ -36,9 +36,22 @@ module firemote {
 					}
 				}
 			}
-			this.gantries.length > 0 || this.gantries.push(new Gantry());
-			this.trayFeeders.length > 0 || this.trayFeeders.push(new TrayFeeder());
-			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder());
+			this.gantries.length > 0 || this.gantries.push(new Gantry({axis:{name:"Gantry", gcAxis:"y"}}));
+			this.trayFeeders.length > 0 || this.trayFeeders.push(new TrayFeeder({axis:{name:"Tray Feeder", gcAxis:"z"}}));
+			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder({axis:{name:"PCB Feeder", gcAxis:"x"}}));
+		}
+
+		validate(): MachineState {
+	    for (var i = 0; i < this.gantries.length; i++) {
+			  this.gantries[i].validate();
+			}
+	    for (var i = 0; i < this.trayFeeders.length; i++) {
+			  this.trayFeeders[i].validate();
+			}
+	    for (var i = 0; i < this.pcbFeeders.length; i++) {
+			  this.pcbFeeders[i].validate();
+			}
+		  return this;
 		}
 
 		clearForLinearMotion() {

@@ -14,7 +14,7 @@ module firemote {
 				  if (obj.hasOwnProperty("name")) this.name = obj.name;
 					if (obj.hasOwnProperty("on")) this.on = obj.on;
 					if (obj.hasOwnProperty("pos")) this.pos = obj.pos;
-					if (obj.hasOwnProperty("part")) this.part = obj.part.clone();
+					if (obj.hasOwnProperty("part")) this.part = obj.part;
 				}
 			}
 

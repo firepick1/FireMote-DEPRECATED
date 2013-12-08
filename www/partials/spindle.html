@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <div class="row ">
 		<label class="col-xs-4 ">Vacuum</label>
 		<div class="col-xs-4 " ng-repeat="spindle in machine.gantries[0].head.spindles">
-			<button type="button" class="btn btn-checkbox center-block " ng-change="postMachineState()" ng-model="spindle.on" ng-click="vacuumClick(spindles)" btn-checkbox >
+			<button type="button" class="btn btn-checkbox center-block " ng-change="postMachineState()" ng-model="spindle.on" ng-click="vacuumClick(spindle)" btn-checkbox >
 				<div class="angle-pointer" style="{{rotateStyle(machine.gantries[0].head)}}">&nbsp;</div>
 			</button>
 		</div>

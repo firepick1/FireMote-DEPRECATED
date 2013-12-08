@@ -13,6 +13,11 @@ module firemote {
 			this.axis = this.axis || new Axis({name:"PCB Feeder"});
 		}
 
+		validate(): PcbFeeder {
+		  this.axis.validate();
+		  return this;
+		}
+
 		clone(): PcbFeeder {
 			return new PcbFeeder(this);
 		}

@@ -19,18 +19,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 
 <div class="panel-heading h3 text-center">Calibrate Linear Axes</div>
-<div>
-	<div class="checkbox-label">Gantry</div>
-	<button type="button" class="btn btn-checkbox" ng-model="machine.gantries[0].axis.calibrate" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
-</div>
-<div>
-	<div class="checkbox-label">Tray Feeder</div>
-	<button type="button" class="btn btn-checkbox" ng-model="machine.trayFeeders[0].axis.calibrate" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
-</div>
-<div>
-	<div class="checkbox-label">PCB Feeder</div>
-	<button type="button" class="btn btn-checkbox" ng-model="machine.pcbFeeders[0].axis.calibrate" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
-</div>
+<div class="form-horizontal">
+	<div class="form-group" ng-repeat="axis in axes">
+		<label class="col-xs-3" for="calibrate-{{axis.name}}">{{axis.name}}</label>
+		<div class="col-xs-9">
+			<select id="calibrate-{{axis.name}}" class="form-control" ng-change="axis.jog=axis.jog*1" ng-model="axis.calibrate">
+				<option value=false>(select calibration)</option>
+				<option value="home">Traverse to home limit stop and zero axis</option>
+			</select>
+		</div>
+	</div>
 
-<button class="big-button {{calibrateClass()}}" ng-click="calibrate()">Calibrate</button>
+	<button class="big-button {{calibrateClass()}}" ng-click="calibrate()">Calibrate</button>
+</div>
 

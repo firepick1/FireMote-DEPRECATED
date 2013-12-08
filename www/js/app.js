@@ -17,5 +17,6 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/camera', {templateUrl: 'partials/camera.html', controller: 'CameraCtrl'});
   $routeProvider.when('/move', {templateUrl: 'partials/move.html', controller: 'MoveCtrl'});
   $routeProvider.when('/log', {templateUrl: 'partials/log.html', controller: 'LogCtrl'});
+  $routeProvider.when('/configure', {templateUrl: 'partials/configure.html', controller: 'ConfigureCtrl'});
   $routeProvider.otherwise({redirectTo: '/status'});
 }]);

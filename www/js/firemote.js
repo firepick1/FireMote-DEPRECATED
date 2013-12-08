@@ -177,7 +177,7 @@ var firemote;
                 if (obj.hasOwnProperty("pos"))
                     this.pos = obj.pos;
                 if (obj.hasOwnProperty("part"))
-                    this.part = obj.part.clone();
+                    this.part = obj.part;
             }
         }
         Spindle.prototype.clone = function () {
@@ -204,6 +204,11 @@ var firemote;
             }
             this.axis = this.axis || new firemote.Axis({ name: "Tray Feeder" });
         }
+        TrayFeeder.prototype.validate = function () {
+            this.axis.validate();
+            return this;
+        };
+
         TrayFeeder.prototype.clone = function () {
             return new TrayFeeder(this);
         };
@@ -228,6 +233,11 @@ var firemote;
             }
             this.axis = this.axis || new firemote.Axis({ name: "PCB Feeder" });
         }
+        PcbFeeder.prototype.validate = function () {
+            this.axis.validate();
+            return this;
+        };
+
         PcbFeeder.prototype.clone = function () {
             return new PcbFeeder(this);
         };
@@ -255,6 +265,11 @@ var firemote;
             this.axis = this.axis || new firemote.Axis({ name: "Gantry" });
             this.head = this.head || new firemote.Head();
         }
+        Gantry.prototype.validate = function () {
+            this.axis.validate();
+            return this;
+        };
+
         Gantry.prototype.clone = function () {
             return new Gantry(this);
         };
@@ -410,10 +425,23 @@ var firemote;
                     }
                 }
             }
-            this.gantries.length > 0 || this.gantries.push(new firemote.Gantry());
-            this.trayFeeders.length > 0 || this.trayFeeders.push(new firemote.TrayFeeder());
-            this.pcbFeeders.length > 0 || this.pcbFeeders.push(new firemote.PcbFeeder());
+            this.gantries.length > 0 || this.gantries.push(new firemote.Gantry({ axis: { name: "Gantry", gcAxis: "y" } }));
+            this.trayFeeders.length > 0 || this.trayFeeders.push(new firemote.TrayFeeder({ axis: { name: "Tray Feeder", gcAxis: "z" } }));
+            this.pcbFeeders.length > 0 || this.pcbFeeders.push(new firemote.PcbFeeder({ axis: { name: "PCB Feeder", gcAxis: "x" } }));
         }
+        MachineState.prototype.validate = function () {
+            for (var i = 0; i < this.gantries.length; i++) {
+                this.gantries[i].validate();
+            }
+            for (var i = 0; i < this.trayFeeders.length; i++) {
+                this.trayFeeders[i].validate();
+            }
+            for (var i = 0; i < this.pcbFeeders.length; i++) {
+                this.pcbFeeders[i].validate();
+            }
+            return this;
+        };
+
         MachineState.prototype.clearForLinearMotion = function () {
             for (var i = 0; i < this.gantries.length; i++) {
                 var spindles = this.gantries[i].head.spindles;
@@ -455,6 +483,7 @@ var firemote;
         function Axis(obj) {
             if (typeof obj === "undefined") { obj = undefined; }
             this.name = "Unknown axis";
+            this.gcAxis = "x";
             this.pos = 0;
             this.posMax = 100;
             this.jog = 1;
@@ -465,6 +494,8 @@ var firemote;
             if (typeof obj !== 'undefined') {
                 if (obj.hasOwnProperty("name"))
                     this.name = obj.name;
+                if (obj.hasOwnProperty("gcAxis"))
+                    this.gcAxis = obj.gcAxis;
                 if (obj.hasOwnProperty("pos"))
                     this.pos = obj.pos * 1;
                 if (obj.hasOwnProperty("posMax"))
@@ -475,6 +506,14 @@ var firemote;
                     this.calibrate = obj.calibrate;
             }
         }
+        Axis.prototype.validate = function () {
+            this.gcAxis = this.gcAxis || "x";
+            this.posMax = this.posMax * 1;
+            this.pos = Math.max(0, Math.min(this.posMax, this.pos * 1));
+            this.jog = this.jog * 1;
+            return this;
+        };
+
         Axis.prototype.clone = function () {
             return new Axis(this);
         };

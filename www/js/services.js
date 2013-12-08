@@ -23,11 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 var services = angular.module('FireMote.services', []);
 
 services.value('version', '0.1');
-services.value('machineLocal', new firemote.MachineState());
-services.value('machineRemote', new firemote.MachineState());
 
-services.factory('BackgroundThread', ['$http', '$interval', 'machineRemote', 'machineLocal',
-		function($http, $interval, machineRemote, machineLocal){
+services.factory('BackgroundThread', ['$http', '$interval', function($http, $interval){
 	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
   var backgroundThread = {
 		onMachineStateReceived: function(state){},
@@ -59,13 +56,15 @@ services.factory('BackgroundThread', ['$http', '$interval', 'machineRemote', 'ma
 		$http.get("firemote/state")
 			.success(function(data) {
 				backgroundThread.t++;
-				backgroundThread.onMachineStateReceived(data);
+				if (!backgroundThread.onMachineStateReceived(data)) {
+					$interval.cancel(promise);
+				}
 			})
 			.error(function(data, status, headers, config) {
 				var msg = JSON.stringify({error:"firemote/state GET failed. Server may be unavailable. Refresh page.",data:data,status:status});
 				console.log(msg);
-				machineLocal.message = msg;
 				$interval.cancel(promise);
+				alert(msg);
 			})
 
 		}, 1000);
