@@ -2,18 +2,18 @@
 module firemote {
 	export class Gantry {
 		head: Head;
-		axis: Axis;
+		axis: LinearAxis;
 
 		constructor(obj = undefined) {
 			if (typeof obj === 'string') {
 			  obj = JSON.parse(obj);
 			}
+			this.axis = new LinearAxis({name:"Gantry", gcAxis:"y"});
+			this.head = new Head(obj && obj.head);
 			if (typeof obj !== 'undefined') {
-				if (obj.hasOwnProperty("head")) this.head = new Head(obj.head);
-				if (obj.hasOwnProperty("axis")) this.axis = new Axis(obj.axis);
+			  var df = new DeltaFactory();
+				if (obj.hasOwnProperty("axis")) df.applyDiff(obj.axis, this.axis);
 			}
-			this.axis = this.axis || new Axis({name:"Gantry"});
-			this.head = this.head || new Head();
 		}
 
 		validate(): Gantry {

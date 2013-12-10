@@ -1,16 +1,17 @@
 ///<reference path='../../include.d.ts'/>
 module firemote {
 	export class TrayFeeder {
-		axis: Axis;
+		axis: LinearAxis;
 
 		constructor(obj = undefined) {
 			if (typeof obj === 'string') {
 			  obj = JSON.parse(obj);
 			}
+			this.axis = new LinearAxis({name:"Tray Feeder", gcAxis:"x"});
 			if (typeof obj !== 'undefined') {
-				if (obj.hasOwnProperty("axis")) this.axis = new Axis(obj.axis);
+			  var df = new DeltaFactory();
+				if (obj.hasOwnProperty("axis")) df.applyDiff(obj.axis, this.axis);
 			}
-			this.axis = this.axis || new Axis({name:"Tray Feeder"});
 		}
 
 		validate(): TrayFeeder {

@@ -1,138 +1,50 @@
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
-    var DeltaFactory = (function () {
-        function DeltaFactory(obj) {
+    var LinearAxis = (function () {
+        function LinearAxis(obj) {
+            if (typeof obj === "undefined") { obj = undefined; }
+            this.name = "Unknown axis";
+            this.gcAxis = "x";
+            this.pos = 0;
+            this.posMax = 100;
+            this.jog = 1;
+            this.calibrate = false;
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            }
+            if (typeof obj !== 'undefined') {
+                if (obj.hasOwnProperty("name"))
+                    this.name = obj.name;
+                if (obj.hasOwnProperty("gcAxis"))
+                    this.gcAxis = obj.gcAxis;
+                if (obj.hasOwnProperty("pos"))
+                    this.pos = obj.pos * 1;
+                if (obj.hasOwnProperty("posMax"))
+                    this.posMax = obj.posMax * 1;
+                if (obj.hasOwnProperty("jog"))
+                    this.jog = obj.jog * 1;
+                if (obj.hasOwnProperty("calibrate"))
+                    this.calibrate = obj.calibrate;
+            }
         }
-        DeltaFactory.prototype.clone = function () {
-            return new DeltaFactory(this);
+        LinearAxis.prototype.validate = function () {
+            this.gcAxis = this.gcAxis || "x";
+            this.posMax = this.posMax * 1;
+            this.pos = Math.max(0, Math.min(this.posMax, this.pos * 1));
+            this.jog = this.jog * 1;
+            return this;
         };
 
-        DeltaFactory.prototype.equals = function (obj1, obj2) {
-            return this.diff(obj1, obj2) ? false : true;
+        LinearAxis.prototype.clone = function () {
+            return new LinearAxis(this);
         };
-
-        DeltaFactory.prototype.applyDiff = function (diff, obj) {
-            if (diff instanceof Array) {
-                this.applyArrayDiff(diff, obj);
-            } else if (diff) {
-                for (var k in diff) {
-                    var val = diff[k];
-                    if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
-                        obj[k] = val;
-                    } else if (typeof obj[k] === 'undefined') {
-                        obj[k] = val;
-                    } else {
-                        this.applyDiff(val, obj[k]);
-                    }
-                }
-            }
-            return obj;
-        };
-
-        DeltaFactory.prototype.applyArrayDiff = function (diff, arr) {
-            for (var i = 0; i < arr.length; i++) {
-                var val = diff[i];
-                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
-                    arr[i] = val;
-                } else {
-                    this.applyDiff(val, arr[i]);
-                }
-            }
-        };
-
-        DeltaFactory.prototype.diff = function (obj1, obj2) {
-            var result = {};
-            var changes = 0;
-            if (typeof obj1 === 'undefined')
-                return "diff(undefined,...)";
-            if (typeof obj2 === 'undefined')
-                return "diff(obj,undefined)";
-            if (typeof obj1 !== typeof obj2)
-                return "diff(type != type)";
-            if (obj1 instanceof Array) {
-                return this.diffArray(obj1, obj2);
-            }
-            for (var k in obj1) {
-                if (k === '$$hashKey')
-                    continue;
-
-                var val1 = obj1[k];
-                var val2 = obj2[k];
-                if (typeof val1 === 'function' || typeof val2 === 'function') {
-                    // ignore functions
-                } else if (typeof val1 !== typeof val2) {
-                    result[k] = val2;
-                    changes++;
-                } else if (val1 instanceof Array) {
-                    var arrDiff = this.diffArray(val1, val2);
-                    if (arrDiff) {
-                        result[k] = arrDiff;
-                        changes++;
-                    }
-                } else {
-                    if (val1 !== val2) {
-                        if (typeof val1 === 'number' || typeof val1 === 'string' || typeof val1 === 'boolean') {
-                            result[k] = val2;
-                            changes++;
-                        } else {
-                            var diffVal = this.diff(val1, val2);
-                            if (diffVal) {
-                                result[k] = diffVal;
-                                changes++;
-                            }
-                        }
-                    }
-                }
-            }
-            for (var k in obj2) {
-                if (k === '$$hashKey')
-                    continue;
-                var val1 = obj1[k];
-                var val2 = obj2[k];
-                if (typeof val1 === 'undefined') {
-                    result[k] = val2;
-                    changes++;
-                }
-            }
-            return changes > 0 ? result : false;
-        };
-
-        DeltaFactory.prototype.diffArray = function (arr1, arr2) {
-            var result = [];
-            var changes = 0;
-            for (var i = 0; i < arr1.length; i++) {
-                var val1 = arr1[i];
-                var val2 = arr2[i];
-                if (typeof val1 !== typeof val2) {
-                    changes++;
-                    result.push(diffResult);
-                } else if (val1 === val2) {
-                    result.push(undefined);
-                } else if (typeof val1 === 'number' || typeof val1 === 'string') {
-                    changes++;
-                    result.push(val2);
-                } else {
-                    var diffResult = this.diff(val1, val2);
-                    if (diffResult) {
-                        changes++;
-                        result.push(diffResult);
-                    } else {
-                        result.push(undefined);
-                    }
-                }
-            }
-            if (changes === 0) {
-                return false;
-            }
-            return result;
-        };
-        return DeltaFactory;
+        return LinearAxis;
     })();
-    firemote.DeltaFactory = DeltaFactory;
+    firemote.LinearAxis = LinearAxis;
 })(firemote || (firemote = {}));
 
-exports.DeltaFactory = firemote.DeltaFactory;
+exports.LinearAxis = firemote.LinearAxis;
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
@@ -198,11 +110,12 @@ var firemote;
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
+            this.axis = new firemote.LinearAxis({ name: "Tray Feeder", gcAxis: "x" });
             if (typeof obj !== 'undefined') {
+                var df = new firemote.DeltaFactory();
                 if (obj.hasOwnProperty("axis"))
-                    this.axis = new firemote.Axis(obj.axis);
+                    df.applyDiff(obj.axis, this.axis);
             }
-            this.axis = this.axis || new firemote.Axis({ name: "Tray Feeder" });
         }
         TrayFeeder.prototype.validate = function () {
             this.axis.validate();
@@ -227,11 +140,12 @@ var firemote;
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
+            this.axis = new firemote.LinearAxis({ name: "PCB Feeder", gcAxis: "z" });
             if (typeof obj !== 'undefined') {
+                var df = new firemote.DeltaFactory();
                 if (obj.hasOwnProperty("axis"))
-                    this.axis = new firemote.Axis(obj.axis);
+                    df.applyDiff(obj.axis, this.axis);
             }
-            this.axis = this.axis || new firemote.Axis({ name: "PCB Feeder" });
         }
         PcbFeeder.prototype.validate = function () {
             this.axis.validate();
@@ -256,14 +170,13 @@ var firemote;
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
+            this.axis = new firemote.LinearAxis({ name: "Gantry", gcAxis: "y" });
+            this.head = new firemote.Head(obj && obj.head);
             if (typeof obj !== 'undefined') {
-                if (obj.hasOwnProperty("head"))
-                    this.head = new firemote.Head(obj.head);
+                var df = new firemote.DeltaFactory();
                 if (obj.hasOwnProperty("axis"))
-                    this.axis = new firemote.Axis(obj.axis);
+                    df.applyDiff(obj.axis, this.axis);
             }
-            this.axis = this.axis || new firemote.Axis({ name: "Gantry" });
-            this.head = this.head || new firemote.Head();
         }
         Gantry.prototype.validate = function () {
             this.axis.validate();
@@ -426,8 +339,8 @@ var firemote;
                 }
             }
             this.gantries.length > 0 || this.gantries.push(new firemote.Gantry({ axis: { name: "Gantry", gcAxis: "y" } }));
-            this.trayFeeders.length > 0 || this.trayFeeders.push(new firemote.TrayFeeder({ axis: { name: "Tray Feeder", gcAxis: "z" } }));
-            this.pcbFeeders.length > 0 || this.pcbFeeders.push(new firemote.PcbFeeder({ axis: { name: "PCB Feeder", gcAxis: "x" } }));
+            this.trayFeeders.length > 0 || this.trayFeeders.push(new firemote.TrayFeeder({ axis: { name: "Tray Feeder", gcAxis: "x" } }));
+            this.pcbFeeders.length > 0 || this.pcbFeeders.push(new firemote.PcbFeeder({ axis: { name: "PCB Feeder", gcAxis: "z" } }));
         }
         MachineState.prototype.validate = function () {
             for (var i = 0; i < this.gantries.length; i++) {
@@ -451,7 +364,23 @@ var firemote;
             }
         };
 
-        MachineState.prototype.axes = function () {
+        MachineState.prototype.linearMotionGCode = function (newMachine) {
+            var df = new firemote.DeltaFactory();
+            var axes1 = this.linearAxes();
+            var axes2 = newMachine.linearAxes();
+            var axesDiff = df.diff(axes1, axes2);
+            var result = "G0";
+            for (var i = 0; i < axesDiff.length; i++) {
+                var axisDiff = axesDiff[i];
+                if (typeof axisDiff !== 'undefined') {
+                    result = result + axes2[i].gcAxis;
+                    result = result + axesDiff[i].pos;
+                }
+            }
+            return result;
+        };
+
+        MachineState.prototype.linearAxes = function () {
             var result = [];
 
             for (var i = 0; i < this.gantries.length; i++) {
@@ -479,47 +408,145 @@ exports.MachineState = firemote.MachineState;
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
-    var Axis = (function () {
-        function Axis(obj) {
-            if (typeof obj === "undefined") { obj = undefined; }
-            this.name = "Unknown axis";
-            this.gcAxis = "x";
-            this.pos = 0;
-            this.posMax = 100;
-            this.jog = 1;
-            this.calibrate = false;
-            if (typeof obj === 'string') {
-                obj = JSON.parse(obj);
-            }
-            if (typeof obj !== 'undefined') {
-                if (obj.hasOwnProperty("name"))
-                    this.name = obj.name;
-                if (obj.hasOwnProperty("gcAxis"))
-                    this.gcAxis = obj.gcAxis;
-                if (obj.hasOwnProperty("pos"))
-                    this.pos = obj.pos * 1;
-                if (obj.hasOwnProperty("posMax"))
-                    this.posMax = obj.posMax * 1;
-                if (obj.hasOwnProperty("jog"))
-                    this.jog = obj.jog * 1;
-                if (obj.hasOwnProperty("calibrate"))
-                    this.calibrate = obj.calibrate;
-            }
+    var DeltaFactory = (function () {
+        function DeltaFactory() {
         }
-        Axis.prototype.validate = function () {
-            this.gcAxis = this.gcAxis || "x";
-            this.posMax = this.posMax * 1;
-            this.pos = Math.max(0, Math.min(this.posMax, this.pos * 1));
-            this.jog = this.jog * 1;
-            return this;
+        DeltaFactory.prototype.clone = function () {
+            return new DeltaFactory();
         };
 
-        Axis.prototype.clone = function () {
-            return new Axis(this);
+        DeltaFactory.prototype.equals = function (obj1, obj2) {
+            return this.diff(obj1, obj2) ? false : true;
         };
-        return Axis;
+
+        DeltaFactory.prototype.applyDiff = function (diff, obj) {
+            if (diff instanceof Array) {
+                this.applyArrayDiff(diff, obj);
+            } else if (diff) {
+                for (var k in diff) {
+                    var val = diff[k];
+                    if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                        obj[k] = val;
+                    } else if (typeof obj[k] === 'undefined') {
+                        obj[k] = val;
+                    } else {
+                        this.applyDiff(val, obj[k]);
+                    }
+                }
+            }
+            return obj;
+        };
+
+        DeltaFactory.prototype.applyArrayDiff = function (diff, arr) {
+            for (var i = 0; i < arr.length; i++) {
+                var val = diff[i];
+                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                    arr[i] = val;
+                } else {
+                    this.applyDiff(val, arr[i]);
+                }
+            }
+        };
+
+        DeltaFactory.prototype.diff = function (obj1, obj2) {
+            var result = {};
+            var changes = 0;
+            if (typeof obj1 === 'undefined')
+                return "diff(undefined,...)";
+            if (typeof obj2 === 'undefined')
+                return "diff(obj,undefined)";
+            if (obj1 instanceof Array) {
+                if (obj2 instanceof Array) {
+                    return this.diffArray(obj1, obj2);
+                } else {
+                    return "diff(Array, Object)";
+                }
+            }
+            if (obj2 instanceof Array) {
+                if (obj1 instanceof Array) {
+                    return this.diffArray(obj1, obj2);
+                } else {
+                    return "diff(Object,Array)";
+                }
+            }
+            for (var k in obj1) {
+                if (k === '$$hashKey')
+                    continue;
+
+                var val1 = obj1[k];
+                var val2 = obj2[k];
+                if (typeof val1 === 'function' || typeof val2 === 'function' || typeof val1 === 'Function' || typeof val2 === 'Function') {
+                    // ignore functions
+                } else if (typeof val1 !== typeof val2) {
+                    result[k] = val2;
+                    changes++;
+                } else if (val1 instanceof Array) {
+                    var arrDiff = this.diffArray(val1, val2);
+                    if (arrDiff) {
+                        result[k] = arrDiff;
+                        changes++;
+                    }
+                } else {
+                    if (val1 !== val2) {
+                        if (typeof val1 === 'number' || typeof val1 === 'string' || typeof val1 === 'boolean') {
+                            result[k] = val2;
+                            changes++;
+                        } else {
+                            var diffVal = this.diff(val1, val2);
+                            if (diffVal) {
+                                result[k] = diffVal;
+                                changes++;
+                            }
+                        }
+                    }
+                }
+            }
+            for (var k in obj2) {
+                if (k === '$$hashKey')
+                    continue;
+                var val1 = obj1[k];
+                var val2 = obj2[k];
+                if (typeof val1 === 'undefined') {
+                    if (typeof val1 === 'function' || typeof val2 === 'function' || typeof val1 === 'Function' || typeof val2 === 'Function') {
+                        // ignore functions
+                    } else {
+                        result[k] = val2;
+                        changes++;
+                    }
+                }
+            }
+            return changes > 0 ? result : false;
+        };
+
+        DeltaFactory.prototype.diffArray = function (arr1, arr2) {
+            var result = [];
+            var changes = 0;
+            for (var i = 0; i < arr1.length; i++) {
+                var val1 = arr1[i];
+                var val2 = arr2[i];
+                if (val1 === val2) {
+                    result.push(undefined);
+                } else if (typeof val1 === 'number' || typeof val1 === 'string') {
+                    changes++;
+                    result.push(val2);
+                } else {
+                    var diffResult = this.diff(val1, val2);
+                    if (diffResult) {
+                        changes++;
+                        result.push(diffResult);
+                    } else {
+                        result.push(undefined);
+                    }
+                }
+            }
+            if (changes === 0) {
+                return false;
+            }
+            return result;
+        };
+        return DeltaFactory;
     })();
-    firemote.Axis = Axis;
+    firemote.DeltaFactory = DeltaFactory;
 })(firemote || (firemote = {}));
 
-exports.Axis = firemote.Axis;
+exports.DeltaFactory = firemote.DeltaFactory;

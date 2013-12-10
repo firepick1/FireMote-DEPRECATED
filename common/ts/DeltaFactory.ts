@@ -1,11 +1,11 @@
 ///<reference path='../../include.d.ts'/>
 module firemote {
 	export class DeltaFactory {
-		constructor(obj) {
+		constructor() {
 		}
 
 		clone(): DeltaFactory {
-			return new DeltaFactory(this);
+			return new DeltaFactory();
 		}
 
 		equals(obj1, obj2): Boolean {
@@ -46,16 +46,27 @@ module firemote {
 			var changes: number = 0;
 			if (typeof obj1 === 'undefined') return "diff(undefined,...)";
 			if (typeof obj2 === 'undefined') return "diff(obj,undefined)";
-			if (typeof obj1 !== typeof obj2) return "diff(type != type)";
 			if (obj1 instanceof Array) {
-			  return this.diffArray(obj1, obj2);
+				if (obj2 instanceof Array) {
+					return this.diffArray(obj1, obj2);
+				} else {
+				  return "diff(Array, Object)";
+				}
+			}
+			if (obj2 instanceof Array) {
+				if (obj1 instanceof Array) {
+					return this.diffArray(obj1, obj2);
+				} else {
+				  return "diff(Object,Array)";
+				}
 			}
 			for (var k in obj1) {
 				if (k === '$$hashKey') continue; // ignore angularjs injection
 
 				var val1 = obj1[k];
 				var val2 = obj2[k];
-				if (typeof val1 === 'function' || typeof val2 === 'function') {
+				if (typeof val1 === 'function' || typeof val2 === 'function' ||
+				    typeof val1 === 'Function' || typeof val2 === 'Function') {
 					// ignore functions
 				} else if (typeof val1 !== typeof val2) {
 						result[k] = val2;
@@ -86,8 +97,13 @@ module firemote {
 				var val1 = obj1[k];
 				var val2 = obj2[k];
 				if (typeof val1 === 'undefined') {
-				  result[k] = val2;
-					changes++;
+					if (typeof val1 === 'function' || typeof val2 === 'function' ||
+							typeof val1 === 'Function' || typeof val2 === 'Function') {
+						// ignore functions
+					} else {
+						result[k] = val2;
+						changes++;
+					}
 				}
 			}
 			return changes > 0 ? result : false;
@@ -99,10 +115,7 @@ module firemote {
 			for (var i = 0; i < arr1.length; i++) {
 			  var val1 = arr1[i];
 			  var val2 = arr2[i];
-			  if (typeof val1 !== typeof val2) {
-					changes++;
-					result.push(diffResult);
-				} else if (val1 === val2) {
+				if (val1 === val2) {
 				  result.push(undefined);
 				} else if (typeof val1 === 'number' || typeof val1 === 'string') {
 					changes++;
@@ -122,8 +135,6 @@ module firemote {
 			}
 			return result;
 		}
-
-
 
 	}
 }

@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 <div class="panel-heading h3 text-center">Move Linear Axis</div>
 <div class="form-horizontal">
-	<div class="form-group" ng-repeat="axis in axes">
+	<div class="form-group" ng-repeat="axis in linearAxes">
 		<label for="posGantry" class="col-xs-3 control-label">{{axis.name}}</label>
 		<div class="col-xs-3">
 			<input id="posGantry" type="number" min="0" max="axis.posMax" step="{{axis.jog}}" class="form-control" ng-model="axis.pos" ng-blur="postMachineState()"/>

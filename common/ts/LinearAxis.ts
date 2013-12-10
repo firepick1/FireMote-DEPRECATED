@@ -1,6 +1,6 @@
 ///<reference path='../../include.d.ts'/>
 module firemote {
-	export class Axis {
+	export class LinearAxis {
 			name: string = "Unknown axis";
 			gcAxis: string = "x";
 			pos: number = 0;
@@ -22,7 +22,7 @@ module firemote {
 				}
 			}
 
-			validate(): Axis {
+			validate(): LinearAxis {
 			  this.gcAxis = this.gcAxis || "x";
 			  this.posMax = this.posMax*1;
 			  this.pos = Math.max(0, Math.min(this.posMax, this.pos*1));
@@ -30,10 +30,10 @@ module firemote {
 				return this;
 			}
 
-			clone(): Axis {
-				return new Axis(this);
+			clone(): LinearAxis {
+				return new LinearAxis(this);
 			}
 	}
 }
 
-exports.Axis = firemote.Axis;
+exports.LinearAxis = firemote.LinearAxis;

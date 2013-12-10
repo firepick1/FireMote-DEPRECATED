@@ -104,7 +104,7 @@ app.post('/firemote/state', function(req, res){
 		var isMove = false;
 	  deltaFactory.applyDiff(diff, machine);
 		machine.validate();
-		var newAxes = machine.axes();
+		var newAxes = machine.linearAxes();
 		for (var i = 0; i < newAxes.length; i++) {
 		  var axis = newAxes[i];
 			if (axis.calibrate === 'home') {
@@ -113,11 +113,18 @@ app.post('/firemote/state', function(req, res){
 				axis.calibrate = false;
 			}
 		}
-		var oldAxes = oldMachine.axes();
+		var oldAxes = oldMachine.linearAxes();
 		var axesDiff = deltaFactory.diff(newAxes, oldAxes);
 		if (axesDiff) {
 		  console.log("/firemote/state clearForLinearMotion " + JSON.stringify(axesDiff));
 		  machine.clearForLinearMotion();
+			var gcode = oldMachine.linearMotionGCode(machine);
+			console.log(gcode);
+			if (machine.firefuse) {
+				var filename = '/dev/firefuse/firestep';
+				var err = fs.writeFileSync('/dev/firefuse/firestep', gcode);
+				if (err) return console.log(err);
+			}
 		}
 		machine.message = "FireMote POST state response";
 		console.log("POST(/firemote/state) -> " + JSON.stringify(diff));

@@ -37,8 +37,8 @@ module firemote {
 				}
 			}
 			this.gantries.length > 0 || this.gantries.push(new Gantry({axis:{name:"Gantry", gcAxis:"y"}}));
-			this.trayFeeders.length > 0 || this.trayFeeders.push(new TrayFeeder({axis:{name:"Tray Feeder", gcAxis:"z"}}));
-			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder({axis:{name:"PCB Feeder", gcAxis:"x"}}));
+			this.trayFeeders.length > 0 || this.trayFeeders.push(new TrayFeeder({axis:{name:"Tray Feeder", gcAxis:"x"}}));
+			this.pcbFeeders.length > 0 || this.pcbFeeders.push(new PcbFeeder({axis:{name:"PCB Feeder", gcAxis:"z"}}));
 		}
 
 		validate(): MachineState {
@@ -63,8 +63,24 @@ module firemote {
 			}
 		}
 
-		axes(): Axis[] {
-		  var result:Axis[] = [];
+		linearMotionGCode(newMachine) : string {
+		  var df = new DeltaFactory();
+			var axes1 = this.linearAxes();
+			var axes2 = newMachine.linearAxes();
+			var axesDiff: LinearAxis[] = <LinearAxis[]>df.diff(axes1, axes2);
+			var result = "G0";
+			for (var i = 0; i < axesDiff.length; i++) {
+			  var axisDiff = axesDiff[i];
+			  if (typeof axisDiff !== 'undefined') {
+					result = result + axes2[i].gcAxis;
+					result = result + axesDiff[i].pos;
+				}
+			}
+			return result;
+		}
+
+		linearAxes(): LinearAxis[] {
+		  var result:LinearAxis[] = [];
 
 			for (var i = 0; i < this.gantries.length; i++) {
 			  result.push(this.gantries[i].axis);

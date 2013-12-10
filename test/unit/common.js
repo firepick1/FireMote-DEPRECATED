@@ -1,6 +1,86 @@
 'use strict';
 
 describe('common-js-tests', function(){
+	it('6. should create a MachineState', inject(function() {
+		var state = new firemote.MachineState();
+		expect(state.gantries[0].head.spindles[0].name).toBe("Left");
+		expect(state.gantries[0].head.spindles.length).toBe(1);
+		expect(state.trayFeeders[0].axis.name).toBe("Tray Feeder");
+		expect(state.pcbFeeders[0].axis.name).toBe("PCB Feeder");
+		expect(state.logLevel).toBe("INFO");
+		expect(state.firefuse).toBe(true);
+		expect(state.stateId).toBe(1);
+		expect(state.message).toBe("FirePick machine state");
+    var json = JSON.stringify({
+			message:"M",
+			stateId:123,
+			logLevel:"TRACE",
+			firefuse:false,
+			gantries:[
+				{ head:{
+						spindles:[
+							{name:"L",on:true,pos:200},
+							{"name":"R","on":true,"pos":200}
+						],
+						angle:0
+					},
+					axis:{name:"G",posMax:200,pos:20,jog:2,calibrate:false}
+				}
+			],
+			trayFeeders:[
+				{axis:{name:"T", posMax:300,"pos":30,"jog":3,"calibrate":false}}
+			],
+			pcbFeeders:[
+			  {axis:{name:"P", posMax:400,"pos":40,"jog":4,"calibrate":false}}
+			]}); 
+
+		var state2 = new firemote.MachineState(json);
+		expect(state2.stateId).toBe(123);
+		expect(state2.message).toBe("M");
+		expect(state2.firefuse).toBe(false);
+		expect(state2.logLevel).toBe("TRACE");
+		expect(state2.gantries[0].head.spindles[0].name).toBe("L");
+		expect(state2.gantries[0].head.spindles[1].name).toBe("R");
+		expect(state2.gantries[0].axis.posMax).toBe(200);
+		expect(state2.gantries[0].axis.pos).toBe(20);
+		expect(state2.gantries[0].axis.jog).toBe(2);
+		expect(state2.gantries[0].axis.name).toBe("G");
+		expect(state2.trayFeeders[0].axis.name).toBe("T");
+		expect(state2.trayFeeders[0].axis.pos).toBe(30);
+		expect(state2.trayFeeders[0].axis.posMax).toBe(300);
+		expect(state2.trayFeeders[0].axis.jog).toBe(3);
+		expect(state2.pcbFeeders[0].axis.name).toBe("P");
+		expect(state2.pcbFeeders[0].axis.posMax).toBe(400);
+		expect(state2.pcbFeeders[0].axis.pos).toBe(40);
+		expect(state2.pcbFeeders[0].axis.jog).toBe(4);
+		expect(state2.gantries[0].axis.pos = 2000).toBe(2000);
+		expect(state2.validate().gantries[0].axis.pos).toBe(200);
+
+		var axes = state.linearAxes();
+		var axes2 = state2.linearAxes();
+		var df = new firemote.DeltaFactory();
+
+		expect(df.diff([
+        { name : 'Gantry', gcAxis : 'y', pos : 0, posMax : 100, jog : 1, calibrate : false }, 
+				{ name : 'PCB Feeder', gcAxis : 'z', pos : 0, posMax : 100, jog : 1, calibrate : false }, 
+				{ name : 'Tray Feeder', gcAxis : 'x', pos : 0, posMax : 100, jog : 1, calibrate : false },
+				],axes)).toEqual(false);
+
+		expect(df.diff([
+        { name : 'G', gcAxis : 'y', pos : 200, posMax : 200, jog : 2, calibrate : false }, 
+				{ name : 'P', gcAxis : 'z', pos : 40, posMax : 400, jog : 4, calibrate : false }, 
+				{ name : 'T', gcAxis : 'x', pos : 30, posMax : 300, jog : 3, calibrate : false },
+		],axes2)).toEqual(false);
+
+		expect(df.diff(axes, axes2)).toEqual([
+				{ name : 'G', pos : 200, posMax : 200, jog : 2 }, 
+				{ name : 'P', pos : 40, posMax : 400, jog : 4 }, 
+				{ name : 'T', pos : 30, posMax : 300, jog : 3 }, 
+				]);
+		
+		expect(state.linearMotionGCode(state2)).toEqual("G0y200z40x30");
+
+	}));
 
   it('7. should create a DeltaFactory', inject(function() {
 			var factory = new firemote.DeltaFactory();
@@ -22,14 +102,14 @@ describe('common-js-tests', function(){
 			expect(factory.diff([{a:1},{b:{c:2,d:3}},{e:4}],[{a:1},{b:{c:2,d:-3}},{e:4}])).toEqual([undefined,{b:{d:-3}},undefined]);
 			expect(factory.diff([{a:1},{b:{c:2,d:3}},{e:4}],[{a:-1},{b:{c:2,d:3}},{e:-4}])).toEqual([{a:-1},undefined, {e:-4}]);
 
-			var axis1 = new firemote.Axis({pos:101,posMax:501});
-			var axis2 = new firemote.Axis({pos:102,posMax:502});
+			var axis1 = new firemote.LinearAxis({pos:101,posMax:501});
+			var axis2 = new firemote.LinearAxis({pos:102,posMax:502});
 			expect(factory.diff(axis1, axis1.clone())).toEqual(false);
 			expect(factory.diff(axis1, axis2)).toEqual({pos:102, posMax:502});
 
 			var pcbFeeder1 = new firemote.PcbFeeder();
 			var trayFeeder1 = new firemote.TrayFeeder();
-			expect(factory.diff(pcbFeeder1, trayFeeder1)).toEqual({axis: {name:'Tray Feeder'}});
+			expect(factory.diff(pcbFeeder1, trayFeeder1)).toEqual({axis: {name:'Tray Feeder', gcAxis:'x'}});
 
 			var gantry1 = new firemote.Gantry();
 			var gantry2 = new firemote.Gantry();
@@ -65,9 +145,9 @@ describe('common-js-tests', function(){
 			expect(part3.pcbId).toBe("B");
 	}));
 
-  it('2. should create an Axis', inject(function() {
+  it('2. should create an LinearAxis', inject(function() {
 			// Test default
-			var axis = new firemote.Axis();
+			var axis = new firemote.LinearAxis();
 			expect(axis.name).toBe("Unknown axis");
 			expect(axis.pos).toBe(0);
 			expect(axis.posMax).toBe(100);
@@ -75,7 +155,7 @@ describe('common-js-tests', function(){
 			expect(axis.calibrate).toBe(false);
 
 			// Test constructor
-			axis = new firemote.Axis({name:"Gantry", posMax:500});
+			axis = new firemote.LinearAxis({name:"Gantry", posMax:500});
 			expect(axis.name).toBe("Gantry");
 			expect(axis.pos).toBe(0);
 			expect(axis.posMax).toBe(500);
@@ -177,68 +257,4 @@ describe('common-js-tests', function(){
 		 expect(gantry.axis.name).toBe("G");
 	}));
 
-	it('6. should create a MachineState', inject(function() {
-		var state = new firemote.MachineState();
-		expect(state.gantries[0].head.spindles[0].name).toBe("Left");
-		expect(state.gantries[0].head.spindles.length).toBe(1);
-		expect(state.trayFeeders[0].axis.name).toBe("Tray Feeder");
-		expect(state.pcbFeeders[0].axis.name).toBe("PCB Feeder");
-		expect(state.logLevel).toBe("INFO");
-		expect(state.firefuse).toBe(true);
-		expect(state.stateId).toBe(1);
-		expect(state.message).toBe("FirePick machine state");
-    var json = JSON.stringify({
-			message:"M",
-			stateId:123,
-			logLevel:"TRACE",
-			firefuse:false,
-			gantries:[
-				{ head:{
-						spindles:[
-							{name:"L",on:true,pos:200},
-							{"name":"R","on":true,"pos":200}
-						],
-						angle:0
-					},
-					axis:{name:"G",posMax:200,pos:20,jog:2,calibrate:false}
-				}
-			],
-			trayFeeders:[
-				{axis:{name:"T", posMax:300,"pos":30,"jog":3,"calibrate":false}}
-			],
-			pcbFeeders:[
-			  {axis:{name:"P", posMax:400,"pos":40,"jog":4,"calibrate":false}}
-			]}); 
-
-		var state2 = new firemote.MachineState(json);
-		expect(state2.stateId).toBe(123);
-		expect(state2.message).toBe("M");
-		expect(state2.firefuse).toBe(false);
-		expect(state2.logLevel).toBe("TRACE");
-		expect(state2.gantries[0].head.spindles[0].name).toBe("L");
-		expect(state2.gantries[0].head.spindles[1].name).toBe("R");
-		expect(state2.gantries[0].axis.posMax).toBe(200);
-		expect(state2.gantries[0].axis.pos).toBe(20);
-		expect(state2.gantries[0].axis.jog).toBe(2);
-		expect(state2.gantries[0].axis.name).toBe("G");
-		expect(state2.trayFeeders[0].axis.name).toBe("T");
-		expect(state2.trayFeeders[0].axis.pos).toBe(30);
-		expect(state2.trayFeeders[0].axis.posMax).toBe(300);
-		expect(state2.trayFeeders[0].axis.jog).toBe(3);
-		expect(state2.pcbFeeders[0].axis.name).toBe("P");
-		expect(state2.pcbFeeders[0].axis.posMax).toBe(400);
-		expect(state2.pcbFeeders[0].axis.pos).toBe(40);
-		expect(state2.pcbFeeders[0].axis.jog).toBe(4);
-		expect(state2.gantries[0].axis.pos = 2000).toBe(2000);
-		expect(state2.validate().gantries[0].axis.pos).toBe(200);
-
-		var axes = state.axes();
-		var df = new firemote.DeltaFactory();
-		expect(df.diff(axes,[
-				{ name : 'Gantry', gcAxis:"y", pos : 0, posMax : 100, jog : 1, calibrate : false }, 
-				{ name : 'PCB Feeder', gcAxis:"x", pos : 0, posMax: 100, jog : 1, calibrate : false }, 
-				{ name : 'Tray Feeder', gcAxis:"z", pos : 0, posMax : 100, jog : 1, calibrate : false } 
-		])).toEqual(false);
-
-	}));
 });

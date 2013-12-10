@@ -382,16 +382,16 @@ fieldset[disabled] .btn-unit.active {
 	margin-top: 8px;
 }
 .spindle-left {
-	margin-left: -2px;
+	margin-left: -3px;
 }
 .spindle-loaded {
-	border-bottom: 4px solid #FA0;
+	border-bottom: 4px solid #A4A;
 }
 .spindle-on {
-	border-top: 36px solid #FA0;
+	border-top: 36px solid #A4A;
 }
 .spindle-right {
-	margin-left: 34px;
+	margin-left: 35px;
 }
 .status-row > th {
 	border-collapse: true;

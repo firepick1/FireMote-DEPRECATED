@@ -165,7 +165,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 					df.applyDiff(scope.diffLocal, scope.machine);
 				} else {
 					scope.machineRemote = new firemote.MachineState(remoteMachineState);
-					scope.remoteAxes = scope.machineRemote.axes();
+					scope.remoteAxes = scope.machineRemote.linearAxes();
 					var UGLY_SLIDER_FIX = true;
 					if (UGLY_SLIDER_FIX) {
 						for (var i = 0; i < scope.remoteAxes.length; i++) {
@@ -174,7 +174,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 						}
 					}
 					scope.machine = new firemote.MachineState(scope.machineRemote);
-					scope.axes = scope.machine.axes();
+					scope.linearAxes = scope.machine.linearAxes();
 					console.log("Initialized from remote machine state:\n" + JSON.stringify(remoteMachineState));
 				}
 			} catch (e) {
