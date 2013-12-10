@@ -122,7 +122,7 @@ app.post('/firemote/state', function(req, res){
 			console.log(gcode);
 			if (machine.firefuse) {
 				var filename = '/dev/firefuse/firestep';
-				var err = fs.writeFileSync('/dev/firefuse/firestep', gcode);
+				var err = fs.writeFileSync('/dev/firefuse/firestep', gcode + "\n");
 				if (err) return console.log(err);
 			}
 		}
