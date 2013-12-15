@@ -173,6 +173,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 					df.applyDiff(diffRemote, scope.machine);
 					scope.diffRemote = diffRemote || scope.diffRemote;
 					//df.applyDiff(scope.diffLocal, scope.machine);
+					scope.t = BackgroundThread.t;
 				} else {
 					scope.machineRemote = new firemote.MachineState(remoteMachineState);
 					scope.remoteAxes = scope.machineRemote.linearAxes();

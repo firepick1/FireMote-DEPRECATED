@@ -47,7 +47,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <body>
   <div ng-controller="MainCtrl">
     <a href="http://github.com/firepick1/FireMote/wiki"><img class="logo" src="img/FireMote.png"/></a>
-    <img class="cam-image" ng-src="firemote/headcam.jpg?t={{backgroundThread.t}}" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
+    <img class="cam-image" ng-src="firemote/headcam.jpg?t={{t}}" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
 		<div ng-show="!machine.firefuse" class="demo" title="Demo Mode is active when FireFuse is unavailable">Demo Mode</div>
 		<div ng-hide="machine" class="loading">Loading remote machine state...</div>
 		<div ng-show="machine">
