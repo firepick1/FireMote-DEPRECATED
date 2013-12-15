@@ -5,6 +5,7 @@ module firemote {
 		stateId: number = 1;
 		logLevel: string = "INFO";
 		firefuse: Boolean = true;
+		gcode: string = "";
 		gantries: Gantry[] = [];
 		trayFeeders: TrayFeeder[] = [];
 		pcbFeeders: PcbFeeder[] = [];
@@ -16,6 +17,7 @@ module firemote {
 			}
 			if (typeof obj !== 'undefined') {
 			  if (obj.hasOwnProperty("message")) this.message = obj.message;
+			  if (obj.hasOwnProperty("gcode")) this.gcode = obj.gcode;
 			  if (obj.hasOwnProperty("stateId")) this.stateId = obj.stateId;
 			  if (obj.hasOwnProperty("logLevel")) this.logLevel = obj.logLevel;
 			  if (obj.hasOwnProperty("firefuse")) this.firefuse = obj.firefuse;
@@ -63,33 +65,54 @@ module firemote {
 			}
 		}
 
-		linearMotionGCode(newMachine) : string {
-		  var df = new DeltaFactory();
-			var axes1 = this.linearAxes();
-			var axes2 = newMachine.linearAxes();
-			var axesDiff: LinearAxis[] = <LinearAxis[]>df.diff(axes1, axes2);
-			var result = "G0";
-			for (var i = 0; i < axesDiff.length; i++) {
-			  var axisDiff = axesDiff[i];
-			  if (typeof axisDiff !== 'undefined') {
-					result = result + axes2[i].gcAxis;
-					result = result + axesDiff[i].pos;
+		calibrate(gc:GCoder = new GCoder()) {
+			var axes = this.linearAxes();
+			var coords = new Coordinates();
+
+			for (var i = 0; i < axes.length; i++) {
+				if (axes[i].calibrate === "home") {
+					coords[axes[i].gcAxis] = 0;
+					axes[i].pos = 0;
 				}
+				axes[i].calibrate = "";
 			}
-			return result;
+
+			gc.home(coords);
 		}
 
-		linearAxes(): LinearAxis[] {
+		moveTo(newState: MachineState, gc:GCoder = new GCoder()) {
+			var axes1 = this.linearAxes();
+			var axes2 = this.linearAxes(newState);
+			var coords = new Coordinates();
+
+			for (var i = 0; i < axes1.length; i++) {
+				var newPos = axes2[i].pos;
+				if (!isNaN(newPos) && axes1[i].pos !== newPos) {
+					coords[axes1[i].gcAxis] = newPos;
+					axes1[i].pos = newPos;
+				}
+			}
+
+			gc.moveTo(coords);
+		}
+
+		linearAxes(machine:MachineState = this): LinearAxis[] {
 		  var result:LinearAxis[] = [];
 
-			for (var i = 0; i < this.gantries.length; i++) {
-			  result.push(this.gantries[i].axis);
+			if (machine.gantries instanceof Array) {
+				for (var i = 0; i < machine.gantries.length; i++) {
+					result.push(machine.gantries[i].axis);
+				}
 			}
-			for (var i = 0; i < this.pcbFeeders.length; i++) {
-			  result.push(this.pcbFeeders[i].axis);
+			if (machine.pcbFeeders instanceof Array) {
+				for (var i = 0; i < machine.pcbFeeders.length; i++) {
+					result.push(machine.pcbFeeders[i].axis);
+				}
 			}
-			for (var i = 0; i < this.trayFeeders.length; i++) {
-			  result.push(this.trayFeeders[i].axis);
+			if (machine.trayFeeders instanceof Array) {
+				for (var i = 0; i < machine.trayFeeders.length; i++) {
+					result.push(machine.trayFeeders[i].axis);
+				}
 			}
 
 			return result;

@@ -1,6 +1,8 @@
+///<reference path='common/ts/Interfaces.ts'/>
 ///<reference path='common/ts/DeltaFactory.ts'/>
 ///<reference path='common/ts/LinearAxis.ts'/>
 ///<reference path='common/ts/Part.ts'/>
+///<reference path='common/ts/GCoder.ts'/>
 ///<reference path='common/ts/Spindle.ts'/>
 ///<reference path='common/ts/TrayFeeder.ts'/>
 ///<reference path='common/ts/PcbFeeder.ts'/>

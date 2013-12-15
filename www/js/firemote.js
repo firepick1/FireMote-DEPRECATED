@@ -1,6 +1,151 @@
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
+    var DeltaFactory = (function () {
+        function DeltaFactory() {
+        }
+        DeltaFactory.prototype.clone = function () {
+            return new DeltaFactory();
+        };
+
+        DeltaFactory.prototype.equals = function (obj1, obj2) {
+            return this.diff(obj1, obj2) ? false : true;
+        };
+
+        DeltaFactory.prototype.applyDiff = function (diff, obj) {
+            if (diff instanceof Array) {
+                this.applyArrayDiff(diff, obj);
+            } else if (diff) {
+                for (var k in diff) {
+                    var val = diff[k];
+                    if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                        obj[k] = val;
+                    } else if (typeof obj[k] === 'undefined') {
+                        obj[k] = val;
+                    } else {
+                        this.applyDiff(val, obj[k]);
+                    }
+                }
+            }
+            return obj;
+        };
+
+        DeltaFactory.prototype.applyArrayDiff = function (diff, arr) {
+            for (var i = 0; i < arr.length; i++) {
+                var val = diff[i];
+                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                    arr[i] = val;
+                } else {
+                    this.applyDiff(val, arr[i]);
+                }
+            }
+        };
+
+        DeltaFactory.prototype.diff = function (obj1, obj2) {
+            var result = {};
+            var changes = 0;
+            if (typeof obj1 === 'undefined')
+                return "diff(undefined,...)";
+            if (typeof obj2 === 'undefined')
+                return "diff(obj,undefined)";
+            if (obj1 instanceof Array) {
+                if (obj2 instanceof Array) {
+                    return this.diffArray(obj1, obj2);
+                } else {
+                    return "diff(Array, Object)";
+                }
+            }
+            if (obj2 instanceof Array) {
+                if (obj1 instanceof Array) {
+                    return this.diffArray(obj1, obj2);
+                } else {
+                    return "diff(Object,Array)";
+                }
+            }
+            for (var k in obj1) {
+                if (k === '$$hashKey')
+                    continue;
+
+                var val1 = obj1[k];
+                var val2 = obj2[k];
+                if (typeof val1 === 'function' || typeof val2 === 'function' || typeof val1 === 'Function' || typeof val2 === 'Function') {
+                    // ignore functions
+                } else if (typeof val1 !== typeof val2) {
+                    result[k] = val2;
+                    changes++;
+                } else if (val1 instanceof Array) {
+                    var arrDiff = this.diffArray(val1, val2);
+                    if (arrDiff) {
+                        result[k] = arrDiff;
+                        changes++;
+                    }
+                } else {
+                    if (val1 !== val2) {
+                        if (typeof val1 === 'number' || typeof val1 === 'string' || typeof val1 === 'boolean') {
+                            result[k] = val2;
+                            changes++;
+                        } else {
+                            var diffVal = this.diff(val1, val2);
+                            if (diffVal) {
+                                result[k] = diffVal;
+                                changes++;
+                            }
+                        }
+                    }
+                }
+            }
+            for (var k in obj2) {
+                if (k === '$$hashKey')
+                    continue;
+                var val1 = obj1[k];
+                var val2 = obj2[k];
+                if (typeof val1 === 'undefined') {
+                    if (typeof val1 === 'function' || typeof val2 === 'function' || typeof val1 === 'Function' || typeof val2 === 'Function') {
+                        // ignore functions
+                    } else {
+                        result[k] = val2;
+                        changes++;
+                    }
+                }
+            }
+            return changes > 0 ? result : false;
+        };
+
+        DeltaFactory.prototype.diffArray = function (arr1, arr2) {
+            var result = [];
+            var changes = 0;
+            for (var i = 0; i < arr1.length; i++) {
+                var val1 = arr1[i];
+                var val2 = arr2[i];
+                if (val1 === val2) {
+                    result.push(undefined);
+                } else if (typeof val1 === 'number' || typeof val1 === 'string') {
+                    changes++;
+                    result.push(val2);
+                } else {
+                    var diffResult = this.diff(val1, val2);
+                    if (diffResult) {
+                        changes++;
+                        result.push(diffResult);
+                    } else {
+                        result.push(undefined);
+                    }
+                }
+            }
+            if (changes === 0) {
+                return false;
+            }
+            return result;
+        };
+        return DeltaFactory;
+    })();
+    firemote.DeltaFactory = DeltaFactory;
+})(firemote || (firemote = {}));
+
+exports.DeltaFactory = firemote.DeltaFactory;
+///<reference path='../../include.d.ts'/>
+var firemote;
+(function (firemote) {
     var LinearAxis = (function () {
         function LinearAxis(obj) {
             if (typeof obj === "undefined") { obj = undefined; }
@@ -9,7 +154,7 @@ var firemote;
             this.pos = 0;
             this.posMax = 100;
             this.jog = 1;
-            this.calibrate = false;
+            this.calibrate = "";
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
@@ -69,6 +214,68 @@ var firemote;
 })(firemote || (firemote = {}));
 
 exports.Part = firemote.Part;
+///<reference path='../../include.d.ts'/>
+var firemote;
+(function (firemote) {
+    var GCoder = (function () {
+        function GCoder(obj) {
+            if (typeof obj === "undefined") { obj = undefined; }
+            this.write = function (s) {
+                console.log(s);
+            };
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            } else if (obj instanceof Function) {
+                this.write = obj;
+            } else if (typeof obj !== 'undefined') {
+                if (obj.hasOwnProperty("write"))
+                    this.write = obj.write;
+            }
+        }
+        GCoder.prototype.coordString = function (coords) {
+            var gcode = "";
+            if (!isNaN(coords.x))
+                gcode += "X" + coords.x;
+            if (!isNaN(coords.y))
+                gcode += "Y" + coords.y;
+            if (!isNaN(coords.z))
+                gcode += "Z" + coords.z;
+            if (!isNaN(coords.a))
+                gcode += "A" + coords.a;
+            if (!isNaN(coords.b))
+                gcode += "B" + coords.b;
+            if (!isNaN(coords.c))
+                gcode += "C" + coords.c;
+            return gcode;
+        };
+
+        GCoder.prototype.home = function (coords) {
+            var gcode = this.coordString(coords);
+            if (gcode.length > 0) {
+                gcode = "G28.2" + gcode;
+                this.write(gcode);
+            }
+            return gcode;
+        };
+
+        GCoder.prototype.moveTo = function (coords) {
+            var gcode = this.coordString(coords);
+            if (gcode.length > 0) {
+                gcode = "G0" + gcode;
+                this.write(gcode);
+            }
+            return gcode;
+        };
+
+        GCoder.prototype.clone = function () {
+            return new GCoder(this);
+        };
+        return GCoder;
+    })();
+    firemote.GCoder = GCoder;
+})(firemote || (firemote = {}));
+
+exports.GCoder = firemote.GCoder;
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
@@ -304,6 +511,7 @@ var firemote;
             this.stateId = 1;
             this.logLevel = "INFO";
             this.firefuse = true;
+            this.gcode = "";
             this.gantries = [];
             this.trayFeeders = [];
             this.pcbFeeders = [];
@@ -314,6 +522,8 @@ var firemote;
             if (typeof obj !== 'undefined') {
                 if (obj.hasOwnProperty("message"))
                     this.message = obj.message;
+                if (obj.hasOwnProperty("gcode"))
+                    this.gcode = obj.gcode;
                 if (obj.hasOwnProperty("stateId"))
                     this.stateId = obj.stateId;
                 if (obj.hasOwnProperty("logLevel"))
@@ -364,33 +574,59 @@ var firemote;
             }
         };
 
-        MachineState.prototype.linearMotionGCode = function (newMachine) {
-            var df = new firemote.DeltaFactory();
-            var axes1 = this.linearAxes();
-            var axes2 = newMachine.linearAxes();
-            var axesDiff = df.diff(axes1, axes2);
-            var result = "G0";
-            for (var i = 0; i < axesDiff.length; i++) {
-                var axisDiff = axesDiff[i];
-                if (typeof axisDiff !== 'undefined') {
-                    result = result + axes2[i].gcAxis;
-                    result = result + axesDiff[i].pos;
+        MachineState.prototype.calibrate = function (gc) {
+            if (typeof gc === "undefined") { gc = new firemote.GCoder(); }
+            var axes = this.linearAxes();
+            var coords = new firemote.Coordinates();
+
+            for (var i = 0; i < axes.length; i++) {
+                if (axes[i].calibrate === "home") {
+                    coords[axes[i].gcAxis] = 0;
+                    axes[i].pos = 0;
                 }
+                axes[i].calibrate = "";
             }
-            return result;
+
+            gc.home(coords);
         };
 
-        MachineState.prototype.linearAxes = function () {
+        MachineState.prototype.moveTo = function (newState, gc) {
+            if (typeof gc === "undefined") { gc = new firemote.GCoder(); }
+            var axes1 = this.linearAxes();
+            var axes2 = this.linearAxes(newState);
+            var coords = new firemote.Coordinates();
+
+            for (var i = 0; i < axes1.length; i++) {
+							if (axes2[i] instanceof Object) {
+                var newPos = axes2[i].pos;
+                if (!isNaN(newPos) && axes1[i].pos !== newPos) {
+                    coords[axes1[i].gcAxis] = newPos;
+                    axes1[i].pos = newPos;
+                }
+							}
+            }
+
+            gc.moveTo(coords);
+        };
+
+        MachineState.prototype.linearAxes = function (machine) {
+            if (typeof machine === "undefined") { machine = this; }
             var result = [];
 
-            for (var i = 0; i < this.gantries.length; i++) {
-                result.push(this.gantries[i].axis);
+            if (machine.gantries instanceof Array) {
+                for (var i = 0; i < machine.gantries.length; i++) {
+                    result.push(machine.gantries[i].axis);
+                }
             }
-            for (var i = 0; i < this.pcbFeeders.length; i++) {
-                result.push(this.pcbFeeders[i].axis);
+            if (machine.pcbFeeders instanceof Array) {
+                for (var i = 0; i < machine.pcbFeeders.length; i++) {
+                    result.push(machine.pcbFeeders[i].axis);
+                }
             }
-            for (var i = 0; i < this.trayFeeders.length; i++) {
-                result.push(this.trayFeeders[i].axis);
+            if (machine.trayFeeders instanceof Array) {
+                for (var i = 0; i < machine.trayFeeders.length; i++) {
+                    result.push(machine.trayFeeders[i].axis);
+                }
             }
 
             return result;
@@ -408,145 +644,32 @@ exports.MachineState = firemote.MachineState;
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {
-    var DeltaFactory = (function () {
-        function DeltaFactory() {
+    var Coordinates = (function () {
+        function Coordinates(obj) {
+            if (typeof obj === "undefined") { obj = undefined; }
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            } else if (obj instanceof Object) {
+                if (obj.hasOwnProperty("x"))
+                    this.x = obj.x;
+                if (obj.hasOwnProperty("y"))
+                    this.y = obj.y;
+                if (obj.hasOwnProperty("z"))
+                    this.z = obj.z;
+                if (obj.hasOwnProperty("a"))
+                    this.a = obj.a;
+                if (obj.hasOwnProperty("b"))
+                    this.b = obj.b;
+                if (obj.hasOwnProperty("c"))
+                    this.c = obj.c;
+            }
         }
-        DeltaFactory.prototype.clone = function () {
-            return new DeltaFactory();
+        Coordinates.prototype.clone = function () {
+            return new Coordinates(this);
         };
-
-        DeltaFactory.prototype.equals = function (obj1, obj2) {
-            return this.diff(obj1, obj2) ? false : true;
-        };
-
-        DeltaFactory.prototype.applyDiff = function (diff, obj) {
-            if (diff instanceof Array) {
-                this.applyArrayDiff(diff, obj);
-            } else if (diff) {
-                for (var k in diff) {
-                    var val = diff[k];
-                    if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
-                        obj[k] = val;
-                    } else if (typeof obj[k] === 'undefined') {
-                        obj[k] = val;
-                    } else {
-                        this.applyDiff(val, obj[k]);
-                    }
-                }
-            }
-            return obj;
-        };
-
-        DeltaFactory.prototype.applyArrayDiff = function (diff, arr) {
-            for (var i = 0; i < arr.length; i++) {
-                var val = diff[i];
-                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
-                    arr[i] = val;
-                } else {
-                    this.applyDiff(val, arr[i]);
-                }
-            }
-        };
-
-        DeltaFactory.prototype.diff = function (obj1, obj2) {
-            var result = {};
-            var changes = 0;
-            if (typeof obj1 === 'undefined')
-                return "diff(undefined,...)";
-            if (typeof obj2 === 'undefined')
-                return "diff(obj,undefined)";
-            if (obj1 instanceof Array) {
-                if (obj2 instanceof Array) {
-                    return this.diffArray(obj1, obj2);
-                } else {
-                    return "diff(Array, Object)";
-                }
-            }
-            if (obj2 instanceof Array) {
-                if (obj1 instanceof Array) {
-                    return this.diffArray(obj1, obj2);
-                } else {
-                    return "diff(Object,Array)";
-                }
-            }
-            for (var k in obj1) {
-                if (k === '$$hashKey')
-                    continue;
-
-                var val1 = obj1[k];
-                var val2 = obj2[k];
-                if (typeof val1 === 'function' || typeof val2 === 'function' || typeof val1 === 'Function' || typeof val2 === 'Function') {
-                    // ignore functions
-                } else if (typeof val1 !== typeof val2) {
-                    result[k] = val2;
-                    changes++;
-                } else if (val1 instanceof Array) {
-                    var arrDiff = this.diffArray(val1, val2);
-                    if (arrDiff) {
-                        result[k] = arrDiff;
-                        changes++;
-                    }
-                } else {
-                    if (val1 !== val2) {
-                        if (typeof val1 === 'number' || typeof val1 === 'string' || typeof val1 === 'boolean') {
-                            result[k] = val2;
-                            changes++;
-                        } else {
-                            var diffVal = this.diff(val1, val2);
-                            if (diffVal) {
-                                result[k] = diffVal;
-                                changes++;
-                            }
-                        }
-                    }
-                }
-            }
-            for (var k in obj2) {
-                if (k === '$$hashKey')
-                    continue;
-                var val1 = obj1[k];
-                var val2 = obj2[k];
-                if (typeof val1 === 'undefined') {
-                    if (typeof val1 === 'function' || typeof val2 === 'function' || typeof val1 === 'Function' || typeof val2 === 'Function') {
-                        // ignore functions
-                    } else {
-                        result[k] = val2;
-                        changes++;
-                    }
-                }
-            }
-            return changes > 0 ? result : false;
-        };
-
-        DeltaFactory.prototype.diffArray = function (arr1, arr2) {
-            var result = [];
-            var changes = 0;
-            for (var i = 0; i < arr1.length; i++) {
-                var val1 = arr1[i];
-                var val2 = arr2[i];
-                if (val1 === val2) {
-                    result.push(undefined);
-                } else if (typeof val1 === 'number' || typeof val1 === 'string') {
-                    changes++;
-                    result.push(val2);
-                } else {
-                    var diffResult = this.diff(val1, val2);
-                    if (diffResult) {
-                        changes++;
-                        result.push(diffResult);
-                    } else {
-                        result.push(undefined);
-                    }
-                }
-            }
-            if (changes === 0) {
-                return false;
-            }
-            return result;
-        };
-        return DeltaFactory;
+        return Coordinates;
     })();
-    firemote.DeltaFactory = DeltaFactory;
+    firemote.Coordinates = Coordinates;
 })(firemote || (firemote = {}));
 
-exports.DeltaFactory = firemote.DeltaFactory;
+exports.Coordinates = firemote.Coordinates;

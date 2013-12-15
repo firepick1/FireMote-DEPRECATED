@@ -99,57 +99,41 @@ app.get('/firemote/state', function(req, res){
 
 app.post('/firemote/state', function(req, res){
 	var diff = req.body;
+	var msg = "FireMote POST state response";
 	if (diff.stateId === machine.stateId + 1) {
-		var oldMachine = new firemote.MachineState(machine);
-		var isMove = false;
-	  deltaFactory.applyDiff(diff, machine);
-		machine.validate();
-		var newAxes = machine.linearAxes();
-		for (var i = 0; i < newAxes.length; i++) {
-		  var axis = newAxes[i];
-			if (axis.calibrate === 'home') {
-			  axis.pos = 0;
-				console.log("calibrating " + axis.name);
-				axis.calibrate = false;
-			}
-		}
-		var oldAxes = oldMachine.linearAxes();
-		var axesDiff = deltaFactory.diff(newAxes, oldAxes);
-		if (axesDiff) {
-		  console.log("/firemote/state clearForLinearMotion " + JSON.stringify(axesDiff));
+		var firestepWriter = function(gcode){ 
+			console.log("GCoder:" + gcode); 
 		  machine.clearForLinearMotion();
-			var gcode = oldMachine.linearMotionGCode(machine);
-			console.log(gcode);
+			machine.gcode = gcode;
 			if (machine.firefuse) {
 				var filename = '/dev/firefuse/firestep';
 				var err = fs.writeFileSync('/dev/firefuse/firestep', gcode + "\n");
-				if (err) return console.log(err);
+				if (err) {
+					msg = JSON.stringify(err);
+				  console.log(msg);
+				}
 			}
-		}
-		machine.message = "FireMote POST state response";
-		console.log("POST(/firemote/state) -> " + JSON.stringify(diff));
-		fs.writeFile('server/machine.json', JSON.stringify(machine), function (err) {
+		};
+		var gc = new firemote.GCoder(firestepWriter);
+		machine.moveTo(diff, gc);
+	  deltaFactory.applyDiff(diff, machine);
+		machine.validate();
+		machine.calibrate(gc);
+		console.log("POST(/firemote/state) <- " + JSON.stringify(diff));
+		var machineStr = JSON.stringify(machine);
+		//console.log(machineStr);
+		fs.writeFile('server/machine.json', machineStr, function (err) {
 			if (err) return console.log(err);
 		});
 	} else {
-		machine.message = "Invalid stateId actual:" + diff.stateId + " expected:" + (machine.stateId+1);
-		console.log(machine.message);
+		msg = "Invalid stateId actual:" + diff.stateId + " expected:" + (machine.stateId+1);
+		console.log(msg);
 	  console.log("POST(/firemote/state) -REJECTED->" + JSON.stringify(diff));
 	}
+	machine.message = msg;
 	firemote_respondJSON(res, machine);
 });
 
-app.listen(8000);
-console.log('FireMote listening on port 8000');
-
-console.log("FIREMOTE");
-for (var k in firemote) {
-	 console.log(k);
-}
-
-var foo= [1,'a'];
-var fun = function(){return 1;}
-console.log("Array typeof is " + (typeof foo));
-console.log("instanceof Array " + (foo instanceof Array));
-console.log("typeof function " + (typeof fun));
-console.log("typeof true " + (typeof true));
+var firemote_port = process.env.FIREMOTE_PORT || 8000;
+app.listen(firemote_port);
+console.log('FireMote listening on port ' + firemote_port);

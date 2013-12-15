@@ -1,6 +1,16 @@
 'use strict';
 
 describe('common-js-tests', function(){
+	it('7. should create a GCoder', inject(function() {
+		var out;
+		var gc = new firemote.GCoder(function(s) { out = s;});
+
+		expect(gc.moveTo({x:1,z:3})).toBe("G0X1Z3");
+		expect(out).toBe("G0X1Z3");
+		expect(gc.home({y:2,b:3})).toBe("G28.2Y2B3");
+		expect(out).toBe("G28.2Y2B3");
+	}));
+
 	it('6. should create a MachineState', inject(function() {
 		var state = new firemote.MachineState();
 		expect(state.gantries[0].head.spindles[0].name).toBe("Left");
@@ -24,14 +34,14 @@ describe('common-js-tests', function(){
 						],
 						angle:0
 					},
-					axis:{name:"G",posMax:200,pos:20,jog:2,calibrate:false}
+					axis:{name:"G",posMax:200,pos:20,jog:2,calibrate:""}
 				}
 			],
 			trayFeeders:[
-				{axis:{name:"T", posMax:300,"pos":30,"jog":3,"calibrate":false}}
+				{axis:{name:"T", posMax:300,"pos":30,"jog":3,"calibrate":""}}
 			],
 			pcbFeeders:[
-			  {axis:{name:"P", posMax:400,"pos":40,"jog":4,"calibrate":false}}
+			  {axis:{name:"P", posMax:400,"pos":40,"jog":4,"calibrate":""}}
 			]}); 
 
 		var state2 = new firemote.MachineState(json);
@@ -61,15 +71,15 @@ describe('common-js-tests', function(){
 		var df = new firemote.DeltaFactory();
 
 		expect(df.diff([
-        { name : 'Gantry', gcAxis : 'y', pos : 0, posMax : 100, jog : 1, calibrate : false }, 
-				{ name : 'PCB Feeder', gcAxis : 'z', pos : 0, posMax : 100, jog : 1, calibrate : false }, 
-				{ name : 'Tray Feeder', gcAxis : 'x', pos : 0, posMax : 100, jog : 1, calibrate : false },
+        { name : 'Gantry', gcAxis : 'y', pos : 0, posMax : 100, jog : 1, calibrate : "" }, 
+				{ name : 'PCB Feeder', gcAxis : 'z', pos : 0, posMax : 100, jog : 1, calibrate : "" }, 
+				{ name : 'Tray Feeder', gcAxis : 'x', pos : 0, posMax : 100, jog : 1, calibrate : "" },
 				],axes)).toEqual(false);
 
 		expect(df.diff([
-        { name : 'G', gcAxis : 'y', pos : 200, posMax : 200, jog : 2, calibrate : false }, 
-				{ name : 'P', gcAxis : 'z', pos : 40, posMax : 400, jog : 4, calibrate : false }, 
-				{ name : 'T', gcAxis : 'x', pos : 30, posMax : 300, jog : 3, calibrate : false },
+        { name : 'G', gcAxis : 'y', pos : 200, posMax : 200, jog : 2, calibrate : "" }, 
+				{ name : 'P', gcAxis : 'z', pos : 40, posMax : 400, jog : 4, calibrate : "" }, 
+				{ name : 'T', gcAxis : 'x', pos : 30, posMax : 300, jog : 3, calibrate : "" },
 		],axes2)).toEqual(false);
 
 		expect(df.diff(axes, axes2)).toEqual([
@@ -78,7 +88,22 @@ describe('common-js-tests', function(){
 				{ name : 'T', pos : 30, posMax : 300, jog : 3 }, 
 				]);
 		
-		expect(state.linearMotionGCode(state2)).toEqual("G0y200z40x30");
+		var gcode;
+		var sw = function(s){gcode = s;};
+		var gc = new firemote.GCoder(sw);
+		state.moveTo({trayFeeders:[{axis:{pos:101}}]},gc);
+		expect(gcode).toEqual("G0Y101");
+		state.moveTo(state2, gc);
+		expect(gcode).toEqual("G0X30Y200Z40");
+		expect(state.gantries[0].axis.pos).toEqual(200);
+		expect(state.pcbFeeders[0].axis.pos).toEqual(40);
+		expect(state.trayFeeders[0].axis.pos).toEqual(30);
+
+		state.gantries[0].axis.calibrate = "home";
+		state.calibrate(gc);
+		expect(gcode).toEqual("G28.2Y0");
+		expect(state.gantries[0].axis.pos).toEqual(0);
+		expect(state.gantries[0].axis.calibrate).toEqual("");
 
 	}));
 
@@ -152,7 +177,7 @@ describe('common-js-tests', function(){
 			expect(axis.pos).toBe(0);
 			expect(axis.posMax).toBe(100);
 			expect(axis.jog).toBe(1);
-			expect(axis.calibrate).toBe(false);
+			expect(axis.calibrate).toBe("");
 
 			// Test constructor
 			axis = new firemote.LinearAxis({name:"Gantry", posMax:500});
@@ -160,7 +185,7 @@ describe('common-js-tests', function(){
 			expect(axis.pos).toBe(0);
 			expect(axis.posMax).toBe(500);
 			expect(axis.jog).toBe(1);
-			expect(axis.calibrate).toBe(false);
+			expect(axis.calibrate).toBe("");
 
 			// Test clone()
 			axis.pos = 1;
@@ -171,17 +196,17 @@ describe('common-js-tests', function(){
 			axis.name = "blueberry";
 			axis.jog = 3;
 			axis.posMax = 4;
-			axis.calibrate = true;
+			axis.calibrate = "home";
 			expect(axis.name).toBe("blueberry");
 			expect(axis.pos).toBe(2);
 			expect(axis.posMax).toBe(4);
 			expect(axis.jog).toBe(3);
-			expect(axis.calibrate).toBe(true);
+			expect(axis.calibrate).toBe("home");
 			expect(axis2.name).toBe("Gantry");
 			expect(axis2.pos).toBe(1);
 			expect(axis2.posMax).toBe(101);
 			expect(axis2.jog).toBe(2);
-			expect(axis2.calibrate).toBe(false);
+			expect(axis2.calibrate).toBe("");
   }));
 
   it('3. should create a Spindle', inject(function() {

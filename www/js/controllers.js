@@ -87,18 +87,27 @@ controllers.controller('StatusCtrl', ['$scope','$location', function(scope, loca
 controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, location) {
     scope.view = "CALIBRATE";
 
-    scope.calibrate = function () {
-      alert("calibrating...");
+    scope.calibrateClick = function () {
       scope.postMachineState();
-      scope.machine.gantries[0].axis.calibrate = false;
-      scope.machine.trayFeeders[0].axis.calibrate = false;
-      scope.machine.pcbFeeders[0].axis.calibrate = false;
+		  for (var i = 0; i < scope.linearAxes.length; i++) {
+				scope.linearAxes[i].calibrate = "";
+			}
+    }
+    scope.calibrateCancel = function () {
+		  for (var i = 0; i < scope.linearAxes.length; i++) {
+				scope.linearAxes[i].calibrate = "";
+			}
     }
     scope.calibrateClass = function() {
-      return scope.machine.gantries[0].axis.calibrate 
-        || scope.machine.trayFeeders[0].axis.calibrate 
-        || scope.machine.pcbFeeders[0].axis.calibrate
-        ? "" : "hide";
+		  var result = "hide";
+			for (var i = 0; i < scope.linearAxes.length; i++) {
+			  if (scope.linearAxes[i].calibrate === "") {
+				  // no calibration
+				} else {
+				  result = "";
+				}
+			}
+			return result;
     }
 }]);
 
@@ -129,8 +138,8 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
     scope.hsliderNumberClass = function() {
       return scope.machine.gantries[0].head.light ? "hslider-number hslider-number-light": "hslider-number";
     }
-    scope.hsliderSpindleClass = function(spindle) {
-      var result = "spindle spindle-" + spindle.side;
+    scope.hsliderSpindleClass = function(spindle, index) {
+      var result = "spindle spindle-" + index;
 
       result += spindle.on ? " spindle-on" : "";
       result += spindle.pos == 0 ? " spindle-down" : "";
@@ -157,12 +166,13 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 				if (scope.hasOwnProperty("machine")) {
 					var newMachineRemote = new firemote.MachineState(remoteMachineState);
 					var df = new firemote.DeltaFactory();
-					scope.diffRemote = df.diff(scope.machineRemote, newMachineRemote);
+					var diffRemote = df.diff(scope.machineRemote, newMachineRemote);
 					scope.diffLocal = df.diff(scope.machineRemote, scope.machine);
 					scope.updated = new Date().toLocaleTimeString();
-					df.applyDiff(scope.diffRemote, scope.machineRemote);
-					df.applyDiff(scope.diffRemote, scope.machine);
-					df.applyDiff(scope.diffLocal, scope.machine);
+					df.applyDiff(diffRemote, scope.machineRemote);
+					df.applyDiff(diffRemote, scope.machine);
+					scope.diffRemote = diffRemote || scope.diffRemote;
+					//df.applyDiff(scope.diffLocal, scope.machine);
 				} else {
 					scope.machineRemote = new firemote.MachineState(remoteMachineState);
 					scope.remoteAxes = scope.machineRemote.linearAxes();

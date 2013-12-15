@@ -20,16 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 <div class="panel-heading h3 text-center">Calibrate Linear Axes</div>
 <div class="form-horizontal">
-	<div class="form-group" ng-repeat="axis in axes">
+	<div class="form-group" ng-repeat="axis in linearAxes">
 		<label class="col-xs-3" for="calibrate-{{axis.name}}">{{axis.name}}</label>
 		<div class="col-xs-9">
 			<select id="calibrate-{{axis.name}}" class="form-control" ng-change="axis.jog=axis.jog*1" ng-model="axis.calibrate">
-				<option value=false>(select calibration)</option>
+				<option value="">(select calibration)</option>
 				<option value="home">Traverse to home limit stop and zero axis</option>
 			</select>
 		</div>
 	</div>
 
-	<button class="big-button {{calibrateClass()}}" ng-click="calibrate()">Calibrate</button>
+	<div class="form-group big-button-group" >
+		<button class="big-button  {{calibrateClass()}}" ng-click="calibrateClick()">Calibrate</button>
+		<button class="big-button2 {{calibrateClass()}}" ng-click="calibrateCancel()">Cancel</button>
+	</div>
 </div>
 

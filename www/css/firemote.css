@@ -67,9 +67,7 @@ button: focus {
 	height: 4px;
 }
 .big-button {
-	position: absolute;
 	bottom: 0;
-	right: 0;
 	border: 2pt solid #444;
 	background-color: #FA0;
 	-webkit-border-radius: 15px;
@@ -79,6 +77,22 @@ button: focus {
 
 	width:80px;
 	height:30px;
+}
+.big-button2 {
+	bottom: 0;
+	border: 2pt solid #444;
+	background-color: #FA0;
+	-webkit-border-radius: 15px;
+	
+	background-image: -webkit-linear-gradient(top, #AAA 0%, #333 100%);
+	color: #FFF;
+
+	width:80px;
+	height:30px;
+}
+.big-button-group {
+	position: absolute;
+	right:0;
 }
 
 .btn-checkbox {
@@ -291,6 +305,7 @@ fieldset[disabled] .btn-unit.active {
 .hslider-container {
 	position: relative;
 	margin-top: 5px;
+	margin-bottom: 10px;
 }
 .hslider-number {
 	position: absolute;
@@ -329,8 +344,8 @@ fieldset[disabled] .btn-unit.active {
 }
 .logo-tiny {
 	position: absolute;
-	top: -25px;
-	left: 22px;
+	top: -16px;
+	left: 16px;
 	width: 80px;
 }
 .logo {
@@ -375,23 +390,24 @@ fieldset[disabled] .btn-unit.active {
 	width: 4px;
 	border: 0;
 	height: 42px !important;
-	border-top: 36px solid #000;
+	border-top: 36px solid #AAA; 
 	margin-top: 2px;
 }
 .spindle-down {
+	border-top: 36px solid #000; 
 	margin-top: 8px;
 }
-.spindle-left {
+.spindle-0 {
 	margin-left: -3px;
 }
+.spindle-1 {
+	margin-left: 35px;
+}
 .spindle-loaded {
-	border-bottom: 4px solid #A4A;
+	border-bottom: 4px solid #FA0;
 }
 .spindle-on {
 	border-top: 36px solid #A4A;
-}
-.spindle-right {
-	margin-left: 35px;
 }
 .status-row > th {
 	border-collapse: true;

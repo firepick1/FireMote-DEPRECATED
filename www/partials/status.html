@@ -22,13 +22,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 <table class="table table-condensed table-striped table-bordered ">
 	<tr class="status-row"><th>StateId:</th><td>{{machine.stateId}}</td></tr>
 	<tr class="status-row"><th>Message:</th><td>{{machine.message}}</td></tr>
+	<tr class="status-row"><th>updated:</th><td>{{updated}}</td></tr>
+	<tr class="status-row"><th>gcode:</th><td>{{machine.gcode}}</td></tr>
 	<tr class="status-row"><th>FireFuse:</th><td>{{machine.firefuse}}</td></tr>
-	<tr class="status-row"><th>Log Level:</th><td>{{machine.logLevel}}</td></tr>
 	<tr class="status-row" ng-repeat="gantry in machine.gantries"><th>Gantry:</th><td>{{gantry}}</td></tr>
 	<tr class="status-row" ng-repeat="trayFeeder in machine.trayFeeders"><th>Tray Feeder:</th><td>{{trayFeeder}}</td></tr>
 	<tr class="status-row" ng-repeat="pcbFeeder in machine.pcbFeeders"><th>PCB Feeder:</th><td>{{pcbFeeder}}</td></tr>
+	<tr class="status-row"><th>Log Level:</th><td>{{machine.logLevel}}</td></tr>
 	<tr class="status-row"><th>FireStep:</th><td>{{machine.firestep}}</td></tr>
 	<tr class="status-row"><th>diffLocal:</th><td>{{diffLocal}}</td></tr>
 	<tr class="status-row"><th>diffRemote:</th><td>{{diffRemote}}</td></tr>
-	<tr class="status-row"><th>updated:</th><td>{{updated}}</td></tr>
 </table>
