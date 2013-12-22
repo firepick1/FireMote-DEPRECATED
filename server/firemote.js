@@ -1,3 +1,4 @@
+console.log("loading express...");
 var express = require('express');
 var fs = require('fs');
 var app = express();
@@ -5,7 +6,9 @@ var __appdir = "www";
 app.use(express.static(__appdir));
 app.use(express.bodyParser());
 
+console.log("loading typescript-require...");
 var tsr = require('typescript-require');
+console.log("loading firemote.js...");
 var firemote = require('../www/js/firemote.js');
 var machine;
 var deltaFactory = new firemote.DeltaFactory();
