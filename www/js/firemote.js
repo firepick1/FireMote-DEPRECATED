@@ -407,15 +407,15 @@ var firemote;
             if (typeof obj === "undefined") { obj = undefined; }
             this.spindles = [];
             this.angle = 0;
-            this.light = true;
+            this.camera = new firemote.Camera();
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
             if (typeof obj !== 'undefined') {
                 if (obj.hasOwnProperty("angle"))
                     this.angle = obj.angle;
-                if (obj.hasOwnProperty("light"))
-                    this.light = obj.light;
+                if (obj.hasOwnProperty("camera"))
+                    this.camera = new firemote.Camera(obj.camera);
                 if (obj.spindles && obj.spindles.length > 0) {
                     for (var i = 0; i < obj.spindles.length; i++) {
                         this.spindles.push(new firemote.Spindle(obj.spindles[i]));
@@ -597,13 +597,13 @@ var firemote;
             var coords = new firemote.Coordinates();
 
             for (var i = 0; i < axes1.length; i++) {
-							if (axes2[i] instanceof Object) {
-                var newPos = axes2[i].pos;
-                if (!isNaN(newPos) && axes1[i].pos !== newPos) {
-                    coords[axes1[i].gcAxis] = newPos;
-                    axes1[i].pos = newPos;
+                if (axes2[i] instanceof Object) {
+                    var newPos = axes2[i].pos;
+                    if (!isNaN(newPos) && axes1[i].pos !== newPos) {
+                        coords[axes1[i].gcAxis] = newPos;
+                        axes1[i].pos = newPos;
+                    }
                 }
-							}
             }
 
             gc.moveTo(coords);
@@ -641,6 +641,36 @@ var firemote;
 })(firemote || (firemote = {}));
 
 exports.MachineState = firemote.MachineState;
+///<reference path='../../include.d.ts'/>
+var firemote;
+(function (firemote) {
+    var Camera = (function () {
+        function Camera(obj) {
+            if (typeof obj === "undefined") { obj = undefined; }
+            this.angle = 0;
+            this.scale = 1;
+            this.light = false;
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            }
+            if (typeof obj !== 'undefined') {
+                if (obj.hasOwnProperty("angle"))
+                    this.angle = obj.angle;
+                if (obj.hasOwnProperty("light"))
+                    this.light = obj.light;
+                if (obj.hasOwnProperty("scale"))
+                    this.scale = obj.scale;
+            }
+        }
+        Camera.prototype.clone = function () {
+            return new Camera(this);
+        };
+        return Camera;
+    })();
+    firemote.Camera = Camera;
+})(firemote || (firemote = {}));
+
+exports.Camera = firemote.Camera;
 ///<reference path='../../include.d.ts'/>
 var firemote;
 (function (firemote) {

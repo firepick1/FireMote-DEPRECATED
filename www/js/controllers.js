@@ -50,6 +50,7 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
     scope.view = "CAMERA";
+		scope.global.imageLarge = true;
 
 }]);
 
@@ -114,15 +115,24 @@ controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, l
 controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundThread', 
   function(scope, location, $timeout, BackgroundThread) {
     scope.view = "MAIN";
-    scope.imageLarge = false;
+		scope.global = {
+			imageLarge:false,
+			partOpacity: 0,
+			rulerOpacity: 0,
+			};
+		scope.scores = [
+			{name:"Bob", score:2},
+			{name:"Mary", score:4},
+			{name:"Alice", score:8}
+			]
     scope.control = location.path() || "/status";
     scope.isActive = [];
 
     scope.camImageClick = function() {
-      scope.imageLarge = !scope.imageLarge;
+      scope.global.imageLarge = !scope.global.imageLarge;
     }
-    scope.camImageHeight = function() {
-      return scope.imageLarge ? "100%" : "65px";
+    scope.camClass = function() {
+      return scope.global.imageLarge ? "" : "cam-thumb";
     }
     scope.ctrlBtnStyle = function(control) {
       return (scope.control === control) ?
@@ -136,7 +146,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
       return (scope.machine.gantries[0].axis.pos * (700 - 36) / scope.machine.gantries[0].axis.posMax); 
     }
     scope.hsliderNumberClass = function() {
-      return scope.machine.gantries[0].head.light ? "hslider-number hslider-number-light": "hslider-number";
+      return scope.machine.gantries[0].head.camera.light ? "hslider-number hslider-number-light": "hslider-number";
     }
     scope.hsliderSpindleClass = function(spindle, index) {
       var result = "spindle spindle-" + index;

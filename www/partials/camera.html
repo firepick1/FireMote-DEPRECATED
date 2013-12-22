@@ -19,8 +19,56 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 
 <div class="panel-header h3 text-centered">Control Camera</div>
-<div>
-	<div class="checkbox-label">Light</div>
-	<button type="button" class="btn btn-checkbox" ng-model="machine.gantries[0].head.light" ng-change="postMachineState()" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
+<div class="form-horizontal">
+	<div ng-repeat="gantry in machine.gantries" >
+		<div class="form-group">
+			<label for="light{{$index}}" class="control-label col-xs-3">Light</label>
+			<button id="light{{$index}}" type="button" class="btn btn-checkbox" ng-model="gantry.head.camera.light" 
+				ng-change="postMachineState()" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
+		</div>
+		<div class="form-group">
+			<label for="scale{{$index}}" class="control-label col-xs-3">Pixels/mm</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="5" max="30" step="0.05" ng-model="gantry.head.camera.scale" 
+					ng-init="gantry.head.camera.scale = 1*gantry.head.camera.scale"
+					ng-change="gantry.head.camera.scale = 1*gantry.head.camera.scale"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="scale{{$index}}" class="form-control " type="number" min="5" max="30" step=".1" ng-model="gantry.head.camera.scale" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="angle{{$index}}" class="control-label col-xs-3">Degrees</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="-90" max="90" step="0.1" ng-model="gantry.head.camera.angle" 
+					ng-init="gantry.head.camera.angle = 1*gantry.head.camera.angle"
+					ng-change="gantry.head.camera.angle = 1*gantry.head.camera.angle"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="angle{{$index}}" class="form-control " type="number" min="-90" max="90" step=".1" ng-model="gantry.head.camera.angle" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="angle{{$index}}" class="control-label col-xs-3">Ruler</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="0" max="1" step="0.05" ng-model="global.rulerOpacity" 
+					ng-init="global.rulerOpacity = 1*global.rulerOpacity"
+					ng-change="global.rulerOpacity = 1*global.rulerOpacity"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="angle{{$index}}" class="form-control " type="number" min="0" max="1" step=".05" ng-model="global.rulerOpacity" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="angle{{$index}}" class="control-label col-xs-3">Part</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="0" max="1" step="0.05" ng-model="global.partOpacity" 
+					ng-init="global.partOpacity = 1*global.partOpacity"
+					ng-change="global.partOpacity = 1*global.partOpacity"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="angle{{$index}}" class="form-control " type="number" min="0" max="1" step=".05" ng-model="global.partOpacity" />
+			</div>
+		</div>
+	</div>
 </div>
-

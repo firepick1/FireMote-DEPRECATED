@@ -1,6 +1,17 @@
 'use strict';
 
 describe('common-js-tests', function(){
+	it('8. should create a Camera', inject(function() {
+		var camera = new firemote.Camera();
+		expect(camera.scale).toBe(1);
+		expect(camera.angle).toBe(0);
+		expect(camera.light).toBe(false);
+		var camera2 = new firemote.Camera({scale:2, angle:45, light:true});
+		expect(camera2.scale).toBe(2);
+		expect(camera2.angle).toBe(45);
+		expect(camera2.light).toBe(true);
+	}));
+
 	it('7. should create a GCoder', inject(function() {
 		var out;
 		var gc = new firemote.GCoder(function(s) { out = s;});

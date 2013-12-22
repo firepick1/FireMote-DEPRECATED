@@ -46,8 +46,50 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 </head>
 <body>
   <div ng-controller="MainCtrl">
-    <a href="http://github.com/firepick1/FireMote/wiki"><img class="logo" src="img/FireMote.png"/></a>
-    <img class="cam-image" ng-src="firemote/headcam.jpg?t={{t}}" height="{{camImageHeight()}}" ng-click="camImageClick()"/>
+		<d3-reticle></d3-reticle>
+		<div class="logo"><a href="http://github.com/firepick1/FireMote/wiki"><img src="img/FireMote.png"/></a></div>
+		<div class="cam-detail {{camClass()}}" ng-click="camImageClick()">
+			<img class="cam-image" ng-src="firemote/headcam.jpg?x=1&t={{t}}" width="100%" />
+			<svg class="cam-image" width="100%" height="100%" >
+				<g transform="translate(400,100)" ng-if="true">
+					<g stroke="#fc8" stroke-width=".1" stroke-opacity="1"  
+						transform="scale({{machine.gantries[0].head.camera.scale}}), rotate({{machine.gantries[0].head.camera.angle}})">
+
+					  <!-- reticle -->
+						<g stroke-dasharray="1,1" ng-attr-opacity="{{1-global.rulerOpacity}}">
+							<line x1="-500" y1="0" x2="-1" y2="0" />
+							<line x1="1" y1="0" x2="500" y2="0" />
+							<line x1="0" y1="-500" x2="0" y2="-1" />
+							<line x1="0" y1="1" x2="0" y2="500" />
+							<circle stroke-dasharray="0" cx="0" cy="0" r="5" fill="none"/>
+						</g>
+
+						<g opacity="{{global.partOpacity}}">
+							<polyline points="-.8,-.4 -.8,.4 .8,.4 .8,-.4 -.8,-.4" fill="none" stroke="#faa" stroke-width=".1"/>
+							<polyline points="-1,-.625 -1,.625 1,.625 1,-.625 -1,-.625" fill="none" stroke="#ee4" stroke-width=".1"/>
+							<polyline points="-1.6,-.8 -1.6,.8 1.6,.8 1.6,-.8 -1.6,-.8" fill="none" stroke="#afa" stroke-width=".1"/>
+							<text ng-attr-x="2" y="1" text-anchor="middle" stroke="none" fill="#fff" font-size=".3mm">
+							<tspan x="0" dy=".3mm" fill="#faa">0603</tspan><tspan x="0" dy=".3mm" fill="#ee4">0805</tspan><tspan x="0" dy=".3mm" fill="#afa">1206</tspan>
+						</text>
+						</g>
+
+						<!-- x-scale -->
+						<g stroke="#fff" transform="translate(0,0)" ng-attr-opacity="{{global.rulerOpacity}}">
+							<line x1="0" y1="-2" x2="0" y2="2"/>
+							<g ng-repeat="x in [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50]">
+								<text ng-attr-x="{{x+0}}" y="-2.2" text-anchor="middle" stroke="none" fill="#fff" font-size=".3mm">{{x}}</text>
+								<line ng-attr-x1="{{x+0}}" y1="-1.5" ng-attr-x2="{{x+0}}" y2="1.5"/>
+								<line ng-attr-x1="{{x+1}}" y1="-1" ng-attr-x2="{{x+1}}" y2="1"/>
+								<line ng-attr-x1="{{x+2}}" y1="-1" ng-attr-x2="{{x+2}}" y2="1"/>
+								<line ng-attr-x1="{{x+3}}" y1="-1" ng-attr-x2="{{x+3}}" y2="1"/>
+								<line ng-attr-x1="{{x+4}}" y1="-1" ng-attr-x2="{{x+4}}" y2="1"/>
+								<text ng-attr-x="{{x+0}}" y="3" text-anchor="middle" stroke="none" fill="#fff" font-size=".3mm">{{x}}</text>
+							</g>
+						</g>
+					</g>
+				</g>
+			</svg>
+		</div>
 		<div ng-show="!machine.firefuse" class="demo" title="Demo Mode is active when FireFuse is unavailable">Demo Mode</div>
 		<div ng-hide="machine" class="loading">Loading remote machine state...</div>
 		<div ng-show="machine">

@@ -235,11 +235,26 @@ fieldset[disabled] .btn-unit.active {
   border-bottom-color: #F00;
 }
 
-.cam-image {
+.cam-detail {
 	display: inline-block;
-	-webkit-border-radius: 5px;
-	border: 1pt solid black;
+	position:relative;
+	width:800px;
+	height:200px;
+	margin-top:5px;
+	overflow: hidden;
 }
+.cam-image {
+	position: absolute;
+	top:0;
+	left:0;
+	-webkit-border-radius: 5px;
+}
+.cam-thumb {
+	margin-top: 5px;
+	width:260px;
+	height:65px;
+}
+
 .checkbox-label{
 	display: inline-block;
 	height: 20px;
@@ -261,9 +276,9 @@ fieldset[disabled] .btn-unit.active {
 }
 .demo {
 	position: absolute;
-	top:15px;
-	left:200px;
-	color: #eee;
+	top:25px;
+	left:220px;
+	color: #aaa;
 	font: 30px Verdana;
 	font-style:italic;
 }
@@ -338,8 +353,9 @@ fieldset[disabled] .btn-unit.active {
 }
 .logo {
 	position: relative;
-	top: -4px;
-	left: -2px;
+	float: left;
+	margin-top: 13px;
+	margin-left: 2px;
 	margin-right: 230px;
 }
 .logo-tiny {

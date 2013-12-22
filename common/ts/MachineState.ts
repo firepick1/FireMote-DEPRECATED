@@ -86,10 +86,12 @@ module firemote {
 			var coords = new Coordinates();
 
 			for (var i = 0; i < axes1.length; i++) {
-				var newPos = axes2[i].pos;
-				if (!isNaN(newPos) && axes1[i].pos !== newPos) {
-					coords[axes1[i].gcAxis] = newPos;
-					axes1[i].pos = newPos;
+				if (axes2[i] instanceof Object) {
+					var newPos = axes2[i].pos;
+					if (!isNaN(newPos) && axes1[i].pos !== newPos) {
+						coords[axes1[i].gcAxis] = newPos;
+						axes1[i].pos = newPos;
+					}
 				}
 			}
 
