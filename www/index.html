@@ -75,6 +75,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 						</g>
 
 						<!-- x-scale -->
+						<g ng-attr-opacity="{{global.rulerOpacity}}">
+							<line x1="-12.7" y1="-1" x2="-12.7" y2="1" stroke="#f44" />
+							<line x1="-12.7" y1="0" x2="12.7" y2="0" stroke="#f44" />
+							<line x1="12.7" y1="-1" x2="12.7" y2="1" stroke="#f44" />
+						</g>
 						<g stroke="#fff" transform="translate(0,0)" ng-attr-opacity="{{global.rulerOpacity}}">
 							<line x1="0" y1="-2" x2="0" y2="2"/>
 							<g ng-repeat="x in [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50]">
