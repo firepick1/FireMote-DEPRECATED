@@ -1,8 +1,9 @@
 ///<reference path='../../include.d.ts'/>
 module firemote {
 	export class Camera {
-			angle: number = 0;
-			scale: number = 1;
+			imageAngle: number = 0;
+			reticleAngle: number = 0;
+			pixelsPerMM: number = 1;
 			light: boolean = false;
 
 			constructor(obj = undefined) {
@@ -10,9 +11,10 @@ module firemote {
 				  obj = JSON.parse(obj);
 				}
 				if (typeof obj !== 'undefined') {
-				  if (obj.hasOwnProperty("angle")) this.angle = obj.angle;
+				  if (obj.hasOwnProperty("imageAngle")) this.imageAngle = obj.imageAngle;
+				  if (obj.hasOwnProperty("reticleAngle")) this.reticleAngle = obj.reticleAngle;
 				  if (obj.hasOwnProperty("light")) this.light = obj.light;
-				  if (obj.hasOwnProperty("scale")) this.scale = obj.scale;
+				  if (obj.hasOwnProperty("pixelsPerMM")) this.pixelsPerMM = obj.pixelsPerMM;
 				}
 			}
 

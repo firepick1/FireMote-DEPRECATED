@@ -3,12 +3,14 @@
 describe('common-js-tests', function(){
 	it('8. should create a Camera', inject(function() {
 		var camera = new firemote.Camera();
-		expect(camera.scale).toBe(1);
-		expect(camera.angle).toBe(0);
+		expect(camera.pixelsPerMM).toBe(1);
+		expect(camera.reticleAngle).toBe(0);
+		expect(camera.imageAngle).toBe(0);
 		expect(camera.light).toBe(false);
-		var camera2 = new firemote.Camera({scale:2, angle:45, light:true});
-		expect(camera2.scale).toBe(2);
-		expect(camera2.angle).toBe(45);
+		var camera2 = new firemote.Camera({pixelsPerMM:2, imageAngle:3, reticleAngle:45, light:true});
+		expect(camera2.pixelsPerMM).toBe(2);
+		expect(camera2.imageAngle).toBe(3);
+		expect(camera2.reticleAngle).toBe(45);
 		expect(camera2.light).toBe(true);
 	}));
 

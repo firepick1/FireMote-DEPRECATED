@@ -212,6 +212,15 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 				BackgroundThread.postMachineStateDiff(diff, scope.onMachineStateReceived);
 			}
     };
+		scope.imageStyle = function(gantryIndex) {
+			var style = "";
+			if (scope.machine) {
+				var gantry = scope.machine.gantries[gantryIndex];
+				var angle = gantry && gantry.head.camera.imageAngle*1 || 0;
+				style="transform:rotate(" + angle + "deg);-ms-transform:rotate(" + angle + "deg);-webkit-transform:rotate(" + angle + "deg)";
+			}
+			return style;
+		};
     scope.updateStatus = function() {
       BackgroundThread.get(scope.onMachineStateReceived);
     };

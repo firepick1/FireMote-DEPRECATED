@@ -49,11 +49,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 		<d3-reticle></d3-reticle>
 		<div class="logo"><a href="http://github.com/firepick1/FireMote/wiki"><img src="img/FireMote.png"/></a></div>
 		<div class="cam-detail {{camClass()}}" ng-click="camImageClick()">
-			<img class="cam-image" ng-src="firemote/headcam.jpg?x=1&t={{t}}" width="100%" />
+			<img class="cam-image" ng-src="firemote/headcam.jpg?x=1&t={{t}}" width="100%" style="{{imageStyle(0)}}"/>
 			<svg class="cam-image" width="100%" height="100%" >
 				<g transform="translate(400,100)" ng-if="true">
 					<g stroke="#fc8" stroke-width=".1" stroke-opacity="1"  
-						transform="scale({{machine.gantries[0].head.camera.scale}}), rotate({{machine.gantries[0].head.camera.angle}})">
+						transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}}), rotate({{machine.gantries[0].head.camera.reticleAngle}})">
 
 					  <!-- reticle -->
 						<g stroke-dasharray="1,1" ng-attr-opacity="{{1-global.rulerOpacity}}">

@@ -647,19 +647,22 @@ var firemote;
     var Camera = (function () {
         function Camera(obj) {
             if (typeof obj === "undefined") { obj = undefined; }
-            this.angle = 0;
-            this.scale = 1;
+            this.imageAngle = 0;
+            this.reticleAngle = 0;
+            this.pixelsPerMM = 1;
             this.light = false;
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
             if (typeof obj !== 'undefined') {
-                if (obj.hasOwnProperty("angle"))
-                    this.angle = obj.angle;
+                if (obj.hasOwnProperty("imageAngle"))
+                    this.imageAngle = obj.imageAngle;
+                if (obj.hasOwnProperty("reticleAngle"))
+                    this.reticleAngle = obj.reticleAngle;
                 if (obj.hasOwnProperty("light"))
                     this.light = obj.light;
-                if (obj.hasOwnProperty("scale"))
-                    this.scale = obj.scale;
+                if (obj.hasOwnProperty("pixelsPerMM"))
+                    this.pixelsPerMM = obj.pixelsPerMM;
             }
         }
         Camera.prototype.clone = function () {
