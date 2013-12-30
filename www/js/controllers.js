@@ -39,11 +39,19 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 		
 		var spindles = scope.machine.gantries[0].head.spindles;
 
-    scope.jogAxis = function(axis, delta) {
-			var newPos = axis.pos*1 + delta*1;
-			if (0 <= newPos && newPos <= axis.posMax) {
-			  axis.pos = newPos;
-				scope.postMachineState();
+    scope.jogAxis = function jogAxis(axis, delta) {
+			delta = delta*1;
+			var minJog = 1;
+			if (Math.abs(delta) < minJog) {
+			  jogAxis(axis, 2*minJog);
+			  jogAxis(axis, delta-2*minJog);
+			} else {
+				var newPos = axis.pos*1 + delta;
+				if (0 <= newPos && newPos <= axis.posMax) {
+					axis.pos = newPos;
+					scope.postMachineState();
+					scope.machineRemote.stateId = scope.machine.stateId; // predictive assignment of server response
+				}
 			}
     }
 }]);
