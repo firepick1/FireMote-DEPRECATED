@@ -18,32 +18,53 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 -->
 
+<tabset>
+	<tab> <tab-heading><i class="glyphicon glyphicon-resize-horizontal"></i> Axis</tab-heading>
+		<div class="tab-contents form-horizontal">
+			<div class="form-group" ng-repeat="axis in linearAxes">
+				<label for="posGantry" class="col-xs-3 control-label">{{axis.name}}</label>
+				<div class="col-xs-3">
+					<input id="posGantry" type="number" min="0" max="axis.posMax" step="{{axis.jog}}" class="form-control" ng-model="axis.pos" ng-blur="postMachineState()"/>
+				</div>
+				<div class="col-xs-3">
+					<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, -axis.jog)"><span class="h3">&#x2013;</span></button>
+					<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, axis.jog)"><span class="h3">+</span></button>
+				</div>
+				<div class="col-xs-3">
+					<select class="form-control" ng-change="axis.jog=axis.jog*1" ng-model="axis.jog">
+						<option value="0.1">&#xb1;0.1mm</option>
+						<option value="0.5">&#xb1;0.5mm</option>
+						<option value="1">&#xb1;1mm</option>
+						<option value="2">&#xb1;2mm</option>
+						<option value="3">&#xb1;3mm</option>
+						<option value="4">&#xb1;4mm</option>
+						<option value="5">&#xb1;5mm</option>
+						<option value=".0254">&#xb1;0.001inch</option>
+						<option value=".254">&#xb1;0.01inch</option>
+						<option value="2.54">&#xb1;0.1inch</option>
+						<option value="25.4">&#xb1;1inch</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</tab>
+	<tab> <tab-heading><i class="glyphicon glyphicon-fast-backward"></i> Calibrate</tab-heading>
+		<div class="tab-contents form-horizontal">
+			<div class="form-group" ng-repeat="axis in linearAxes">
+				<label class="col-xs-3" for="calibrate-{{axis.name}}">{{axis.name}}</label>
+				<div class="col-xs-9">
+					<select id="calibrate-{{axis.name}}" class="form-control" ng-change="axis.jog=axis.jog*1" ng-model="axis.calibrate">
+						<option value="">(select calibration)</option>
+						<option value="home">Traverse to home limit stop and zero axis</option>
+					</select>
+				</div>
+			</div>
 
-<div class="panel-heading h3 text-center">Move Linear Axis</div>
-<div class="form-horizontal">
-	<div class="form-group" ng-repeat="axis in linearAxes">
-		<label for="posGantry" class="col-xs-3 control-label">{{axis.name}}</label>
-		<div class="col-xs-3">
-			<input id="posGantry" type="number" min="0" max="axis.posMax" step="{{axis.jog}}" class="form-control" ng-model="axis.pos" ng-blur="postMachineState()"/>
+			<div class="form-group big-button-group" >
+				<button class="big-button  {{calibrateClass()}}" ng-click="calibrateClick()">Calibrate</button>
+				<button class="big-button2 {{calibrateClass()}}" ng-click="calibrateCancel()">Cancel</button>
+			</div>
 		</div>
-		<div class="col-xs-3">
-			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, -axis.jog)"><span class="h3">&#x2013;</span></button>
-			<button type="button" class="btn btn-xs btn-jog" ng-click="jogAxis(axis, axis.jog)"><span class="h3">+</span></button>
-		</div>
-		<div class="col-xs-3">
-			<select class="form-control" ng-change="axis.jog=axis.jog*1" ng-model="axis.jog">
-				<option value="0.1">&#xb1;0.1mm</option>
-				<option value="0.5">&#xb1;0.5mm</option>
-				<option value="1">&#xb1;1mm</option>
-				<option value="2">&#xb1;2mm</option>
-				<option value="3">&#xb1;3mm</option>
-				<option value="4">&#xb1;4mm</option>
-				<option value="5">&#xb1;5mm</option>
-				<option value=".0254">&#xb1;0.001inch</option>
-				<option value=".254">&#xb1;0.01inch</option>
-				<option value="2.54">&#xb1;0.1inch</option>
-				<option value="25.4">&#xb1;1inch</option>
-			</select>
-		</div>
-	</div>
-</div>
+	</tab>
+</tabset>
+

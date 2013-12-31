@@ -121,6 +121,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 			imageLarge:false,
 			partOpacity: 0,
 			rulerOpacity: 0,
+			cropOpacity: 0,
 			};
 		scope.scores = [
 			{name:"Bob", score:2},
