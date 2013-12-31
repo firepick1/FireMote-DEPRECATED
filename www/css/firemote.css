@@ -286,6 +286,27 @@ fieldset[disabled] .btn-unit.active {
 	position: relative;
 	margin-top: 50px;
 }
+.error {
+	position:fixed;
+	top:0;
+	left:0; 
+	right:0;
+	z-index: 1;
+	padding: 5px;
+	padding-left: 20px;
+	color: #fff;
+	background-color: #a00;
+}
+.error-header {
+	float: left;
+	font: 20pt Arial;
+	padding-right: 20px;
+	border-right: 3px solid white;
+}
+.error-body {
+	float: left;
+	padding-left: 20px;
+}
 .form-control:focus {
   border-color: #66afe9;
   outline: 0;

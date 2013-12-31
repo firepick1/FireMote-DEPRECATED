@@ -29,6 +29,7 @@ services.factory('BackgroundThread', ['$http', '$interval', function($http, $int
   var backgroundThread = {
 		onMachineStateReceived: function(state){},
 		t:0,
+		error:null,
 		get: function(callback){
 			$http.get("firemote/state")
 				.success(function(data) {
@@ -61,10 +62,9 @@ services.factory('BackgroundThread', ['$http', '$interval', function($http, $int
 				}
 			})
 			.error(function(data, status, headers, config) {
-				var msg = JSON.stringify({error:"firemote/state GET failed. Server may be unavailable. Refresh page.",data:data,status:status});
-				console.log(msg);
 				$interval.cancel(promise);
-				alert(msg);
+				backgroundThread.error = {error:"FireMote server is unresponsive. \u21BB Refresh page when server is available. (firemote/state GET failed)",data:data,status:status};
+				console.log(backgroundThread.error);
 			})
 
 		}, 1000);

@@ -46,16 +46,41 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 </head>
 <body>
   <div ng-controller="MainCtrl">
-		<d3-reticle></d3-reticle>
+		<div class="error" ng-if="backgroundThread.error">
+			<div class="error-header">Error</div>
+			<div class="error-body">{{backgroundThread.error.error}}</div>
+		</div>
 		<div class="logo"><a href="http://github.com/firepick1/FireMote/wiki"><img src="img/FireMote.png"/></a></div>
 		<div class="cam-detail {{camClass()}}" ng-click="camImageClick()">
 			<img class="cam-image" ng-src="firemote/headcam.jpg?x=1&t={{t}}" width="100%" style="{{imageStyle(0)}}"/>
 			<svg class="cam-image" width="100%" height="100%" >
 				<g transform="translate(400,100)" ng-if="true">
+					<g stroke-width=".1" ng-attr-opacity="{{global.cropOpacity}}" stroke="#f4f" ng-if="machine.gantries[0].head.camera.crop"
+						transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}})">
+						<line 
+							ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
+							ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y2="{{-machine.gantries[0].head.camera.crop.height/2}}" />
+						<line 
+							ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y1="{{machine.gantries[0].head.camera.crop.height/2}}" 
+							ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
+						<line 
+							ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
+							ng-attr-x2="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
+						<line 
+							ng-attr-x1="{{machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
+							ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
+							ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
+					</g>
 					<g stroke="#fc8" stroke-width=".1" stroke-opacity="1"  
 						transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}}), rotate({{machine.gantries[0].head.camera.reticleAngle}})">
 
-					  <!-- reticle -->
 						<g stroke-dasharray="1,1" ng-attr-opacity="{{1-global.rulerOpacity}}">
 							<line x1="-500" y1="0" x2="-1" y2="0" />
 							<line x1="1" y1="0" x2="500" y2="0" />
@@ -64,29 +89,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 							<circle stroke-dasharray="0" cx="0" cy="0" r="5" fill="none"/>
 						</g>
 
-						<g opacity="{{global.cropOpacity}}" stroke="#f4f">
-							<line 
-								ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
-								ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y2="{{-machine.gantries[0].head.camera.crop.height/2}}" />
-							<line 
-								ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y1="{{machine.gantries[0].head.camera.crop.height/2}}" 
-								ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
-							<line 
-								ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
-								ng-attr-x2="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
-							<line 
-								ng-attr-x1="{{machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
-								ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
-								ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
-						</g>
-
+						<!--
+						-->
 						<g opacity="{{global.partOpacity}}">
 							<polyline points="-.5,-.25 -.5,.25 .5,.25 .5,-.25 -.5,-.25" fill="none" stroke="#f44" stroke-width=".1"/>
 							<polyline points="-.8,-.4 -.8,.4 .8,.4 .8,-.4 -.8,-.4" fill="none" stroke="#faa" stroke-width=".1"/>
@@ -97,7 +101,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 						</text>
 						</g>
 
-						<!-- x-scale -->
 						<g ng-attr-opacity="{{global.rulerOpacity}}">
 							<line x1="-12.7" y1="-1" x2="-12.7" y2="1" stroke="#f44" />
 							<line x1="-12.7" y1="0" x2="12.7" y2="0" stroke="#f44" />
@@ -132,9 +135,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 				<div class="sidebar">
 					<a href="http://github.com/firepick1/FirePick/wiki"><img class="logo-tiny" src="img/FirePick.png"/></a>
 					<div class="sidebar-button"><button ng-click="viewControl('/status')" style="{{ctrlBtnStyle('/status')}}"><i class="glyphicon glyphicon-info-sign"></i> Status</button></div>
+					<div class="sidebar-button"><button ng-click="viewControl('/move')" style="{{ctrlBtnStyle('/move')}}"><i class="glyphicon glyphicon-move"></i> Move</button></div>
 					<div class="sidebar-button"><button ng-click="viewControl('/camera')" style="{{ctrlBtnStyle('/camera')}}"><i class="glyphicon glyphicon-camera"></i> Camera</button></div>
 					<div class="sidebar-button"><button ng-click="viewControl('/spindle')" style="{{ctrlBtnStyle('/spindle')}}"><i class="glyphicon glyphicon-download-alt"></i> Spindles</button></div>
-					<div class="sidebar-button"><button ng-click="viewControl('/move')" style="{{ctrlBtnStyle('/move')}}"><i class="glyphicon glyphicon-move"></i> Move</button></div>
 					<div class="sidebar-button"><button ng-click="viewControl('/configure')" style="{{ctrlBtnStyle('/configure')}}"><i class="glyphicon glyphicon-wrench"></i> Configure</button></div>
 				</div>
 				<div class="partials" ng-view></div>

@@ -228,6 +228,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
       BackgroundThread.get(scope.onMachineStateReceived);
     };
 		BackgroundThread.onMachineStateReceived = scope.onMachineStateReceived;
+		scope.backgroundThread = BackgroundThread;
     scope.updateStatus();
 
 }]);
