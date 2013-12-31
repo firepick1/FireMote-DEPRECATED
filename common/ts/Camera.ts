@@ -5,6 +5,8 @@ module firemote {
 			reticleAngle: number = 0;
 			pixelsPerMM: number = 1;
 			light: boolean = false;
+			crop: Rect= new Rect();
+			image: Rect = new Rect({width:800, height:200});
 
 			constructor(obj = undefined) {
 			  if (typeof obj === 'string') {
@@ -15,6 +17,8 @@ module firemote {
 				  if (obj.hasOwnProperty("reticleAngle")) this.reticleAngle = obj.reticleAngle;
 				  if (obj.hasOwnProperty("light")) this.light = obj.light;
 				  if (obj.hasOwnProperty("pixelsPerMM")) this.pixelsPerMM = obj.pixelsPerMM;
+				  if (obj.hasOwnProperty("crop")) this.crop = new Rect(obj.crop);
+				  if (obj.hasOwnProperty("image")) this.image = new Rect(obj.image);
 				}
 			}
 

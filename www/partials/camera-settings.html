@@ -1,0 +1,111 @@
+<!--
+camera-settings.html https://github.com/firepick1/FireMote/wiki
+
+Copyright (C) 2013  Karl Lew, <karl@firepick.org>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<div class="tab-contents form-horizontal form-wide">
+	<div ng-repeat="gantry in machine.gantries" >
+		<div class="form-group">
+			<label for="light{{$index}}" class="control-label col-xs-3">Light</label>
+			<button id="light{{$index}}" type="button" class="btn btn-checkbox" 
+				ng-model="gantry.head.camera.light" 
+				ng-change="postMachineState()" 
+				btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false"></button>
+		</div>
+		<div class="form-group">
+			<label for="pixelsPerMM{{$index}}" 
+				title="Calibrate image to ruler"
+				class="control-label col-xs-3">Pixels/mm</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="5" max="30" step="0.05" ng-model="gantry.head.camera.pixelsPerMM" 
+					ng-init="gantry.head.camera.pixelsPerMM = 1*gantry.head.camera.pixelsPerMM"
+					ng-change="gantry.head.camera.pixelsPerMM = 1*gantry.head.camera.pixelsPerMM" 
+					ng-blur="postMachineState()"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="pixelsPerMM{{$index}}" class="form-control " type="number" min="5" max="30" step=".05" 
+					ng-model="gantry.head.camera.pixelsPerMM" 
+					ng-blur="postMachineState()"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="imageAngle{{$index}}" 
+				title="Camera mounting error adjustment"
+				class="control-label col-xs-3">Image &#x2220;&#x00b0; </label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="-5" max="5" step="0.005" 
+					ng-model="gantry.head.camera.imageAngle" 
+					ng-init="gantry.head.camera.imageAngle = 1*gantry.head.camera.imageAngle"
+					ng-change="gantry.head.camera.imageAngle = 1*gantry.head.camera.imageAngle" 
+					ng-blur="postMachineState()"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="imageAngle{{$index}}" class="form-control " type="number" min="-5" max="5" step=".005" 
+					ng-model="gantry.head.camera.imageAngle" ng-blur="postMachineState()"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="reticleAngle{{$index}}" 
+				title="Measure objects in camera view"
+				class="control-label col-xs-3">Reticle &#x2220;&#x00b0;</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="-90" max="90" step="0.1" ng-model="gantry.head.camera.reticleAngle" 
+					ng-init="gantry.head.camera.reticleAngle = 1*gantry.head.camera.reticleAngle"
+					ng-change="gantry.head.camera.reticleAngle = 1*gantry.head.camera.reticleAngle"
+					ng-blur="postMachineState()"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="reticleAngle{{$index}}" class="form-control " type="number" min="-90" max="90" step=".1" 
+					ng-model="gantry.head.camera.reticleAngle"
+					ng-blur="postMachineState()" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="angle{{$index}}" 
+				title="Show calibration ruler (mm)"
+				class="control-label col-xs-3">Ruler</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="0" max="1" step="0.05" ng-model="global.rulerOpacity" 
+					ng-init="global.rulerOpacity = 1*global.rulerOpacity"
+					ng-change="global.rulerOpacity = 1*global.rulerOpacity"
+					ng-blur="postMachineState()" />
+			</div>
+			<div class="col-xs-3">
+				<input id="angle{{$index}}" class="form-control " type="number" min="0" max="1" step=".05" 
+					ng-model="global.rulerOpacity" 
+					ng-blur="postMachineState()" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="angle{{$index}}" 
+				title="Show standard part sizes"
+				class="control-label col-xs-3">Part</label>
+			<div class="col-xs-6">
+				<input class="form-control " type="range" min="0" max="1" step="0.05" ng-model="global.partOpacity" 
+					ng-init="global.partOpacity = 1*global.partOpacity"
+					ng-change="global.partOpacity = 1*global.partOpacity"
+					ng-blur="postMachineState()" />
+			</div>
+			<div class="col-xs-3">
+				<input id="angle{{$index}}" class="form-control " type="number" min="0" max="1" step=".05" 
+					ng-model="global.partOpacity"
+					ng-blur="postMachineState()"/>
+			</div>
+		</div>
+	</div>
+</div>

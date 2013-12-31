@@ -1,0 +1,39 @@
+<!--
+camera-vision.html https://github.com/firepick1/FireMote/wiki
+
+Copyright (C) 2013  Karl Lew, <karl@firepick.org>
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+-->
+
+<div class="tab-contents form-horizontal form-wide">
+	<div ng-repeat="gantry in machine.gantries" >
+		<div class="form-group">
+			<label for="crop{{$index}}" 
+				title="Vision recognition cropping rectangle width x height (pixels)"
+				class="control-label col-xs-3">Crop WxH</label>
+			<div class="col-xs-3">
+				<input id="crop{{$index}}" class="form-control " type="number" min="0" max="gantry.head.camera.image.width" step=".05" 
+					ng-model="gantry.head.camera.crop.width" 
+					ng-blur="postMachineState()"/>
+			</div>
+			<div class="col-xs-3">
+				<input id="crop{{$index}}" class="form-control " type="number" min="0" max="gantry.head.camera.image.height" step=".05" 
+					ng-model="gantry.head.camera.crop.height" 
+					ng-blur="postMachineState()"/>
+			</div>
+		</div>
+	</div>
+</div>

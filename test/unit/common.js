@@ -7,11 +7,27 @@ describe('common-js-tests', function(){
 		expect(camera.reticleAngle).toBe(0);
 		expect(camera.imageAngle).toBe(0);
 		expect(camera.light).toBe(false);
-		var camera2 = new firemote.Camera({pixelsPerMM:2, imageAngle:3, reticleAngle:45, light:true});
+		expect(camera.crop.x).toBe(0);
+		expect(camera.crop.y).toBe(0);
+		expect(camera.crop.width).toBe(0);
+		expect(camera.crop.height).toBe(0);
+		camera.crop.x = 10;
+		camera.crop.y = 20;
+		camera.crop.width = 30;
+		camera.crop.height = 40;
+		var camera2 = new firemote.Camera({pixelsPerMM:2, imageAngle:3, reticleAngle:45, light:true, crop:camera.crop});
 		expect(camera2.pixelsPerMM).toBe(2);
 		expect(camera2.imageAngle).toBe(3);
 		expect(camera2.reticleAngle).toBe(45);
 		expect(camera2.light).toBe(true);
+		camera.crop.x = 11;
+		camera.crop.y = 21;
+		camera.crop.width = 31;
+		camera.crop.height = 41;
+		expect(camera2.crop.x).toBe(10);
+		expect(camera2.crop.y).toBe(20);
+		expect(camera2.crop.width).toBe(30);
+		expect(camera2.crop.height).toBe(40);
 	}));
 
 	it('7. should create a GCoder', inject(function() {

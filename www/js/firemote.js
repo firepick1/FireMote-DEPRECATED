@@ -651,6 +651,8 @@ var firemote;
             this.reticleAngle = 0;
             this.pixelsPerMM = 1;
             this.light = false;
+            this.crop = new firemote.Rect();
+            this.image = new firemote.Rect({ width: 800, height: 200 });
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
             }
@@ -663,6 +665,10 @@ var firemote;
                     this.light = obj.light;
                 if (obj.hasOwnProperty("pixelsPerMM"))
                     this.pixelsPerMM = obj.pixelsPerMM;
+                if (obj.hasOwnProperty("crop"))
+                    this.crop = new firemote.Rect(obj.crop);
+                if (obj.hasOwnProperty("image"))
+                    this.image = new firemote.Rect(obj.image);
             }
         }
         Camera.prototype.clone = function () {
@@ -706,3 +712,36 @@ var firemote;
 })(firemote || (firemote = {}));
 
 exports.Coordinates = firemote.Coordinates;
+///<reference path='../../include.d.ts'/>
+var firemote;
+(function (firemote) {
+    var Rect = (function () {
+        function Rect(obj) {
+            if (typeof obj === "undefined") { obj = undefined; }
+            this.x = 0;
+            this.y = 0;
+            this.width = 0;
+            this.height = 0;
+            if (typeof obj === 'string') {
+                obj = JSON.parse(obj);
+            }
+            if (typeof obj !== 'undefined') {
+                if (obj.hasOwnProperty("x"))
+                    this.x = obj.x;
+                if (obj.hasOwnProperty("y"))
+                    this.y = obj.y;
+                if (obj.hasOwnProperty("width"))
+                    this.width = obj.width;
+                if (obj.hasOwnProperty("height"))
+                    this.height = obj.height;
+            }
+        }
+        Rect.prototype.clone = function () {
+            return new Rect(this);
+        };
+        return Rect;
+    })();
+    firemote.Rect = Rect;
+})(firemote || (firemote = {}));
+
+exports.Rect = firemote.Rect;

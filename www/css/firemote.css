@@ -349,7 +349,6 @@ fieldset[disabled] .btn-unit.active {
 .log {
 	margin-top: 3px;
 	border: none;
-	border-top: 2pt solid #EEE;
 	border-bottom: 2pt solid #EEE;
 	width:800px;
 	height:500px;
@@ -399,9 +398,13 @@ fieldset[disabled] .btn-unit.active {
 	position: absolute;
 	left:0px;
 	top:0px;
+	text-align: left !important;
 	padding-left: 5pt;
 	padding-top: 10px;
 	margin-right: -3px;
+	width: 150px;
+}
+.sidebar-button {
 }
 .spindle {
 	position: absolute;
@@ -441,6 +444,9 @@ fieldset[disabled] .btn-unit.active {
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
 	padding-right: 5px;
+}
+.tab-contents {
+	padding-top: 10px;
 }
 .vslider {
 	-webkit-appearance: slider-vertical;

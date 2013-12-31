@@ -25,15 +25,6 @@ var bootstrap = angular.module('FireMote.bootstrap', ['ui.bootstrap']);
 var controllers = angular.module('FireMote.controllers', []);
 
 
-controllers.controller('LogCtrl', ['$scope','$location',function(scope, location) {
-    scope.view = "LOG";
-
-    scope.logUrl = function() {
-    	return "/firemote/log?level=" + scope.machine.logLevel;
-    }
-
-}]);
-
 controllers.controller('MoveCtrl', ['$scope','$location',function(scope, location) {
     scope.view = "MOVE";
 		
@@ -91,6 +82,9 @@ controllers.controller('StatusCtrl', ['$scope','$location', function(scope, loca
 		var diff = df.diff(scope.machineRemote, scope.machine);
 		scope.diffLocal = diff;
 		
+    scope.logUrl = function() {
+    	return "/firemote/log?level=" + scope.machine.logLevel;
+    }
 }]);
 
 controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, location) {
