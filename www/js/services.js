@@ -27,7 +27,7 @@ services.value('version', '0.1');
 services.factory('BackgroundThread', ['$http', '$interval', function($http, $interval){
 	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
   var backgroundThread = {
-		onMachineStateReceived: function(state){},
+		onMachineStateReceived: function(state){return true;},
 		t:0,
 		error:null,
 		get: function(callback){

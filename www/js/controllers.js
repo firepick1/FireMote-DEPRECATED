@@ -202,8 +202,8 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 					console.log("Initialized from remote machine state:\n" + JSON.stringify(remoteMachineState));
 				}
 			} catch (e) {
-				alert("onMachineStateReceived()\n" + e);
-				return false;
+				console.log("onMachineStateReceived() remoteMachineState:\n" + remoteMachineState); 
+				console.log("onMachineStateReceived() exception ignored:\n" + e); // log error and keep going
 			}
 			return true;
     };
