@@ -45,6 +45,28 @@ controllers.controller('MoveCtrl', ['$scope','$location',function(scope, locatio
 				}
 			}
     }
+    scope.calibrateClick = function () {
+      scope.postMachineState();
+		  for (var i = 0; i < scope.linearAxes.length; i++) {
+				scope.linearAxes[i].calibrate = "";
+			}
+    }
+    scope.calibrateCancel = function () {
+		  for (var i = 0; i < scope.linearAxes.length; i++) {
+				scope.linearAxes[i].calibrate = "";
+			}
+    }
+    scope.calibrateClass = function() {
+		  var result = "hide";
+			for (var i = 0; i < scope.linearAxes.length; i++) {
+			  if (scope.linearAxes[i].calibrate === "") {
+				  // no calibration
+				} else {
+				  result = "";
+				}
+			}
+			return result;
+    }
 }]);
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
@@ -84,33 +106,6 @@ controllers.controller('StatusCtrl', ['$scope','$location', function(scope, loca
 		
     scope.logUrl = function() {
     	return "/firemote/log?level=" + scope.machine.logLevel;
-    }
-}]);
-
-controllers.controller('CalibrateCtrl', ['$scope','$location', function(scope, location) {
-    scope.view = "CALIBRATE";
-
-    scope.calibrateClick = function () {
-      scope.postMachineState();
-		  for (var i = 0; i < scope.linearAxes.length; i++) {
-				scope.linearAxes[i].calibrate = "";
-			}
-    }
-    scope.calibrateCancel = function () {
-		  for (var i = 0; i < scope.linearAxes.length; i++) {
-				scope.linearAxes[i].calibrate = "";
-			}
-    }
-    scope.calibrateClass = function() {
-		  var result = "hide";
-			for (var i = 0; i < scope.linearAxes.length; i++) {
-			  if (scope.linearAxes[i].calibrate === "") {
-				  // no calibration
-				} else {
-				  result = "";
-				}
-			}
-			return result;
     }
 }]);
 
