@@ -1,0 +1,26 @@
+#! /bin/bash
+
+type -P npm
+if [ $? -ne 0 ] 
+then
+	echo "++++++++++++++++++ INSTALLING NPM ++++++++++++"
+	apt-get -q -y install npm
+fi
+
+type -P node
+if [ $? -ne 0 ]
+then
+	echo "++++++++++++++++++ INSTALLING NODEJS ++++++++++++"
+	apt-get -q -y install nodejs
+fi
+
+if [ ! -e /usr/bin/typescript ]
+then
+	echo "++++++++++++++++++ INSTALLING TYPESCRIPT ++++++++++++"
+	npm install typescript
+	npm install -g express
+	npm install typescript-require
+	npm install -g typescript-require
+fi
+
+
