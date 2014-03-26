@@ -1,10 +1,16 @@
 #! /bin/bash
 
-type -P npm
-if [ $? -ne 0 ] 
+if [ `whoami` != "root" ]
 then
-	echo "++++++++++++++++++ INSTALLING NPM ++++++++++++"
-	apt-get -q -y install npm
+  echo ERROR: This script must be run as root
+	exit 1
+fi
+
+type -P lsb_release
+if [ $? -ne 0 ]
+then
+	echo "++++++++++++++++++ INSTALLING lsb_release ++++++++++++"
+	apt-get -q -y install lsb-release;
 fi
 
 type -P node
