@@ -1,12 +1,6 @@
 #! /bin/bash
 
-if [ `whoami` != "root" ]
-then
-  echo "ERROR: This script must be run as root"
-  exit 1
-fi
-
-install_nodejs() {
+function install_nodejs() {
   echo "++++++++++++++++++ INSTALLING nodejs `lsb_release -ds` ++++++++++++++++++" 
   apt-get update
   apt-get install -y python-software-properties python g++ make
@@ -14,6 +8,12 @@ install_nodejs() {
   apt-get update
   apt-get -q -y install nodejs
 }
+
+if [ `whoami` != "root" ]
+then
+  echo "ERROR: This script must be run as root"
+  exit 1
+fi
 
 type -P node
 if [ $? -ne 0 ] 
