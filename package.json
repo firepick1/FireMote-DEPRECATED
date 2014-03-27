@@ -1,10 +1,10 @@
 {
-  "name": "hello-world",
-  "description": "hello world test app",
+  "name": "FireMote",
+  "description": "Pick-and-place nodjs web remote control",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "3.4.4"
+    "express": "3.5.1"
   },
   "devDependencies": {
     "karma-junit-reporter": "~0.1.0"
