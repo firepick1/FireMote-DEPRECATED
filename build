@@ -1,54 +1,59 @@
 #! /bin/bash
 
-function install_nodejs() {
-  echo "++++++++++++++++++ INSTALLING nodejs FOR `lsb_release -ds` ++++++++++++++++++" 
-  apt-get update
-  apt-get install -y python-software-properties python g++ make
-  add-apt-repository -y ppa:chris-lea/node.js
-  apt-get update
-  apt-get -q -y install nodejs
-}
-
-if [ `whoami` != "root" ]
-then
+if [ `whoami` == "root" ]; then
+	echo verified root
+else 
   echo "ERROR: This script must be run as root"
   exit 1
 fi
 
-type -P node
-if [ $? -ne 0 ] 
-then
-  if [ `lsb_release -is` == 'Ubuntu' ] || [ `lsb_release -is` == "Debian" ]
+if [ "$(type -P node)" == "" ]; then
+  echo "++++++++++++++++++ INSTALLING nodejs ++++++++++++++++++" 
+  if [ `lsb_release -is` == 'Ubuntu' ] 
   then
-    install_nodejs
+	  echo "Ubuntu"
+		apt-get update
+		apt-get install -y python-software-properties python g++ make
+		add-apt-repository -y ppa:chris-lea/node.js
+		apt-get update
+		apt-get -q -y install nodejs
+  elif [ `uname -m` == 'armv6l' ] 
+	then
+	  echo "Raspberry Pi"
+		wget http://nodejs.org/dist/v0.10.24/node-v0.10.24-linux-arm-pi.tar.gz
+		tar xvzf node-v0.10.24-linux-arm-pi.tar.gz
+		mv node-v0.10.24-linux-arm-pi /opt/node
+		rm node-v0.10.24-linux-arm-pi.tar.gz
+		echo nodejs installed as /opt/node
   else
     echo PLEASE INSTALL nodejs MANUALLY 
     echo "https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager"
     exit 1
   fi
+else
+	echo "verified $(type -P node)"
 fi
 
-type -P npm
-if [ $? -ne 0 ]
-then
+if [ "$(type -P npm)" == "" ]; then
   echo "ERROR: Your nodejs is too old, please uninstall it and run this again"
   echo "Suggestion:"
   echo "  sudo apt-get remove --purge nodejs"
   echo "  sudo apt-get clean"
   echo "  sudo apt-get autoremove"
   exit 1
+else
+	echo "verified $(type -P node)"
 fi
 
-type -P tsc
-if [ $? -ne 0 ]
-then
+if [ "$(type -P tsc)" == "" ]; then
   echo "++++++++++++++++++ INSTALLING TYPESCRIPT ++++++++++++"
   npm install -g typescript
   npm install
 fi
-echo END
-exit 1
-  sudo -u $SUDO_USER npm install typescript-require
-  sudo -u $SUDO_USER npm install -g typescript-require
+#  sudo -u $SUDO_USER npm install typescript-require
+#  sudo -u $SUDO_USER npm install -g typescript-require
+echo 
+echo Run FireMote server on port 8000:
+echo   node server/firemote.js
 
 
