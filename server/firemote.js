@@ -72,6 +72,27 @@ firestep_load = function() {
 firestep_load();
 
 
+app.get('/firemote/cv/1/camera.jpg', function(req, res){
+  res.setHeader('Content-Type', 'image/jpeg');
+  res.sendfile('/dev/firefuse/cv/1/camera.jpg');
+});
+app.get('/firemote/cv/1/output.jpg', function(req, res){
+  res.setHeader('Content-Type', 'image/jpeg');
+  res.sendfile('/dev/firefuse/cv/1/output.jpg');
+});
+app.get('/firemote/cv/1/monitor.jpg', function(req, res){
+  res.setHeader('Content-Type', 'image/jpeg');
+  res.sendfile('/dev/firefuse/cv/1/monitor.jpg');
+});
+app.get('/firemote/cv/1/gray/cve/calc-offset/save.json', function(req, res){
+  res.setHeader('Content-Type', 'application/json');
+  res.sendfile('/dev/firefuse/cv/1/gray/cve/calc-offset/save.json');
+});
+app.get('/firemote/cv/1/gray/cve/calc-offset/process.json', function(req, res){
+  res.setHeader('Content-Type', 'application/json');
+  res.sendfile('/dev/firefuse/cv/1/gray/cve/calc-offset/process.json');
+});
+
 app.put('/firemote/firestep', function(req, res){
   res.setHeader('Content-Type', 'application/json');
   var filename = '/dev/firefuse/firestep';
