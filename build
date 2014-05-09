@@ -22,6 +22,7 @@ then
   then
     install_nodejs
   else
+    echo `lsb_release -is` nodejs installation is not automated
     echo PLEASE INSTALL nodejs MANUALLY 
     echo "https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager"
     exit 1
