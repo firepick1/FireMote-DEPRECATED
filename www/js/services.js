@@ -25,51 +25,51 @@ var services = angular.module('FireMote.services', []);
 services.value('version', '0.1');
 
 services.factory('BackgroundThread', ['$http', '$interval', function($http, $interval){
-	var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
+  var animation = ['\u25cb', '\u25d4', '\u25d1', '\u25d5', '\u25cf'];
   var backgroundThread = {
-		onMachineStateReceived: function(state){return true;},
-		t:0,
-		error:null,
-		get: function(callback){
-			$http.get("firemote/state")
-				.success(function(data) {
-					callback(data);
-				})
-				.error(function(data, status, headers, config) {
-					alert("Could not get status");
-				});
-		},
-		postMachineStateDiff: function(diff, callback) {
-			var json = JSON.stringify(diff);
-			$http.post("firemote/state", json)
-				.success(function(data) {
-					callback(data);
-				})
-				.error(function(data, status, headers, config) {
-					alert("Could not get status");
-				});
-		}
-	};
+    onMachineStateReceived: function(state){return true;},
+    t:0,
+    error:null,
+    get: function(callback){
+      $http.get("firemote/state")
+        .success(function(data) {
+          callback(data);
+        })
+        .error(function(data, status, headers, config) {
+          alert("Could not get status");
+        });
+    },
+    postMachineStateDiff: function(diff, callback) {
+      var json = JSON.stringify(diff);
+      $http.post("firemote/state", json)
+        .success(function(data) {
+          callback(data);
+        })
+        .error(function(data, status, headers, config) {
+          alert("Could not get status");
+        });
+    }
+  };
 
-	var promise = $interval(function(seconds) {
-		var df = new firemote.DeltaFactory();
+  var promise = $interval(function(seconds) {
+    var df = new firemote.DeltaFactory();
 
-		$http.get("firemote/state")
-			.success(function(data) {
-				backgroundThread.t++;
-				if (!backgroundThread.onMachineStateReceived(data)) {
-					$interval.cancel(promise);
-				}
-			})
-			.error(function(data, status, headers, config) {
-				$interval.cancel(promise);
-				backgroundThread.error = {error:"FireMote server is unresponsive. \u21BB Refresh page when server is available. (firemote/state GET failed)",data:data,status:status};
-				console.log(backgroundThread.error);
-			})
+    $http.get("firemote/state")
+      .success(function(data) {
+        backgroundThread.t++;
+        if (!backgroundThread.onMachineStateReceived(data)) {
+          $interval.cancel(promise);
+        }
+      })
+      .error(function(data, status, headers, config) {
+        $interval.cancel(promise);
+        backgroundThread.error = {error:"FireMote server is unresponsive. \u21BB Refresh page when server is available. (firemote/state GET failed)",data:data,status:status};
+        console.log(backgroundThread.error);
+      })
 
-		}, 1000);
+    }, 500);
 
-	return backgroundThread;
+  return backgroundThread;
 }]);
 
 services.factory('d3',[function(){
