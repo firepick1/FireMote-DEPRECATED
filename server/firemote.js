@@ -108,7 +108,7 @@ app.get('/firemote/log', function(req, res){
 app.get('/firemote/headcam.jpg', function(req, res){
   res.setHeader('Content-Type', 'image/jpeg');
   if (machine.firefuse) {
-    res.sendfile('/dev/firefuse/cv/1/camera.jpg');
+    res.sendfile('/dev/firefuse/cv/1/monitor.jpg');
   } else {
     res.sendfile(__appdir + '/img/camcv0.jpg');
   }
