@@ -27,51 +27,51 @@ var controllers = angular.module('FireMote.controllers', []);
 
 controllers.controller('MoveCtrl', ['$scope','$location',function(scope, location) {
     scope.view = "MOVE";
-		
-		var spindles = scope.machine.gantries[0].head.spindles;
+    
+    var spindles = scope.machine.gantries[0].head.spindles;
 
     scope.jogAxis = function jogAxis(axis, delta) {
-			delta = delta*1;
-			var minJog = 1;
-			if (Math.abs(delta) < minJog) {
-			  jogAxis(axis, 2*minJog);
-			  jogAxis(axis, delta-2*minJog);
-			} else {
-				var newPos = axis.pos*1 + delta;
-				if (0 <= newPos && newPos <= axis.posMax) {
-					axis.pos = newPos;
-					scope.postMachineState();
-					scope.machineRemote.stateId = scope.machine.stateId; // predictive assignment of server response
-				}
-			}
+      delta = delta*1;
+      var minJog = 1;
+      if (Math.abs(delta) < minJog) {
+        jogAxis(axis, 2*minJog);
+        jogAxis(axis, delta-2*minJog);
+      } else {
+        var newPos = axis.pos*1 + delta;
+        if (0 <= newPos && newPos <= axis.posMax) {
+          axis.pos = newPos;
+          scope.postMachineState();
+          scope.machineRemote.stateId = scope.machine.stateId; // predictive assignment of server response
+        }
+      }
     }
     scope.calibrateClick = function () {
       scope.postMachineState();
-		  for (var i = 0; i < scope.linearAxes.length; i++) {
-				scope.linearAxes[i].calibrate = "";
-			}
+      for (var i = 0; i < scope.linearAxes.length; i++) {
+        scope.linearAxes[i].calibrate = "";
+      }
     }
     scope.calibrateCancel = function () {
-		  for (var i = 0; i < scope.linearAxes.length; i++) {
-				scope.linearAxes[i].calibrate = "";
-			}
+      for (var i = 0; i < scope.linearAxes.length; i++) {
+        scope.linearAxes[i].calibrate = "";
+      }
     }
     scope.calibrateClass = function() {
-		  var result = "hide";
-			for (var i = 0; i < scope.linearAxes.length; i++) {
-			  if (scope.linearAxes[i].calibrate === "") {
-				  // no calibration
-				} else {
-				  result = "";
-				}
-			}
-			return result;
+      var result = "hide";
+      for (var i = 0; i < scope.linearAxes.length; i++) {
+        if (scope.linearAxes[i].calibrate === "") {
+          // no calibration
+        } else {
+          result = "";
+        }
+      }
+      return result;
     }
 }]);
 
 controllers.controller('CameraCtrl', ['$scope','$location',function(scope, location) {
     scope.view = "CAMERA";
-		scope.global.imageLarge = true;
+    scope.global.imageLarge = true;
 
 }]);
 
@@ -100,29 +100,29 @@ controllers.controller('SpindleCtrl', ['$scope','$location',function(scope, loca
 
 controllers.controller('StatusCtrl', ['$scope','$location', function(scope, location ) {
     scope.view = "STATUS";
-		var df = new firemote.DeltaFactory();
-		var diff = df.diff(scope.machineRemote, scope.machine);
-		scope.diffLocal = diff;
-		
+    var df = new firemote.DeltaFactory();
+    var diff = df.diff(scope.machineRemote, scope.machine);
+    scope.diffLocal = diff;
+    
     scope.logUrl = function() {
-    	return "/firemote/log?level=" + scope.machine.logLevel;
+      return "/firemote/log?level=" + scope.machine.logLevel;
     }
 }]);
 
 controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundThread', 
   function(scope, location, $timeout, BackgroundThread) {
     scope.view = "MAIN";
-		scope.global = {
-			imageLarge:false,
-			partOpacity: 0,
-			rulerOpacity: 0,
-			cropOpacity: 0,
-			};
-		scope.scores = [
-			{name:"Bob", score:2},
-			{name:"Mary", score:4},
-			{name:"Alice", score:8}
-			]
+    scope.global = {
+      imageLarge:false,
+      partOpacity: 0,
+      rulerOpacity: 0,
+      cropOpacity: 0,
+      };
+    scope.scores = [
+      {name:"Bob", score:2},
+      {name:"Mary", score:4},
+      {name:"Alice", score:8}
+      ]
     scope.control = location.path() || "/status";
     scope.isActive = [];
 
@@ -138,7 +138,7 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
         "background-color: #efefef; border:none; height: 40px; z-index:0";
     }
     scope.demoClick = function() {
-			alert("not implemented");
+      alert("not implemented");
     }
     scope.hsliderLeft = function() {
       return (scope.machine.gantries[0].axis.pos * (700 - 36) / scope.machine.gantries[0].axis.posMax); 
@@ -155,75 +155,75 @@ controllers.controller('MainCtrl', ['$scope','$location','$timeout','BackgroundT
 
       return result;
     }
-		scope.hsliderChange = function(axis) {
-			axis.pos = axis.pos*1; // convert slider string to number
-			if (scope.hsliderPromise) {
-				$timeout.cancel(scope.hsliderPromise);
-			}
-			scope.hsliderPromise = $timeout(function() {
-				scope.hsliderPromise = false;
-				scope.postMachineState();
-			}, 1000);
-		};
+    scope.hsliderChange = function(axis) {
+      axis.pos = axis.pos*1; // convert slider string to number
+      if (scope.hsliderPromise) {
+        $timeout.cancel(scope.hsliderPromise);
+      }
+      scope.hsliderPromise = $timeout(function() {
+        scope.hsliderPromise = false;
+        scope.postMachineState();
+      }, 1000);
+    };
     scope.viewControl = function(control) {
       location.path(control);
       scope.control = control;
     };
     scope.onMachineStateReceived = function(remoteMachineState) {
-			try {
-				if (scope.hasOwnProperty("machine")) {
-					var newMachineRemote = new firemote.MachineState(remoteMachineState);
-					var df = new firemote.DeltaFactory();
-					var diffRemote = df.diff(scope.machineRemote, newMachineRemote);
-					scope.diffLocal = df.diff(scope.machineRemote, scope.machine);
-					scope.updated = new Date().toLocaleTimeString();
-					df.applyDiff(diffRemote, scope.machineRemote);
-					df.applyDiff(diffRemote, scope.machine);
-					scope.diffRemote = diffRemote || scope.diffRemote;
-					//df.applyDiff(scope.diffLocal, scope.machine);
-					scope.t = BackgroundThread.t;
-				} else {
-					scope.machineRemote = new firemote.MachineState(remoteMachineState);
-					scope.remoteAxes = scope.machineRemote.linearAxes();
-					var UGLY_SLIDER_FIX = true;
-					if (UGLY_SLIDER_FIX) {
-						for (var i = 0; i < scope.remoteAxes.length; i++) {
-							scope.remoteAxes[i].pos = 0;  
-							console.log(JSON.stringify(scope.remoteAxes[i]));
-						}
-					}
-					scope.machine = new firemote.MachineState(scope.machineRemote);
-					scope.linearAxes = scope.machine.linearAxes();
-					console.log("Initialized from remote machine state:\n" + JSON.stringify(remoteMachineState));
-				}
-			} catch (e) {
-				console.log("onMachineStateReceived() remoteMachineState:\n" + remoteMachineState); 
-				console.log("onMachineStateReceived() exception ignored:\n" + e); // log error and keep going
-			}
-			return true;
+      try {
+        if (scope.hasOwnProperty("machine")) {
+          var newMachineRemote = new firemote.MachineState(remoteMachineState);
+          var df = new firemote.DeltaFactory();
+          var diffRemote = df.diff(scope.machineRemote, newMachineRemote);
+          scope.diffLocal = df.diff(scope.machineRemote, scope.machine);
+          scope.updated = new Date().toLocaleTimeString();
+          df.applyDiff(diffRemote, scope.machineRemote);
+          df.applyDiff(diffRemote, scope.machine);
+          scope.diffRemote = diffRemote || scope.diffRemote;
+          //df.applyDiff(scope.diffLocal, scope.machine);
+          scope.t = BackgroundThread.t;
+        } else {
+          scope.machineRemote = new firemote.MachineState(remoteMachineState);
+          scope.remoteAxes = scope.machineRemote.linearAxes();
+          var UGLY_SLIDER_FIX = true;
+          if (UGLY_SLIDER_FIX) {
+            for (var i = 0; i < scope.remoteAxes.length; i++) {
+              scope.remoteAxes[i].pos = 0;  
+              console.log(JSON.stringify(scope.remoteAxes[i]));
+            }
+          }
+          scope.machine = new firemote.MachineState(scope.machineRemote);
+          scope.linearAxes = scope.machine.linearAxes();
+          console.log("Initialized from remote machine state:\n" + JSON.stringify(remoteMachineState));
+        }
+      } catch (e) {
+        console.log("onMachineStateReceived() remoteMachineState:\n" + remoteMachineState); 
+        console.log("onMachineStateReceived() exception ignored:\n" + e); // log error and keep going
+      }
+      return true;
     };
     scope.postMachineState = function() {
-			scope.machine.stateId = scope.machineRemote.stateId + 1;
-			scope.machine.validate();
-			var diff = new firemote.DeltaFactory().diff(scope.machineRemote, scope.machine);
-			if (diff) {
-				BackgroundThread.postMachineStateDiff(diff, scope.onMachineStateReceived);
-			}
+      scope.machine.stateId = scope.machineRemote.stateId + 1;
+      scope.machine.validate();
+      var diff = new firemote.DeltaFactory().diff(scope.machineRemote, scope.machine);
+      if (diff) {
+        BackgroundThread.postMachineStateDiff(diff, scope.onMachineStateReceived);
+      }
     };
-		scope.imageStyle = function(gantryIndex) {
-			var style = "";
-			if (scope.machine) {
-				var gantry = scope.machine.gantries[gantryIndex];
-				var angle = gantry && gantry.head.camera.imageAngle*1 || 0;
-				style="transform:rotate(" + angle + "deg);-ms-transform:rotate(" + angle + "deg);-webkit-transform:rotate(" + angle + "deg)";
-			}
-			return style;
-		};
+    scope.imageStyle = function(gantryIndex) {
+      var style = "";
+      if (scope.machine) {
+        var gantry = scope.machine.gantries[gantryIndex];
+        var angle = gantry && gantry.head.camera.imageAngle*1 || 0;
+        style="transform:rotate(" + angle + "deg);-ms-transform:rotate(" + angle + "deg);-webkit-transform:rotate(" + angle + "deg)";
+      }
+      return style;
+    };
     scope.updateStatus = function() {
       BackgroundThread.get(scope.onMachineStateReceived);
     };
-		BackgroundThread.onMachineStateReceived = scope.onMachineStateReceived;
-		scope.backgroundThread = BackgroundThread;
+    BackgroundThread.onMachineStateReceived = scope.onMachineStateReceived;
+    scope.backgroundThread = BackgroundThread;
     scope.updateStatus();
 
 }]);
