@@ -67,7 +67,7 @@ services.factory('BackgroundThread', ['$http', '$interval', function($http, $int
         console.log(backgroundThread.error);
       })
 
-    }, 500);
+    }, 1000);
 
   return backgroundThread;
 }]);
