@@ -84,13 +84,13 @@ app.get('/firemote/cv/1/monitor.jpg', function(req, res){
   res.setHeader('Content-Type', 'image/jpeg');
   res.sendfile('/dev/firefuse/cv/1/monitor.jpg');
 });
-app.get('/firemote/cv/1/gray/cve/calc-offset/save.cmd', function(req, res){
+app.get('/firemote/cv/1/gray/cve/calc-offset/save.fire', function(req, res){
   res.setHeader('Content-Type', 'application/json');
-  res.sendfile('/dev/firefuse/cv/1/gray/cve/calc-offset/save.cmd');
+  res.sendfile('/dev/firefuse/cv/1/gray/cve/calc-offset/save.fire');
 });
-app.get('/firemote/cv/1/gray/cve/calc-offset/process.cmd', function(req, res){
+app.get('/firemote/cv/1/gray/cve/calc-offset/process.fire', function(req, res){
   res.setHeader('Content-Type', 'application/json');
-  res.sendfile('/dev/firefuse/cv/1/gray/cve/calc-offset/process.cmd');
+  res.sendfile('/dev/firefuse/cv/1/gray/cve/calc-offset/process.fire');
 });
 
 app.put('/firemote/firestep', function(req, res){
