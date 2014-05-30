@@ -46,106 +46,106 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 </head>
 <body>
   <div ng-controller="MainCtrl">
-		<div class="error" ng-if="backgroundThread.error">
-			<div class="error-header">Error</div>
-			<div class="error-body">{{backgroundThread.error.error}}</div>
-		</div>
-		<div class="logo"><a href="http://github.com/firepick1/FireMote/wiki"><img src="img/FireMote.png"/></a></div>
-		<div class="cam-detail {{camClass()}}" ng-click="camImageClick()">
-			<img class="cam-image" ng-src="firemote/headcam.jpg?x=1&t={{t}}" width="100%" style="{{imageStyle(0)}}"/>
-			<svg class="cam-image" width="100%" height="100%" >
-				<g transform="translate(400,100)" ng-if="true">
-					<g stroke-width=".1" ng-attr-opacity="{{global.cropOpacity}}" stroke="#f4f" ng-if="machine.gantries[0].head.camera.crop"
-						transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}})">
-						<line 
-							ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
-							ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y2="{{-machine.gantries[0].head.camera.crop.height/2}}" />
-						<line 
-							ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y1="{{machine.gantries[0].head.camera.crop.height/2}}" 
-							ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
-						<line 
-							ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
-							ng-attr-x2="{{-machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
-						<line 
-							ng-attr-x1="{{machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
-							ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
-							ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
-					</g>
-					<g stroke="#fc8" stroke-width=".1" stroke-opacity="1"  
-						transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}}), rotate({{machine.gantries[0].head.camera.reticleAngle}})">
+    <div class="error" ng-if="backgroundThread.error">
+      <div class="error-header">Error</div>
+      <div class="error-body">{{backgroundThread.error.error}}</div>
+    </div>
+    <div class="logo"><a href="http://github.com/firepick1/FireMote/wiki"><img src="img/FireMote.png"/></a></div>
+    <div class="cam-detail {{camClass()}}" ng-click="camImageClick()">
+      <img class="cam-image" ng-src="firemote/headcam.jpg?x=1&t={{t}}" width="100%" style="{{imageStyle(0)}}"/>
+      <svg class="cam-image" width="100%" height="100%" >
+        <g transform="translate(400,100)" ng-if="true">
+          <g stroke-width=".1" ng-attr-opacity="{{global.cropOpacity}}" stroke="#f4f" ng-if="machine.gantries[0].head.camera.crop"
+            transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}})">
+            <line 
+              ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
+              ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y2="{{-machine.gantries[0].head.camera.crop.height/2}}" />
+            <line 
+              ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y1="{{machine.gantries[0].head.camera.crop.height/2}}" 
+              ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
+            <line 
+              ng-attr-x1="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
+              ng-attr-x2="{{-machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
+            <line 
+              ng-attr-x1="{{machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y1="{{-machine.gantries[0].head.camera.crop.height/2}}" 
+              ng-attr-x2="{{machine.gantries[0].head.camera.crop.width/2}}" 
+              ng-attr-y2="{{machine.gantries[0].head.camera.crop.height/2}}" />
+          </g>
+          <g stroke="#fc8" stroke-width=".1" stroke-opacity="1"  
+            transform="scale({{machine.gantries[0].head.camera.pixelsPerMM}}), rotate({{machine.gantries[0].head.camera.reticleAngle}})">
 
-						<g stroke-dasharray="1,1" ng-attr-opacity="{{1-global.rulerOpacity}}">
-							<line x1="-500" y1="0" x2="-1" y2="0" />
-							<line x1="1" y1="0" x2="500" y2="0" />
-							<line x1="0" y1="-500" x2="0" y2="-1" />
-							<line x1="0" y1="1" x2="0" y2="500" />
-							<circle stroke-dasharray="0" cx="0" cy="0" r="5" fill="none"/>
-						</g>
+            <g stroke-dasharray="1,1" ng-attr-opacity="{{1-global.rulerOpacity}}">
+              <line x1="-500" y1="0" x2="-1" y2="0" />
+              <line x1="1" y1="0" x2="500" y2="0" />
+              <line x1="0" y1="-500" x2="0" y2="-1" />
+              <line x1="0" y1="1" x2="0" y2="500" />
+              <circle stroke-dasharray="0" cx="0" cy="0" r="5" fill="none"/>
+            </g>
 
-						<!--
-						-->
-						<g opacity="{{global.partOpacity}}">
-							<polyline points="-.5,-.25 -.5,.25 .5,.25 .5,-.25 -.5,-.25" fill="none" stroke="#f44" stroke-width=".1"/>
-							<polyline points="-.8,-.4 -.8,.4 .8,.4 .8,-.4 -.8,-.4" fill="none" stroke="#faa" stroke-width=".1"/>
-							<polyline points="-1,-.625 -1,.625 1,.625 1,-.625 -1,-.625" fill="none" stroke="#ee4" stroke-width=".1"/>
-							<polyline points="-1.6,-.8 -1.6,.8 1.6,.8 1.6,-.8 -1.6,-.8" fill="none" stroke="#afa" stroke-width=".1"/>
-							<text y="-2.5" text-anchor="left" stroke="none" fill="#fff" font-size=".3mm">
-							<tspan x="6" dy=".3mm" fill="#f44">0402</tspan><tspan x="6" dy=".3mm" fill="#faa">0603</tspan><tspan x="6" dy=".3mm" fill="#ee4">0805</tspan><tspan x="6" dy=".3mm" fill="#afa">1206</tspan>
-						</text>
-						</g>
+            <!--
+            -->
+            <g opacity="{{global.partOpacity}}">
+              <polyline points="-.5,-.25 -.5,.25 .5,.25 .5,-.25 -.5,-.25" fill="none" stroke="#f44" stroke-width=".1"/>
+              <polyline points="-.8,-.4 -.8,.4 .8,.4 .8,-.4 -.8,-.4" fill="none" stroke="#faa" stroke-width=".1"/>
+              <polyline points="-1,-.625 -1,.625 1,.625 1,-.625 -1,-.625" fill="none" stroke="#ee4" stroke-width=".1"/>
+              <polyline points="-1.6,-.8 -1.6,.8 1.6,.8 1.6,-.8 -1.6,-.8" fill="none" stroke="#afa" stroke-width=".1"/>
+              <text y="-2.5" text-anchor="left" stroke="none" fill="#fff" font-size=".3mm">
+              <tspan x="6" dy=".3mm" fill="#f44">0402</tspan><tspan x="6" dy=".3mm" fill="#faa">0603</tspan><tspan x="6" dy=".3mm" fill="#ee4">0805</tspan><tspan x="6" dy=".3mm" fill="#afa">1206</tspan>
+            </text>
+            </g>
 
-						<g ng-attr-opacity="{{global.rulerOpacity}}">
-							<line x1="-12.7" y1="-1" x2="-12.7" y2="1" stroke="#f44" />
-							<line x1="-12.7" y1="0" x2="12.7" y2="0" stroke="#f44" />
-							<line x1="12.7" y1="-1" x2="12.7" y2="1" stroke="#f44" />
-						</g>
-						<g stroke="#8f8" transform="translate(0,0)" ng-attr-opacity="{{global.rulerOpacity}}">
-							<line x1="0" y1="-2" x2="0" y2="2"/>
-							<g ng-repeat="x in [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50]">
-								<text ng-attr-x="{{x+0}}" y="-2.2" text-anchor="middle" stroke="none" fill="#8f8" font-size=".3mm">{{x}}</text>
-								<line ng-attr-x1="{{x+0}}" y1="-1.5" ng-attr-x2="{{x+0}}" y2="1.5"/>
-								<line ng-attr-x1="{{x+1}}" y1="-1" ng-attr-x2="{{x+1}}" y2="1"/>
-								<line ng-attr-x1="{{x+2}}" y1="-1" ng-attr-x2="{{x+2}}" y2="1"/>
-								<line ng-attr-x1="{{x+3}}" y1="-1" ng-attr-x2="{{x+3}}" y2="1"/>
-								<line ng-attr-x1="{{x+4}}" y1="-1" ng-attr-x2="{{x+4}}" y2="1"/>
-								<text ng-attr-x="{{x+0}}" y="3" text-anchor="middle" stroke="none" fill="#8f8" font-size=".3mm">{{x}}</text>
-							</g>
-						</g>
-					</g>
-				</g>
-			</svg>
-		</div>
-		<div ng-show="!machine.firefuse" class="demo" title="Demo Mode is active when FireFuse is unavailable">Demo Mode</div>
-		<div ng-hide="machine" class="loading">Loading remote machine state...</div>
-		<div ng-show="machine">
-			<div class="hslider-container" ng-repeat="gantry in machine.gantries">
-				<div onselectstart="return false" class="{{hsliderNumberClass()}}" style="left:{{hsliderLeft()}}px">{{machine.gantries[0].axis.pos}}</div>
-				<input type="range" class="hslider" step="1" ng-model="gantry.axis.pos" ng-change="hsliderChange(gantry.axis)" min="0" max="{{gantry.axis.posMax}}" />
-				<div ng-repeat="spindle in gantry.head.spindles" class="{{hsliderSpindleClass(spindle, $index)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
-			</div>
+            <g ng-attr-opacity="{{global.rulerOpacity}}">
+              <line x1="-12.7" y1="-1" x2="-12.7" y2="1" stroke="#f44" />
+              <line x1="-12.7" y1="0" x2="12.7" y2="0" stroke="#f44" />
+              <line x1="12.7" y1="-1" x2="12.7" y2="1" stroke="#f44" />
+            </g>
+            <g stroke="#8f8" transform="translate(0,0)" ng-attr-opacity="{{global.rulerOpacity}}">
+              <line x1="0" y1="-2" x2="0" y2="2"/>
+              <g ng-repeat="x in [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30,35,40,45,50]">
+                <text ng-attr-x="{{x+0}}" y="-2.2" text-anchor="middle" stroke="none" fill="#8f8" font-size=".3mm">{{x}}</text>
+                <line ng-attr-x1="{{x+0}}" y1="-1.5" ng-attr-x2="{{x+0}}" y2="1.5"/>
+                <line ng-attr-x1="{{x+1}}" y1="-1" ng-attr-x2="{{x+1}}" y2="1"/>
+                <line ng-attr-x1="{{x+2}}" y1="-1" ng-attr-x2="{{x+2}}" y2="1"/>
+                <line ng-attr-x1="{{x+3}}" y1="-1" ng-attr-x2="{{x+3}}" y2="1"/>
+                <line ng-attr-x1="{{x+4}}" y1="-1" ng-attr-x2="{{x+4}}" y2="1"/>
+                <text ng-attr-x="{{x+0}}" y="3" text-anchor="middle" stroke="none" fill="#8f8" font-size=".3mm">{{x}}</text>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div ng-show="!machine.firefuse" class="demo" title="Demo Mode is active when FireFuse is unavailable">Demo Mode</div>
+    <div ng-hide="machine" class="loading">Loading remote machine state...</div>
+    <div ng-show="machine">
+      <div class="hslider-container" ng-repeat="gantry in machine.gantries">
+        <div onselectstart="return false" class="{{hsliderNumberClass()}}" style="left:{{hsliderLeft()}}px">{{machine.gantries[0].axis.pos}}</div>
+        <input type="range" class="hslider" step="1" ng-model="gantry.axis.pos" ng-change="hsliderChange(gantry.axis)" min="0" max="{{gantry.axis.posMax}}" />
+        <div ng-repeat="spindle in gantry.head.spindles" class="{{hsliderSpindleClass(spindle, $index)}}" style="left:{{hsliderLeft()}}px">&nbsp;</div>
+      </div>
 
-			<div class="detail-controls">
-				<div class="sidebar">
-					<a href="http://github.com/firepick1/FirePick/wiki"><img class="logo-tiny" src="img/FirePick.png"/></a>
-					<div class="sidebar-button"><button ng-click="viewControl('/status')" style="{{ctrlBtnStyle('/status')}}"><i class="glyphicon glyphicon-info-sign"></i> Status</button></div>
-					<div class="sidebar-button"><button ng-click="viewControl('/move')" style="{{ctrlBtnStyle('/move')}}"><i class="glyphicon glyphicon-move"></i> Move</button></div>
-					<div class="sidebar-button"><button ng-click="viewControl('/camera')" style="{{ctrlBtnStyle('/camera')}}"><i class="glyphicon glyphicon-camera"></i> Camera</button></div>
-					<div class="sidebar-button"><button ng-click="viewControl('/spindle')" style="{{ctrlBtnStyle('/spindle')}}"><i class="glyphicon glyphicon-download-alt"></i> Spindles</button></div>
-					<div class="sidebar-button"><button ng-click="viewControl('/configure')" style="{{ctrlBtnStyle('/configure')}}"><i class="glyphicon glyphicon-wrench"></i> Configure</button></div>
-				</div>
-				<div class="partials" ng-view></div>
-			</div>
-			<div class="debug">
-				<input id="d1" type="checkbox" ng-click="demoClick()"><label title="In demo mode, all REST calls are mocked." for="d1">Demo</label>
-			</div>
-		</div>
+      <div class="detail-controls">
+        <div class="sidebar">
+          <a href="http://github.com/firepick1/FirePick/wiki"><img class="logo-tiny" src="img/FirePick.png"/></a>
+          <div class="sidebar-button"><button ng-click="viewControl('/status')" style="{{ctrlBtnStyle('/status')}}"><i class="glyphicon glyphicon-info-sign"></i> Status</button></div>
+          <div class="sidebar-button"><button ng-click="viewControl('/move')" style="{{ctrlBtnStyle('/move')}}"><i class="glyphicon glyphicon-move"></i> Move</button></div>
+          <div class="sidebar-button"><button ng-click="viewControl('/camera')" style="{{ctrlBtnStyle('/camera')}}"><i class="glyphicon glyphicon-camera"></i> Camera</button></div>
+          <div class="sidebar-button"><button ng-click="viewControl('/spindle')" style="{{ctrlBtnStyle('/spindle')}}"><i class="glyphicon glyphicon-download-alt"></i> Spindles</button></div>
+          <div class="sidebar-button"><button ng-click="viewControl('/configure')" style="{{ctrlBtnStyle('/configure')}}"><i class="glyphicon glyphicon-wrench"></i> Configure</button></div>
+        </div>
+        <div class="partials" ng-view></div>
+      </div>
+      <div class="debug">
+        <input id="d1" type="checkbox" ng-click="demoClick()"><label title="In demo mode, all REST calls are mocked." for="d1">Demo</label>
+      </div>
+    </div>
   </div>
 </body>
 </html>
