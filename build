@@ -51,7 +51,7 @@ if [ "$(type -P tsc)" == "" ]; then
   npm install -g typescript
   npm install
 fi
-#  sudo -u $SUDO_USER npm install typescript-require
+sudo -u $SUDO_USER npm install typescript-require
 #  sudo -u $SUDO_USER npm install -g typescript-require
 echo 
 echo Run FireMote server on port 8000:
